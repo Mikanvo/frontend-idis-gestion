@@ -1,4 +1,9 @@
 // Here you can add other styles
+.input-group-addon {
+  min-width: 40px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
 .input-group-text{
   background-color: #e8e8e8;
 }
