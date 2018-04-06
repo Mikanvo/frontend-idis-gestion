@@ -1,1 +1,39 @@
 // Here you can add other styles
+.input-group-text{
+  background-color: #e8e8e8;
+}
+.disabled{cursor: not-allowed}
+.pagination-box {
+  position: relative;
+  //margin-top: -10px;
+}
+.pagination-range {
+  margin-top: 7px;
+  display: inline-block;
+}
+.pagination-controllers {
+  float: right;
+}
+
+.pagination-controllers input {
+  min-width: 60px;
+  text-align: right;
+}
+.pagination-limit{
+  margin-right: 25px;
+  display: inline-table;
+  width: 150px;
+}
+.pagination-pages {
+  display: inline-block;
+}
+.pagination-box button {
+  outline: none !important;
+}
+.pagination-prevpage, .pagination-nextpage, .pagination-firstpage, .pagination-lastpage {
+  vertical-align: top;
+}
+.pagination-page {
+  width: 160px;
+  display: inline-table;
+}

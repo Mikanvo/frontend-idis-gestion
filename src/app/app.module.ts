@@ -74,6 +74,7 @@ import {UserGuard} from './guards/user.guard';
 import {ClientGuard} from './guards/client.guard';
 import {AdminOrUserGuard} from './guards/admin-or-user.guard';
 import {AdminOrUserOrClientGuard} from './guards/admin-or-user-or-client.guard';
+import {HandleErrorService} from './services/error/handle-error.service';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt_token');
@@ -91,11 +92,6 @@ export function tokenGetter() {
         tokenGetter: tokenGetter,
         whitelistedDomains: ['localhost:4200', '127.0.0.1:4200', 'http://127.0.0.1:4200']
       }
-      /*jwtOptionsProvider: {
-        provide: JWT_OPTIONS,
-        useFactory: jwtOptionsFactory,
-        deps: [TokenService]
-      }*/
     }),
     ChartsModule,
     BackendModule
@@ -117,7 +113,8 @@ export function tokenGetter() {
     UserGuard,
     ClientGuard,
     AdminOrUserGuard,
-    AdminOrUserOrClientGuard
+    AdminOrUserOrClientGuard,
+    HandleErrorService
   ],
   bootstrap: [AppComponent]
 })

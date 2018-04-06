@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import {AuthenticationService} from '../../services/auth/authentication.service';
-import {Utilisateur} from '../../models/utilisateur';
+import {Utilisateur} from '../../models/utilisateur/utilisateur';
 
 export function getAlertConfig(): AlertConfig {
   return Object.assign(new AlertConfig(), { type: 'success' });
