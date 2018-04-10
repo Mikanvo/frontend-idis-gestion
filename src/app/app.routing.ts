@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {Routes, RouterModule, Router} from '@angular/router';
 import {LoginComponent} from './backend/login/login.component';
 import {FullLayoutComponent} from './containers';
 import {AdminGuard} from './guards/admin.guard';
-import {UserGuard} from './guards/user.guard';
-import {ClientGuard} from './guards/client.guard';
 import {AdminOrUserOrClientGuard} from './guards/admin-or-user-or-client.guard';
 import {AdminOrUserGuard} from './guards/admin-or-user.guard';
 
 export const routes: Routes = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {
     path: '',
     component: FullLayoutComponent,

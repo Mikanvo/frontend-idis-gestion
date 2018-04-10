@@ -42,3 +42,39 @@
   width: 160px;
   display: inline-table;
 }
+// SELECT 2
+.ui-select-choices.dropdown-menu {
+  display: block;
+}
+
+.ui-select-multiple {
+  height: auto;
+  padding: 4px 4px 4px 4px !important;
+}
+.btn-group-xs>.btn, .btn-xs {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+.ui-select-multiple .btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.ngx-select_multiple{
+  height: auto;
+  padding: 4px !important;
+}
+
+.ui-select-multiple .btn {
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+ng-select.form-control {
+  padding: 0 !important;
+  border: 0 !important;
+}

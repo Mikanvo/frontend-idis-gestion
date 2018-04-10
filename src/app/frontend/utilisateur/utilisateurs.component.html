@@ -3,30 +3,51 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <button class="btn btn-primary" placement="top" tooltip="Utilisateur"><i class="fa fa-plus"></i> Ajouter</button>
-          <button class="btn btn-default float-right"><i class="fa fa-refresh"></i> Actualiser</button>
+          <button class="btn btn-primary" placement="top" tooltip="Utilisateur" (click)="openModal(null, 'i')"><i
+            class="fa fa-plus"></i> Ajouter
+          </button>
+          <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
+          </button>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-4 offset-md-2">
-              <div class="input-group  mb-4">
+            <div class="col-md-4">
+              <div class="input-group mb-4">
                 <div class="input-group-prepend">
                   <span class="input-group-text text-color-blue">Pseudo</span>
                 </div>
-                <input class="form-control" type="text">
+                <input (keyup)="searchPseudo($event.target.value)" class="form-control" type="text" [(ngModel)]="username">
               </div>
             </div>
             <div class="col-md-4">
-              <div class="input-group  mb-4">
+              <div class="input-group mb-4">
                 <div class="input-group-prepend">
                   <span class="input-group-text text-color-blue">Rôle</span>
                 </div>
-                <input class="form-control" type="text">
+                <ng-select class="form-control" *ngIf="allRoles.length > 0"
+                           [allowClear]="true"
+                           [multiple]="true"
+                           [items]="allRoles"
+                           (data)="refreshValue($event)"
+                           placeholder="Aucun rôle sélectionné">
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group mb-4">
+                <div class="input-group-prepend">
+                  <span class="input-group-text text-color-blue">Statut</span>
+                </div>
+                <select class="form-control" [(ngModel)]="enable" (change)="searchStatut()">
+                  <option value="2">Tout</option>
+                  <option value="1">Actif</option>
+                  <option value="0">Inactif</option>
+                </select>
               </div>
             </div>
           </div>
           <div *ngIf="allUsers?.utilisateurs">
-            <table class="table table-striped" [mfData]="allUsers?.utilisateurs" #mf="mfDataTable" [mfRowsOnPage]="10">
+            <table class="table table-condensed table-bordered data-table" [mfData]="allUsers?.utilisateurs" #mf="mfDataTable" [mfRowsOnPage]="size">
               <thead>
               <tr>
                 <th style="width: 20%">
@@ -47,8 +68,8 @@
                   <span *ngFor="let role of user?.roles">{{role?.roleName}} &nbsp;</span>
                 </td>
                 <td class="text-center">
-                  <button class="btn btn-warning" placement="top" tooltip="Modifier"><i class="fa fa-edit"></i></button>
-                  <button class="btn btn-primary" placement="top" tooltip="Afficher"><i class="fa fa-eye"></i></button>
+                  <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="openModal(user, 'u')"><i class="fa fa-edit"></i></button>
+                  <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="openModal(user, 's')"><i class="fa fa-eye"></i></button>
                   <button class="btn btn-danger" placement="top" tooltip="Désactiver" *ngIf="user.enable === 1"><i
                     class="fa fa-lock"></i></button>
                   <button class="btn btn-success" placement="top" tooltip="Activer" *ngIf="user.enable === 0"><i
@@ -58,36 +79,21 @@
               </tr>
               </tbody>
             </table>
-            <div class="pagination-box">
-              <div class="pagination-range">
-                Résultats: <span>{{currentPage + 1}}</span> - <span>{{allUsers.nombreUtilisateurs}}</span> / <span>{{allUsers.totalUtilisateurs}}</span>
-              </div>
-              <div class="pagination-controllers">
-                <div class="pagination-limit">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Limite:</span>
-                    </div>
-                    <input type="number" [(ngModel)]="size" (change)="searchLimit($event.target.value)" min="10" step="1" class="form-control">
-                  </div>
-                </div>
-                <div class=" pagination-pages">
-                  <button class="btn btn-default pagination-firstpage" [ngClass]="{disabled: currentPage==0}">«</button>
-                  <button class="btn btn-default pagination-prevpage" [ngClass]="{disabled: currentPage==0}">‹</button>
-                  <div class="pagination-page">
-                    <div class="input-group mb-3">
-                      <input class="form-control" [(ngModel)]="page" (change)="searchPage($event.target.value)" min="1" step="1" type="number" max="{{allUsers?.totalPages}}">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">/{{allUsers?.totalPages}}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <button class="btn btn-default pagination-nextpage" [ngClass]="{disabled: currentPage == allUsers?.totalPages -1}">›</button>
-                  <button class="btn btn-default pagination-lastpage" [ngClass]="{disabled: currentPage == allUsers?.totalPages -1}">»</button>
-                </div>
-              </div>
-
-            </div>
+            <app-pagination
+              [pages]="pages"
+              [nombreElements]="allUsers?.nombreUtilisateurs"
+              [totalElements]="allUsers?.totalUtilisateurs"
+              [totalPages]="allUsers?.totalPages"
+              [currentPage]="currentPage"
+              [size]="size"
+              [page]="page"
+              (search)="searchPage($event)"
+              (limit)="searchLimit($event)"
+              (first)="firstPage($event)"
+              (next)="nextPage($event)"
+              (previous)="previousPage($event)"
+              (last)="lastPage($event)"
+            ></app-pagination>
           </div>
 
         </div>

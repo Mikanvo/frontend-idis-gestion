@@ -75,6 +75,7 @@ import {ClientGuard} from './guards/client.guard';
 import {AdminOrUserGuard} from './guards/admin-or-user.guard';
 import {AdminOrUserOrClientGuard} from './guards/admin-or-user-or-client.guard';
 import {HandleErrorService} from './services/error/handle-error.service';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt_token');
@@ -94,13 +95,14 @@ export function tokenGetter() {
       }
     }),
     ChartsModule,
-    BackendModule
+    BackendModule,
   ],
+  exports: [BrowserAnimationsModule],
   declarations: [
     AppComponent,
     ...APP_CONTAINERS,
     ...APP_COMPONENTS,
-    ...APP_DIRECTIVES
+    ...APP_DIRECTIVES,
   ],
   providers: [
     {

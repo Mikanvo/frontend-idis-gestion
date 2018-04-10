@@ -11,12 +11,10 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
 
-
   constructor() {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
 
     if (req.method == 'POST' || req.method == 'PATCH' || req.method == 'PUT') {
 
