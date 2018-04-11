@@ -9,8 +9,7 @@ import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {ModalUtilisateurComponent} from './modal-utilisateur.component';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {ModalRemoveComponent} from './modal-remove.component';
 
 @Component({
   selector: 'app-utilisateurs',
@@ -45,14 +44,15 @@ export class UtilisateursComponent implements OnInit {
     this.getAllUsers();
   }
 
-  searchPseudo(username: string){
+  searchPseudo(username: string) {
     this.getAllUsers();
   }
 
-  searchStatut(){
+  searchStatut() {
     this.getAllUsers();
   }
 
+// ---------------------------------- START API REQUEST-----------------------------------------------------
   getAllUsers() {
     this.utilisateurService.searchUsers(this.username, this.enable, this.currentPage, this.size)
       .subscribe((users) => {
@@ -75,6 +75,8 @@ export class UtilisateursComponent implements OnInit {
       console.log(this.allRoles)
     });
   }
+
+  // ---------------------------------- END API REQUEST-----------------------------------------------------
 
   searchPage(page: number) {
     this.currentPage = page;
@@ -138,15 +140,38 @@ export class UtilisateursComponent implements OnInit {
 
     (<ModalUtilisateurComponent>this.modalRef.content).onClose.subscribe(result => {
       console.log(result);
-      if(result.type === 'i'){
+      if (result.type === 'i') {
         this.allUsers.utilisateurs.unshift(result.user);
       }
-      if(result.type === 'u'){
+      if (result.type === 'u') {
         /*let index = this.allUsers.utilisateurs.findIndex((user) => result.user.id);
         console.log("Before update: ", this.allUsers.utilisateurs[index]);
         this.allUsers.utilisateurs[index] = result.user;
         console.log("After update: ", this.allUsers.utilisateurs[index]);*/
         this.getAllUsers();
+      }
+    });
+
+  }
+
+  openRemoveModal(user: Utilisateur, type: string, index: number) {
+    this.modalRef = this.modalService.show(ModalRemoveComponent, {class: 'modal-sm'});
+
+    (<ModalRemoveComponent>this.modalRef.content).showRemoveModal(
+      type,
+      user
+    );
+
+    (<ModalRemoveComponent>this.modalRef.content).onClose.subscribe(result => {
+      console.log(result);
+      if (result.type === 'd') {
+        this.allUsers.utilisateurs[index].enable = 0;
+      }
+      if (result.type === 'e') {
+        this.allUsers.utilisateurs[index].enable = 1;
+      }
+      if (result.type === 'r') {
+        this.allUsers.utilisateurs.splice(index, 1);
       }
     });
 

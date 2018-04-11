@@ -16,7 +16,8 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text text-color-blue">Pseudo</span>
                 </div>
-                <input (keyup)="searchPseudo($event.target.value)" class="form-control" type="text" [(ngModel)]="username">
+                <input (keyup)="searchPseudo($event.target.value)" class="form-control" type="text"
+                       [(ngModel)]="username">
               </div>
             </div>
             <div class="col-md-4">
@@ -47,7 +48,8 @@
             </div>
           </div>
           <div *ngIf="allUsers?.utilisateurs">
-            <table class="table table-condensed table-bordered data-table" [mfData]="allUsers?.utilisateurs" #mf="mfDataTable" [mfRowsOnPage]="size">
+            <table class="table table-condensed table-bordered data-table" [mfData]="allUsers?.utilisateurs"
+                   #mf="mfDataTable" [mfRowsOnPage]="size">
               <thead>
               <tr>
                 <th style="width: 20%">
@@ -62,19 +64,25 @@
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let user of mf.data">
+              <tr *ngFor="let user of mf.data; let i = index">
                 <td>{{user.username}}</td>
                 <td class="text-center">
                   <span *ngFor="let role of user?.roles">{{role?.roleName}} &nbsp;</span>
                 </td>
                 <td class="text-center">
-                  <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="openModal(user, 'u')"><i class="fa fa-edit"></i></button>
-                  <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="openModal(user, 's')"><i class="fa fa-eye"></i></button>
-                  <button class="btn btn-danger" placement="top" tooltip="Désactiver" *ngIf="user.enable === 1"><i
+                  <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="openModal(user, 'u')"><i
+                    class="fa fa-edit"></i></button>
+                  <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="openModal(user, 's')"><i
+                    class="fa fa-eye"></i></button>
+                  <button class="btn btn-danger" placement="top" tooltip="Désactiver" *ngIf="user.enable === 1"
+                          (click)="openRemoveModal(user, 'd', i)"><i
                     class="fa fa-lock"></i></button>
-                  <button class="btn btn-success" placement="top" tooltip="Activer" *ngIf="user.enable === 0"><i
+                  <button class="btn btn-success" placement="top" tooltip="Activer" *ngIf="user.enable === 0"
+                          (click)="openRemoveModal(user, 'e', i)"><i
                     class="fa fa-unlock-alt"></i></button>
-                  <!--<button class="btn btn-danger"><i class="fa fa-remove"></i></button>-->
+                  <button class="btn btn-danger" placement="top" tooltip="Supprimer" (click)="openRemoveModal(user, 'r', i)">
+                    <i class="fa fa-remove"></i>
+                  </button>
                 </td>
               </tr>
               </tbody>

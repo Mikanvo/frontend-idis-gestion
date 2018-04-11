@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {CustomRole} from '../../models/role/custom-role';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 import {RoleService} from '../../services/role/role.service';
 import {Role} from '../../models/role/role';
 import {Subject} from 'rxjs/Subject';
+import {RegisterForm} from '../../models/utilisateur/register-form';
+import {PasswordValidator} from '../../directives/validators/password-validator';
 
 @Component({
   selector: 'app-modal-utilisateur',
@@ -15,7 +17,7 @@ import {Subject} from 'rxjs/Subject';
   styleUrls: ['./modal-utilisateur.component.scss']
 })
 export class ModalUtilisateurComponent implements OnInit {
-  public user: Utilisateur = new Utilisateur();
+  public user: RegisterForm = new RegisterForm();
   public type: string;
   userForm: FormGroup;
   allRoles: Array<CustomRole> = new Array<CustomRole>();
@@ -41,14 +43,15 @@ export class ModalUtilisateurComponent implements OnInit {
 
   public showUserModal(type: string, user: Utilisateur): void {
     this.type = type;
-    this.user =  user;
-    console.log(type);
-    console.log(user);
+
     if(user !== null){
+      this.user.username =  user.username;
+      this.user.roles =  user.roles;
       this.userForm.setValue({
         id: user.id || '',
         username: user.username || '',
-        password: ''
+        password: '',
+        repassword: ''
       });
       if (user.roles) {
         this.user.roles.forEach((role) => {
@@ -64,19 +67,24 @@ export class ModalUtilisateurComponent implements OnInit {
     let id = this.userForm.get('id');
     let username = this.userForm.get('username');
     let password = this.userForm.get('password');
+    let repassword = this.userForm.get('repassword');
 
     (this.type) ? id.disable() : id.enable();
     ((this.type === 's') || (this.type === 'u')) ? username.disable() : username.enable();
     (this.type === 's') ? password.disable() : password.enable();
+    (this.type === 's') ? repassword.disable() : repassword.enable();
 
   }
 
   createForm() {
 
     this.userForm = this.fb.group({
-      id: [''],
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      id: new FormControl(''),
+      username: new FormControl(this.user.username, [Validators.required, Validators.minLength(4)]),
+      password: new FormControl(this.user.password, [Validators.required, Validators.minLength(4)]),
+      repassword: new FormControl(this.user.repassword, [Validators.required]),
+    }, {
+      validator: PasswordValidator.matchPassword// your validation method
     });
 
   }
@@ -113,21 +121,21 @@ export class ModalUtilisateurComponent implements OnInit {
   showSave(msg: string) {
     this.toastr.success(msg, "Enregistrer", {
       closeButton: true,
-      timeOut: 5000,
+      timeOut: 3000,
     });
   }
   showUpdate(msg: string) {
     this.toastr.warning(msg, "Modification", {
       closeButton: true,
-      timeOut: 5000,
+      timeOut: 3000,
     });
   }
 
   saveUser() {
     this.isLoading = true;
-    this.user = new Utilisateur();
     this.user.username = this.userForm.value.username;
     this.user.password = this.userForm.value.password;
+    this.user.repassword = this.userForm.value.repassword;
     this.user.roles = new Array<Role>();
     if (this.formRoles.length > 0) {
       this.formRoles.forEach((role) => {
@@ -149,7 +157,7 @@ export class ModalUtilisateurComponent implements OnInit {
         };
         this.isLoading = false;
         this.onClose.next(data);
-        this.showSave("Utilisateur enregistré");
+        this.showSave("Utilisateur enregistré avec succès");
         this.modalRef.hide();
       }, (err) => {
         console.log(err);
@@ -160,8 +168,6 @@ export class ModalUtilisateurComponent implements OnInit {
 
   updateUser() {
     this.isLoading = true;
-    this.user = new Utilisateur();
-
     this.user.id = this.userForm.getRawValue().id;
     this.user.username = this.userForm.getRawValue().username;
     this.user.password = this.userForm.getRawValue().password;

@@ -18,6 +18,7 @@ import {LaddaModule} from 'angular2-ladda';
 import { NgxSelectModule } from 'ngx-select-ex';
 import { ModalUtilisateurComponent } from './modal-utilisateur.component';
 import {ToastrModule} from 'ngx-toastr';
+import { ModalRemoveComponent } from './modal-remove.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -48,8 +49,9 @@ import {ToastrModule} from 'ngx-toastr';
   declarations: [
     UtilisateursComponent,
     PaginationComponent,
-    ModalUtilisateurComponent],
-  entryComponents: [ModalUtilisateurComponent],
+    ModalUtilisateurComponent,
+    ModalRemoveComponent],
+  entryComponents: [ModalUtilisateurComponent, ModalRemoveComponent],
   providers: [UtilisateurService, RoleService]
 })
 export class UtilisateurModule { }
