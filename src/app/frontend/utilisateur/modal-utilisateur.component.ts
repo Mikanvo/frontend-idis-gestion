@@ -171,6 +171,7 @@ export class ModalUtilisateurComponent implements OnInit {
     this.user.id = this.userForm.getRawValue().id;
     this.user.username = this.userForm.getRawValue().username;
     this.user.password = this.userForm.getRawValue().password;
+    this.user.repassword = this.userForm.getRawValue().repassword;
     this.user.roles = new Array<Role>();
     if (this.formRoles.length > 0) {
       this.formRoles.forEach((role) => {
