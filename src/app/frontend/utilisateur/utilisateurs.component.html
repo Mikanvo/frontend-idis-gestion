@@ -27,9 +27,10 @@
                 </div>
                 <ng-select class="form-control" *ngIf="allRoles.length > 0"
                            [allowClear]="true"
-                           [multiple]="true"
+                           [multiple]="false"
                            [items]="allRoles"
                            (data)="refreshValue($event)"
+                           (removed)="removeValue($event)"
                            placeholder="Aucun rôle sélectionné">
                 </ng-select>
               </div>
@@ -80,7 +81,8 @@
                   <button class="btn btn-success" placement="top" tooltip="Activer" *ngIf="user.enable === 0"
                           (click)="openRemoveModal(user, 'e', i)"><i
                     class="fa fa-unlock-alt"></i></button>
-                  <button class="btn btn-danger" placement="top" tooltip="Supprimer" (click)="openRemoveModal(user, 'r', i)">
+                  <button class="btn btn-danger" placement="top" tooltip="Supprimer"
+                          (click)="openRemoveModal(user, 'r', i)">
                     <i class="fa fa-remove"></i>
                   </button>
                 </td>

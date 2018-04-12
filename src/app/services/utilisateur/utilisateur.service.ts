@@ -7,6 +7,7 @@ import {BASE_URL} from '../const/constants.service';
 import {HandleErrorService} from '../error/handle-error.service';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {RegisterForm} from '../../models/utilisateur/register-form';
+import {Role} from '../../models/role/role';
 
 @Injectable()
 export class UtilisateurService {
@@ -17,13 +18,14 @@ export class UtilisateurService {
   ) {
   }
 
-  public searchUsers(username: string, enable: number, page: number, size: number): Observable<ListeUtilisateurs> {
+  public searchUsers(username: string, role: string, enable: number, page: number, size: number): Observable<ListeUtilisateurs> {
     let httpParams = new HttpParams()
       .append('username', username)
+      .append('roles', role)
       .append('enable', enable.toString())
       .append('page', page.toString())
       .append('size', size.toString());
-    return this.http.get<ListeUtilisateurs>(`${BASE_URL}/user/search-users`, {params: httpParams})
+    return this.http.get<ListeUtilisateurs>(`${BASE_URL}/user/search-users?`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),

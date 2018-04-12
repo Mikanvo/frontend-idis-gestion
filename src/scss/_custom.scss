@@ -69,7 +69,7 @@
   padding: 4px !important;
 }
 
-.ui-select-multiple .btn {
+ui-select-match .btn, .ui-select-multiple .btn {
   border: 1px solid transparent;
   border-radius: 4px;
 }
@@ -78,3 +78,9 @@ ng-select.form-control {
   padding: 0 !important;
   border: 0 !important;
 }
+
+ng-select .btn-secondary {
+  background-color: #ffffff !important;
+}
+
+.glyphicon-remove { position: relative; } .glyphicon-remove:before { content: "\f00d"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; color: #000; font-size: 15px; padding-right: 0.5em; position: absolute; top: 0px; left: -5px; }

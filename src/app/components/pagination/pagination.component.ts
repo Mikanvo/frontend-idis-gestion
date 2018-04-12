@@ -38,7 +38,11 @@ export class PaginationComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if (this.currentPage === 0) {
       this.debut = 1;
-      this.fin = this.size;
+      if(this.size < this.totalElements){
+        this.fin = this.size;
+      }else{
+        this.fin = this.totalElements;
+      }
     }
   }
 
