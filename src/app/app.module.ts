@@ -76,6 +76,8 @@ import {AdminOrUserGuard} from './guards/admin-or-user.guard';
 import {AdminOrUserOrClientGuard} from './guards/admin-or-user-or-client.guard';
 import {HandleErrorService} from './services/error/handle-error.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {PaginationModule} from './components/pagination/pagination.module';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt_token');
@@ -86,6 +88,8 @@ export function tokenGetter() {
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     JwtModule.forRoot({
@@ -96,6 +100,7 @@ export function tokenGetter() {
     }),
     ChartsModule,
     BackendModule,
+    PaginationModule
   ],
   exports: [BrowserAnimationsModule],
   declarations: [

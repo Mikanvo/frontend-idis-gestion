@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {CustomRole} from '../../models/role/custom-role';
-import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs/Subject';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
@@ -8,11 +6,11 @@ import {UtilisateurService} from '../../services/utilisateur/utilisateur.service
 import {ToastrService} from 'ngx-toastr';
 
 @Component({
-  selector: 'app-modal-remove',
-  templateUrl: './modal-remove.component.html',
-  styleUrls: ['./modal-remove.component.scss']
+  selector: 'app-modal-remove-utilisateur',
+  templateUrl: './modal-remove-utilisateur.component.html',
+  styleUrls: ['./modal-remove-utilisateur.component.scss']
 })
-export class ModalRemoveComponent implements OnInit {
+export class ModalRemoveUtilisateurComponent implements OnInit {
 
   public user: Utilisateur = new Utilisateur();
   public type: string;

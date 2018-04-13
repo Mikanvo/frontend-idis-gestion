@@ -1,37 +1,41 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import {ListeRoles} from '../../models/role/liste-roles';
+import {Role} from '../../models/role/role';
 import {HandleErrorService} from '../error/handle-error.service';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {BASE_URL} from '../const/constants.service';
 import {catchError, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs/Observable';
-import {Role} from '../../models/role/role';
-import {ListeRoles} from '../../models/role/liste-roles';
+import {Site} from '../../models/site/site';
+import {ListeSites} from '../../models/site/liste-sites';
 
 @Injectable()
-export class RoleService {
+export class SiteService {
 
   constructor(private http: HttpClient,
               private handleErrorService: HandleErrorService) {
   }
 
-  public getAllRoles(): Observable<Array<Role>> {
-    return this.http.get<Array<Role>>(`${BASE_URL}/admin/all-roles`)
+  public getAllSites(): Observable<Array<Site>> {
+    return this.http.get<Array<Site>>(`${BASE_URL}/admin/all-sites`)
       .pipe(
         tap(
-          (roles) => {console.log(roles)},
+          (data) => {console.log(data)},
           error => console.log(error)
         ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public searchRoles(roleName: string, enable: number, page: number, size: number): Observable<ListeRoles> {
+  public searchSites(nomSite: string, codeSite: string, nomPays: string, enable: number, page: number, size: number): Observable<ListeSites> {
     let httpParams = new HttpParams()
-      .append('roleName', roleName)
+      .append('nomSite', nomSite)
+      .append('codeSite', codeSite)
+      .append('nomPays', nomPays)
       .append('enable', enable.toString())
       .append('page', page.toString())
       .append('size', size.toString());
-    return this.http.get<ListeRoles>(`${BASE_URL}/admin/search-roles`, {params: httpParams})
+    return this.http.get<ListeRoles>(`${BASE_URL}/admin/search-sites`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -41,30 +45,30 @@ export class RoleService {
       );
   }
 
-  public addRole(role: Role) {
+  public addSite(site: Site) {
 
-    return this.http.post<Role>(`${BASE_URL}/admin/add-role`, role)
+    return this.http.post<Site>(`${BASE_URL}/admin/add-site`, site)
       .pipe(
-        tap(role => console.log(role) ),
+        tap(data => console.log(data) ),
         catchError(this.handleErrorService.handleError)
       );
 
   }
 
-  public updateRole(role: Role) {
+  public updateSite(site: Site) {
 
-    return this.http.post<Role>(`${BASE_URL}/admin/update-role`, role)
+    return this.http.post<Site>(`${BASE_URL}/admin/update-site`, site)
       .pipe(
-        tap(role => console.log(role) ),
+        tap(site => console.log(site) ),
         catchError(this.handleErrorService.handleError)
       );
 
   }
 
-  public getRole(id: number) {
+  public getSite(id: number) {
     let httpParams = new HttpParams()
       .append('id', id.toString());
-    return this.http.get<Role>(`${BASE_URL}/admin/take-role`, {params: httpParams})
+    return this.http.get<Role>(`${BASE_URL}/admin/take-site`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -74,24 +78,24 @@ export class RoleService {
       );
   }
 
-  public disableRole(role: Role) {
-    return this.http.post<Role>(`${BASE_URL}/admin/disable-role`, role)
+  public disableSite(site: Site) {
+    return this.http.post<Site>(`${BASE_URL}/admin/disable-site`, site)
       .pipe(
         tap(disable => console.log(disable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public enableRole(role: Role) {
-    return this.http.post<Role>(`${BASE_URL}/admin/enable-role`, role)
+  public enableSite(site: Site) {
+    return this.http.post<Site>(`${BASE_URL}/admin/enable-site`, site)
       .pipe(
         tap(enable => console.log(enable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public removeRole(role: Role) {
-    return this.http.post<Role>(`${BASE_URL}/admin/remove-role`, role)
+  public removeSite(site: Site) {
+    return this.http.post<Site>(`${BASE_URL}/admin/remove-site`, site)
       .pipe(
         tap(remove => console.log(remove) ),
         catchError(this.handleErrorService.handleError)

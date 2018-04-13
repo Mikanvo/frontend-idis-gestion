@@ -1,37 +1,36 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {HandleErrorService} from '../error/handle-error.service';
+import { Injectable } from '@angular/core';
 import {BASE_URL} from '../const/constants.service';
 import {catchError, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs/Observable';
-import {Role} from '../../models/role/role';
-import {ListeRoles} from '../../models/role/liste-roles';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {HandleErrorService} from '../error/handle-error.service';
+import {Pays} from '../../models/pays/pays';
+import {ListePays} from '../../models/pays/liste-pays';
 
 @Injectable()
-export class RoleService {
+export class PaysService {
 
   constructor(private http: HttpClient,
-              private handleErrorService: HandleErrorService) {
-  }
+              private handleErrorService: HandleErrorService) { }
 
-  public getAllRoles(): Observable<Array<Role>> {
-    return this.http.get<Array<Role>>(`${BASE_URL}/admin/all-roles`)
+  public getAllPays(): Observable<Array<Pays>> {
+    return this.http.get<Array<Pays>>(`${BASE_URL}/user/all-pays`)
       .pipe(
         tap(
-          (roles) => {console.log(roles)},
+          (data) => {console.log(data)},
           error => console.log(error)
         ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public searchRoles(roleName: string, enable: number, page: number, size: number): Observable<ListeRoles> {
+  public searchPays(nomPays: string, enable: number, page: number, size: number): Observable<ListePays> {
     let httpParams = new HttpParams()
-      .append('roleName', roleName)
+      .append('nomPays', nomPays)
       .append('enable', enable.toString())
       .append('page', page.toString())
       .append('size', size.toString());
-    return this.http.get<ListeRoles>(`${BASE_URL}/admin/search-roles`, {params: httpParams})
+    return this.http.get<ListePays>(`${BASE_URL}/user/search-pays`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -41,30 +40,30 @@ export class RoleService {
       );
   }
 
-  public addRole(role: Role) {
+  public addPays(pays: Pays) {
 
-    return this.http.post<Role>(`${BASE_URL}/admin/add-role`, role)
+    return this.http.post<Pays>(`${BASE_URL}/user/add-pays`, pays)
       .pipe(
-        tap(role => console.log(role) ),
+        tap(data => console.log(data) ),
         catchError(this.handleErrorService.handleError)
       );
 
   }
 
-  public updateRole(role: Role) {
+  public updatePays(pays: Pays) {
 
-    return this.http.post<Role>(`${BASE_URL}/admin/update-role`, role)
+    return this.http.post<Pays>(`${BASE_URL}/user/update-pays`, pays)
       .pipe(
-        tap(role => console.log(role) ),
+        tap(data => console.log(data) ),
         catchError(this.handleErrorService.handleError)
       );
 
   }
 
-  public getRole(id: number) {
+  public getPays(id: number) {
     let httpParams = new HttpParams()
       .append('id', id.toString());
-    return this.http.get<Role>(`${BASE_URL}/admin/take-role`, {params: httpParams})
+    return this.http.get<Pays>(`${BASE_URL}/user/take-pays`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -74,27 +73,28 @@ export class RoleService {
       );
   }
 
-  public disableRole(role: Role) {
-    return this.http.post<Role>(`${BASE_URL}/admin/disable-role`, role)
+  public disablePays(pays: Pays) {
+    return this.http.post<Pays>(`${BASE_URL}/user/disable-pays`, pays)
       .pipe(
         tap(disable => console.log(disable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public enableRole(role: Role) {
-    return this.http.post<Role>(`${BASE_URL}/admin/enable-role`, role)
+  public enablePays(pays: Pays) {
+    return this.http.post<Pays>(`${BASE_URL}/admin/enable-pays`, pays)
       .pipe(
         tap(enable => console.log(enable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public removeRole(role: Role) {
-    return this.http.post<Role>(`${BASE_URL}/admin/remove-role`, role)
+  public removePays(pays: Pays) {
+    return this.http.post<Pays>(`${BASE_URL}/admin/remove-pays`, pays)
       .pipe(
         tap(remove => console.log(remove) ),
         catchError(this.handleErrorService.handleError)
       );
   }
+
 }

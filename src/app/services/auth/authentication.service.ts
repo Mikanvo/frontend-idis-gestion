@@ -38,8 +38,7 @@ export class AuthenticationService {
         tap(
           jwt => this.tokenService.saveToken(jwt.headers.get('Authorization')),
           error => console.log(error)
-        ),
-        catchError(this.handleErrorService.handleError)
+        )
       );
   }
 

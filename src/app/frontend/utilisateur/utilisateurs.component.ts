@@ -9,8 +9,9 @@ import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {ModalUtilisateurComponent} from './modal-utilisateur.component';
-import {ModalRemoveComponent} from './modal-remove.component';
 import {isArray} from 'util';
+import {ModalRemoveUtilisateurComponent} from './modal-remove-utilisateur.component';
+import {Role} from '../../models/role/role';
 
 @Component({
   selector: 'app-utilisateurs',
@@ -25,8 +26,8 @@ export class UtilisateursComponent implements OnInit {
   //------------- END FORMS -----------------------------
 
   allUsers: ListeUtilisateurs;
-  allRoles: Array<CustomRole> = new Array<CustomRole>();
-  formRoles: any = null;
+  allRoles: Array<Role> = new Array<Role>();
+  role: Role = null;
   username: string = '';
   enable: number = 2;
   currentPage: number = 0;
@@ -43,25 +44,24 @@ export class UtilisateursComponent implements OnInit {
 
   ngOnInit() {
     this.getAllRoles();
-    this.getAllUsers();
+    this.searchUsers();
   }
 
-  searchPseudo(username: string) {
-    this.getAllUsers();
+  searchPseudo() {
+    this.searchUsers();
   }
 
   searchStatut() {
-    this.getAllUsers();
+    this.searchUsers();
   }
 
 // ---------------------------------- START API REQUEST-----------------------------------------------------
-  getAllUsers() {
-    let role = "";
-    if (this.formRoles !== null) {
-      role = this.formRoles.text;
+  searchUsers() {
+    let roleName = "";
+    if(this.role !== null){
+      roleName = this.role.roleName;
     }
-    console.log(role);
-    this.utilisateurService.searchUsers(this.username, role, this.enable, this.currentPage, this.size)
+    this.utilisateurService.searchUsers(this.username, roleName, this.enable, this.currentPage, this.size)
       .subscribe((users) => {
         this.allUsers = users;
         this.pages = new Array(users.totalPages);
@@ -73,13 +73,7 @@ export class UtilisateursComponent implements OnInit {
 
   getAllRoles() {
     this.roleService.getAllRoles().subscribe((roles) => {
-      roles.forEach((role) => {
-        this.allRoles.push({
-          'id': role.id,
-          'text': role.roleName
-        });
-      });
-      console.log(this.allRoles)
+      this.allRoles = roles;
     });
   }
 
@@ -87,26 +81,16 @@ export class UtilisateursComponent implements OnInit {
 
   searchPage(page: number) {
     this.currentPage = page;
-    this.getAllUsers();
+    this.searchUsers();
   }
 
   searchLimit(limit: number) {
     this.size = limit;
-    this.getAllUsers();
+    this.searchUsers();
   }
 
-  refreshValue(event) {
-    if(isArray(event)){
-      this.formRoles = null;
-    }else{
-      this.formRoles = event;
-    }
-    console.log(this.formRoles);
-    this.getAllUsers();
-  }
-  removeValue(event){
-    console.log(event);
-    this.formRoles = null;
+  searchRole(event) {
+    this.searchUsers();
   }
 
   hasRole(role: string) {
@@ -115,27 +99,27 @@ export class UtilisateursComponent implements OnInit {
 
   nextPage(page: number) {
     this.currentPage = page;
-    this.getAllUsers();
+    this.searchUsers();
   }
 
   previousPage(page: number) {
     this.currentPage = page;
-    this.getAllUsers();
+    this.searchUsers();
   }
 
   firstPage(page: number) {
     this.currentPage = page;
-    this.getAllUsers();
+    this.searchUsers();
   }
 
   lastPage(page: number) {
     this.currentPage = page;
-    this.getAllUsers();
+    this.searchUsers();
   }
 
   reload() {
     this.currentPage = 0;
-    this.getAllUsers();
+    this.searchUsers();
   }
 
   //---------------------------------- MODAL FORMS -------------------------------
@@ -161,28 +145,28 @@ export class UtilisateursComponent implements OnInit {
         /*this.allUsers.utilisateurs.unshift(result.user);
         this.allUsers.nombreUtilisateurs += 1;
         this.allUsers.totalUtilisateurs += 1;*/
-        this.getAllUsers();
+        this.searchUsers();
       }
       if (result.type === 'u') {
         /*let index = this.allUsers.utilisateurs.findIndex((user) => result.user.id);
         console.log("Before update: ", this.allUsers.utilisateurs[index]);
         this.allUsers.utilisateurs[index] = result.user;
         console.log("After update: ", this.allUsers.utilisateurs[index]);*/
-        this.getAllUsers();
+        this.searchUsers();
       }
     });
 
   }
 
   openRemoveModal(user: Utilisateur, type: string, index: number) {
-    this.modalRef = this.modalService.show(ModalRemoveComponent, {class: 'modal-sm'});
+    this.modalRef = this.modalService.show(ModalRemoveUtilisateurComponent, {class: 'modal-sm'});
 
-    (<ModalRemoveComponent>this.modalRef.content).showRemoveModal(
+    (<ModalRemoveUtilisateurComponent>this.modalRef.content).showRemoveModal(
       type,
       user
     );
 
-    (<ModalRemoveComponent>this.modalRef.content).onClose.subscribe(result => {
+    (<ModalRemoveUtilisateurComponent>this.modalRef.content).onClose.subscribe(result => {
       console.log(result);
       if (result.type === 'd') {
         this.allUsers.utilisateurs[index].enable = 0;
@@ -192,7 +176,7 @@ export class UtilisateursComponent implements OnInit {
       }
       if (result.type === 'r') {
         /*this.allUsers.utilisateurs.splice(index, 1);*/
-        this.getAllUsers();
+        this.searchUsers();
       }
     });
 

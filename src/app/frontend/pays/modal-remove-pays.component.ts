@@ -1,0 +1,118 @@
+import { Component, OnInit } from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import {ToastrService} from 'ngx-toastr';
+import {Pays} from '../../models/pays/pays';
+import {PaysService} from '../../services/pays/pays.service';
+
+@Component({
+  selector: 'app-modal-remove-pays',
+  templateUrl: './modal-remove-pays.component.html',
+  styleUrls: ['./modal-remove-pays.component.scss']
+})
+export class ModalRemovePaysComponent implements OnInit {
+
+  public pays: Pays = new Pays();
+  public type: string;
+  public onClose: Subject<any>;
+
+  isLoading: boolean = false;
+
+  constructor(
+    private paysService: PaysService,
+    public modalRef: BsModalRef,
+    private toastr: ToastrService
+  ) { }
+
+  ngOnInit() {
+    this.onClose = new Subject();
+  }
+
+  public showRemoveModal(type: string, pays: Pays): void {
+    this.type = type;
+    this.pays =  pays;
+  }
+
+  confirm(){
+    this.isLoading = true;
+    if(this.type === 'd'){
+      this.paysService.disablePays(this.pays)
+        .subscribe((resp) =>{
+          console.log(resp);
+          let data = {
+            type: this.type,
+            pays: this.pays
+          };
+          this.showDisable("Pays désactivé avec succès");
+          this.onClose.next(data);
+          this.isLoading = false;
+          this.modalRef.hide();
+        }, (err) =>{
+          console.log(err);
+          this.isLoading = false;
+        })
+    }
+
+    if(this.type === 'r'){
+      this.paysService.removePays(this.pays)
+        .subscribe((resp) =>{
+          let data = {
+            type: this.type,
+            pays: this.pays
+          };
+          this.showRemove("Pays supprimé avec succès");
+          this.onClose.next(data);
+          this.isLoading = false;
+          this.modalRef.hide();
+        }, (err) =>{
+          console.log(err);
+          this.isLoading = false;
+        })
+    }
+
+    if(this.type === 'e'){
+      this.paysService.enablePays(this.pays)
+        .subscribe((resp) =>{
+          console.log(resp);
+          let data = {
+            type: this.type,
+            pays: this.pays
+          };
+          this.showEnable("Pays activé avec succès");
+          this.onClose.next(data);
+          this.isLoading = false;
+          this.modalRef.hide();
+        }, (err) =>{
+          console.log(err);
+          this.isLoading = false;
+        })
+    }
+
+  }
+
+  showEnable(msg: string) {
+    this.toastr.success(msg, "Activation", {
+      closeButton: true,
+      timeOut: 3000,
+    });
+  }
+
+  showDisable(msg: string) {
+    this.toastr.error(msg, "Désactivation", {
+      closeButton: true,
+      timeOut: 3000,
+    });
+  }
+  showRemove(msg: string) {
+    this.toastr.error(msg, "Suppression", {
+      closeButton: true,
+      timeOut: 3000,
+    });
+  }
+
+  close(){
+    this.modalRef.hide();
+
+  }
+
+}

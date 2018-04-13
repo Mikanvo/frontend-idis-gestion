@@ -27,6 +27,7 @@
     "@angular/router": "5.2.3",
     "@angular/upgrade": "5.2.3",
     "@auth0/angular-jwt": "^1.1.0",
+    "@ng-select/ng-select": "^0.36.2",
     "@swimlane/ngx-datatable": "^11.2.0",
     "angular2-datatable": "^0.6.0",
     "angular2-jwt": "^0.2.3",

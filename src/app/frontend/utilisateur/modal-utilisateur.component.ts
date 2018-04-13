@@ -20,11 +20,17 @@ export class ModalUtilisateurComponent implements OnInit {
   public user: RegisterForm = new RegisterForm();
   public type: string;
   userForm: FormGroup;
-  allRoles: Array<CustomRole> = new Array<CustomRole>();
-  formRoles: Array<CustomRole> = new Array<CustomRole>();
+  allRoles: Array<Role> = new Array<Role>();
+
   public onClose: Subject<any>;
 
   isLoading: boolean = false;
+
+  error: string = "";
+  alert: any = {
+    type: "danger",
+    dismissible: true
+  };
 
   constructor(private utilisateurService: UtilisateurService,
               private roleService: RoleService,
@@ -51,38 +57,33 @@ export class ModalUtilisateurComponent implements OnInit {
         id: user.id || '',
         username: user.username || '',
         password: '',
-        repassword: ''
+        repassword: '',
+        roles: user.roles || []
       });
-      if (user.roles) {
-        this.user.roles.forEach((role) => {
-          this.formRoles.push({
-            'id': role.id,
-            'text': role.roleName
-          });
-        });
-        console.log(this.formRoles);
-      }
     }
 
     let id = this.userForm.get('id');
     let username = this.userForm.get('username');
     let password = this.userForm.get('password');
     let repassword = this.userForm.get('repassword');
+    let roles = this.userForm.get('roles');
 
     (this.type) ? id.disable() : id.enable();
     ((this.type === 's') || (this.type === 'u')) ? username.disable() : username.enable();
     (this.type === 's') ? password.disable() : password.enable();
     (this.type === 's') ? repassword.disable() : repassword.enable();
+    (this.type === 's') ? roles.disable() : roles.enable();
 
   }
 
   createForm() {
 
     this.userForm = this.fb.group({
-      id: new FormControl(''),
+      id: new FormControl(this.user.id),
       username: new FormControl(this.user.username, [Validators.required, Validators.minLength(4)]),
       password: new FormControl(this.user.password, [Validators.required, Validators.minLength(4)]),
       repassword: new FormControl(this.user.repassword, [Validators.required]),
+      roles: new FormControl(this.user.roles, [Validators.required])
     }, {
       validator: PasswordValidator.matchPassword// your validation method
     });
@@ -91,13 +92,8 @@ export class ModalUtilisateurComponent implements OnInit {
 
   getAllRoles() {
     this.roleService.getAllRoles().subscribe((roles) => {
-      roles.forEach((role) => {
-        this.allRoles.push({
-          'id': role.id,
-          'text': role.roleName
-        });
-      });
-      console.log(this.allRoles)
+      this.allRoles = roles;
+      console.log(roles);
     });
   }
 
@@ -112,10 +108,6 @@ export class ModalUtilisateurComponent implements OnInit {
     if(this.type === "u"){
       this.updateUser();
     }
-  }
-
-  rolesValue(event) {
-    this.formRoles = event;
   }
 
   showSave(msg: string) {
@@ -136,18 +128,9 @@ export class ModalUtilisateurComponent implements OnInit {
     this.user.username = this.userForm.value.username;
     this.user.password = this.userForm.value.password;
     this.user.repassword = this.userForm.value.repassword;
-    this.user.roles = new Array<Role>();
-    if (this.formRoles.length > 0) {
-      this.formRoles.forEach((role) => {
-        this.user.roles.push({
-          'id': role.id,
-          'roleName': role.text,
-          'createAt': null,
-          'updateAt': null,
-          'enable': 1
-        })
-      })
-    }
+    this.user.roles = this.userForm.value.roles;
+
+    console.log(this.user);
 
     this.utilisateurService.addUser(this.user)
       .subscribe((user: Utilisateur) => {
@@ -161,6 +144,7 @@ export class ModalUtilisateurComponent implements OnInit {
         this.modalRef.hide();
       }, (err) => {
         console.log(err);
+        this.error = err;
         this.isLoading = false;
       });
 
@@ -172,18 +156,7 @@ export class ModalUtilisateurComponent implements OnInit {
     this.user.username = this.userForm.getRawValue().username;
     this.user.password = this.userForm.getRawValue().password;
     this.user.repassword = this.userForm.getRawValue().repassword;
-    this.user.roles = new Array<Role>();
-    if (this.formRoles.length > 0) {
-      this.formRoles.forEach((role) => {
-        this.user.roles.push({
-          'id': role.id,
-          'roleName': role.text,
-          'createAt': null,
-          'updateAt': null,
-          'enable': 1
-        })
-      })
-    }
+    this.user.roles = this.userForm.getRawValue().roles;
 
     this.utilisateurService.updateUser(this.user)
       .subscribe((user: Utilisateur) => {
@@ -193,13 +166,18 @@ export class ModalUtilisateurComponent implements OnInit {
         };
         this.isLoading = false;
         this.onClose.next(data);
-        this.showUpdate("Utilisateur modifié");
+        this.showUpdate("Utilisateur modifié avec succès");
         this.modalRef.hide();
       }, (err) => {
         console.log(err);
+        this.error = err;
         this.isLoading = false;
       });
 
+  }
+
+  dismiss(){
+    this.error = "";
   }
 
 }

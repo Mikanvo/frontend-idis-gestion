@@ -78,7 +78,11 @@ export class PaginationComponent implements OnInit, OnChanges {
     console.log(this.page);
     if (limit < 10) limit = 10;
     if (limit > this.totalElements) {
-      limit = this.totalElements;
+      if(this.totalElements < 10){
+        limit = 10;
+      }else{
+        limit = this.totalElements;
+      }
     }
     if (this.currentPage > 0) {
       let r = this.totalElements % parseInt(limit.toString());

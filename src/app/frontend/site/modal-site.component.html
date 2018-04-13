@@ -1,0 +1,118 @@
+<div class="modal-header modal-primary">
+  <h4 class="modal-title" *ngIf="type === 'i'">Ajouter Site</h4>
+  <h4 class="modal-title" *ngIf="type === 'u'">Modifier Site</h4>
+  <h4 class="modal-title" *ngIf="type === 's'">Afficher Site</h4>
+  <button type="button" class="close" (click)="onCancel()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="card-title" *ngIf="error">
+    <alert class="text-center" [type]="alert.type" [dismissible]="alert.dismissible" (onClose)="dismiss()">
+      <strong>{{error}}</strong>
+    </alert>
+  </div>
+  <form (keyup.enter)="enterPress()" [formGroup]="siteForm" novalidate>
+    <div class="row">
+      <div class="form-group row col-md-6">
+        <label for="nomSite" class="control-label col-md-3">Nom</label>
+        <div class="col-md-9">
+          <input [ngClass]="{'is-invalid': (!!siteForm?.controls['nomSite']?.errors?.minlength || !!siteForm?.controls['nomSite']?.errors?.required) && (siteForm.controls['nomSite'].errors && (siteForm.controls['nomSite'].dirty || siteForm.controls['nomSite'].touched)),
+                'is-valid': (!siteForm?.controls['nomSite']?.errors?.minlength || !siteForm?.controls['nomSite']?.errors?.required) && (!siteForm.controls['nomSite'].errors && (siteForm.controls['nomSite'].dirty || siteForm.controls['nomSite'].touched))}"
+                 id="nomSite" type="text" class="form-control"
+                 formControlName="nomSite">
+          <div
+            *ngIf="siteForm.controls['nomSite'].errors && (siteForm.controls['nomSite'].dirty || siteForm.controls['nomSite'].touched)"
+            class="invalid-feedback">
+            <span
+              [hidden]="!siteForm.controls['nomSite'].errors?.required">Le <strong>nom</strong> est obligatoire.</span>
+            <span [hidden]="!siteForm.controls['nomSite'].errors?.minlength">Le <strong>nom</strong> doit être de 4 caractères au minimum.</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row col-md-6">
+        <label for="codeSite" class="control-label col-md-3">Code</label>
+        <div class="col-md-9">
+          <input [ngClass]="{'is-invalid': (!!siteForm?.controls['codeSite']?.errors?.minlength || !!siteForm?.controls['codeSite']?.errors?.required) && (siteForm.controls['codeSite'].errors && (siteForm.controls['codeSite'].dirty || siteForm.controls['codeSite'].touched)),
+               'is-valid': (!siteForm?.controls['codeSite']?.errors?.minlength || !siteForm?.controls['codeSite']?.errors?.required) && (!siteForm.controls['codeSite'].errors && (siteForm.controls['codeSite'].dirty || siteForm.controls['codeSite'].touched))}"
+                 id="codeSite" type="text" class="form-control"
+                 formControlName="codeSite">
+          <div
+            *ngIf="siteForm.controls['codeSite'].errors && (siteForm.controls['codeSite'].dirty || siteForm.controls['codeSite'].touched)"
+            class="invalid-feedback">
+            <span
+              [hidden]="!siteForm.controls['codeSite'].errors?.required">Le <strong>code</strong> est obligatoire.</span>
+            <span [hidden]="!siteForm.controls['codeSite'].errors?.minlength">Le <strong>code</strong> doit être de 3 caractères au minimum.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group row col-md-6">
+        <label for="contact" class="control-label col-md-3">Contact</label>
+        <div class="col-md-9">
+          <input [ngClass]="{'is-invalid': (!!siteForm?.controls['contact']?.errors?.minlength || !!siteForm?.controls['contact']?.errors?.required) && (siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched)),
+               'is-valid': (!siteForm?.controls['contact']?.errors?.minlength || !siteForm?.controls['contact']?.errors?.required) && (!siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched))}"
+                 id="contact" type="tel" class="form-control"
+                 formControlName="contact">
+          <div
+            *ngIf="siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched)"
+            class="invalid-feedback">
+            <span [hidden]="!siteForm.controls['contact'].errors?.required">Le <strong>contact</strong> est obligatoire.</span>
+            <span [hidden]="!siteForm.controls['contact'].errors?.minlength">Le <strong>contact</strong> doit être de 8 chiffres au minimum.</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row col-md-6">
+        <label for="pays" class="control-label col-md-3">Pays</label>
+        <div class="col-md-9">
+          <ng-select [ngClass]="{'is-invalid': (!!siteForm?.controls['pays']?.errors?.required) && (siteForm.controls['pays'].errors && (siteForm.controls['pays'].dirty || siteForm.controls['pays'].touched)),
+                   'is-valid': (!siteForm?.controls['pays']?.errors?.required) && (!siteForm.controls['pays'].errors && (siteForm.controls['pays'].dirty || siteForm.controls['pays'].touched))}"
+                     id="pays" class="form-control" *ngIf="allPays?.length > 0"
+                     [items]="allPays"
+                     bindLabel="nomPays"
+                     (data)="paysValue($event)"
+                     formControlName="pays"
+                     placeholder="Aucun pays sélectionné">
+          </ng-select>
+          <div
+            *ngIf="siteForm.controls['pays'].errors && (siteForm.controls['pays'].dirty || siteForm.controls['pays'].touched)"
+            class="invalid-perso">
+            <span
+              [hidden]="!siteForm.controls['pays'].errors?.required">Le <strong>pays</strong> est obligatoire.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group row col-md-6">
+        <label for="adresse" class="control-label col-md-3">Adresse</label>
+        <div class="col-md-9">
+        <textarea cols="30" rows="2" id="adresse" class="form-control"
+                  formControlName="adresse"></textarea>
+        </div>
+      </div>
+      <div class="form-group row col-md-6">
+        <label for="description" class="control-label col-md-3">Description</label>
+        <div class="col-md-9">
+        <textarea cols="30" rows="2" id="description" class="form-control"
+                  formControlName="description"></textarea>
+        </div>
+      </div>
+    </div>
+    <input id="id" type="hidden" formControlName="id">
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="onCancel()">Fermer</button>
+  <button *ngIf="type === 'i'" [ladda]="isLoading" type="button" class="btn btn-primary"
+          [disabled]='siteForm.status==="INVALID"'
+          (click)="saveSite()">
+    Enregistrer
+  </button>
+  <button *ngIf="type === 'u'" [ladda]="isLoading" type="button" class="btn btn-warning"
+          [disabled]='siteForm.status==="INVALID"'
+          (click)="updateSite()">
+    Modifier
+  </button>
+</div>

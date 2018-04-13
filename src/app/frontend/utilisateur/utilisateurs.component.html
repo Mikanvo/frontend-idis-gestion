@@ -16,7 +16,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text text-color-blue">Pseudo</span>
                 </div>
-                <input (keyup)="searchPseudo($event.target.value)" class="form-control" type="text"
+                <input (keyup)="searchPseudo()" class="form-control" type="text"
                        [(ngModel)]="username">
               </div>
             </div>
@@ -26,11 +26,10 @@
                   <span class="input-group-text text-color-blue">Rôle</span>
                 </div>
                 <ng-select class="form-control" *ngIf="allRoles.length > 0"
-                           [allowClear]="true"
-                           [multiple]="false"
                            [items]="allRoles"
-                           (data)="refreshValue($event)"
-                           (removed)="removeValue($event)"
+                           bindLabel="roleName"
+                           (change)="searchRole($event)"
+                           [(ngModel)]="role"
                            placeholder="Aucun rôle sélectionné">
                 </ng-select>
               </div>
@@ -40,11 +39,11 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text text-color-blue">Statut</span>
                 </div>
-                <select class="form-control" [(ngModel)]="enable" (change)="searchStatut()">
-                  <option value="2">Tout</option>
-                  <option value="1">Actif</option>
-                  <option value="0">Inactif</option>
-                </select>
+                <ng-select [clearable]="false" class="form-control" [(ngModel)]="enable" (change)="searchStatut()">
+                  <ng-option [value]="2">Tout</ng-option>
+                  <ng-option [value]="1">Actif</ng-option>
+                  <ng-option [value]="0">Inactif</ng-option>
+                </ng-select>
               </div>
             </div>
           </div>
@@ -86,6 +85,9 @@
                     <i class="fa fa-remove"></i>
                   </button>
                 </td>
+              </tr>
+              <tr *ngIf="allUsers?.utilisateurs.length === 0">
+                <td colspan="3" class="text-center">Aucun resultat trouvé</td>
               </tr>
               </tbody>
             </table>
