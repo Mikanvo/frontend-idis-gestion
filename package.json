@@ -30,6 +30,7 @@
     "@ng-select/ng-select": "^0.36.2",
     "@swimlane/ngx-datatable": "^11.2.0",
     "angular2-datatable": "^0.6.0",
+    "angular2-focus": "^1.1.2",
     "angular2-jwt": "^0.2.3",
     "angular2-ladda": "^1.2.3",
     "angular2-text-mask": "^8.0.4",

@@ -48,7 +48,7 @@ import {TextMaskModule} from 'angular2-text-mask';
   declarations: [
     SitesComponent,
     ModalSiteComponent,
-    ModalRemoveSiteComponent
+    ModalRemoveSiteComponent,
   ],
   entryComponents: [ModalSiteComponent, ModalRemoveSiteComponent],
   providers: [

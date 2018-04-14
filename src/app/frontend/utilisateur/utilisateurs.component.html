@@ -55,11 +55,11 @@
                 <th style="width: 15%">
                   <mfDefaultSorter by="username" [mfShowSortableArrows]="true">Pseudo</mfDefaultSorter>
                 </th>
-                <th style="width: 25%">
-                  <mfDefaultSorter [mfShowSortableArrows]="false">Nom utilisateur</mfDefaultSorter>
-                </th>
                 <th style="width: 20%" class="text-center">
                   <mfDefaultSorter by="roles" [mfShowSortableArrows]="true">Rôles</mfDefaultSorter>
+                </th>
+                <th style="width: 25%">
+                  <mfDefaultSorter [mfShowSortableArrows]="false">Nom utilisateur</mfDefaultSorter>
                 </th>
                 <th style="width: 40%" class="text-center">
                   <mfDefaultSorter>Actions</mfDefaultSorter>
@@ -69,10 +69,10 @@
               <tbody>
               <tr *ngFor="let user of mf.data; let i = index">
                 <td>{{user.username}}</td>
-                <td>{{user?.personne?.raisonSociale}}</td>
                 <td class="text-center">
                   <span *ngFor="let role of user?.roles">{{role?.roleName}} &nbsp;</span>
                 </td>
+                <td>{{user?.personne?.raisonSociale}}</td>
                 <td class="text-center">
                   <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="openModal(user, 'u')"><i
                     class="fa fa-edit"></i></button>

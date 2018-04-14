@@ -19,7 +19,7 @@
         <input [ngClass]="{'is-invalid': (!!userForm?.controls['username']?.errors?.minlength || !!userForm?.controls['username']?.errors?.required) && (userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched)),
                'is-valid': (!userForm?.controls['username']?.errors?.minlength || !userForm?.controls['username']?.errors?.required) && (!userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched))}"
                id="username" type="text" class="form-control"
-               formControlName="username">
+               formControlName="username" [focus]="true">
         <div
           *ngIf="userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched)"
           class="invalid-feedback">
@@ -85,9 +85,15 @@
                    'is-valid': (!userForm?.controls['personne']?.errors?.required) && (!userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched))}"
                    id="personne" class="form-control" *ngIf="allPersonnes?.length > 0"
                    [items]="allPersonnes"
-                   [bindLabel]="typeUser === 'client'? 'codeClient': 'matricule'"
+                   bindLabel="raisonSociale"
                    formControlName="personne"
                    placeholder="Aucune personne sélectionnée">
+          <ng-template ng-label-tmp let-item="item">
+            <b>{{item?.matricule}}</b><b>{{item?.codeClient}}</b> || {{item?.raisonSociale}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            <b>{{item?.matricule}}</b><b>{{item?.codeClient}}</b> || {{item?.raisonSociale}}
+          </ng-template>
         </ng-select>
         <div
           *ngIf="userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched)"

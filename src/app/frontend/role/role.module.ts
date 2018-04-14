@@ -45,7 +45,7 @@ import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
   declarations: [
     RolesComponent,
     ModalRoleComponent,
-    ModalRemoveRoleComponent
+    ModalRemoveRoleComponent,
   ],
   entryComponents: [ModalRoleComponent, ModalRemoveRoleComponent],
   providers: [

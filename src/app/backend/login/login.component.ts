@@ -3,7 +3,6 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import {AuthenticationService} from '../../services/auth/authentication.service';
-import {Utilisateur} from '../../models/utilisateur/utilisateur';
 
 export function getAlertConfig(): AlertConfig {
   return Object.assign(new AlertConfig(), { type: 'success' });
@@ -24,6 +23,7 @@ export class LoginComponent implements OnInit {
   };
   error: string = "";
 
+  isLoading: boolean = false;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -39,12 +39,16 @@ export class LoginComponent implements OnInit {
     let username = this.loginForm.value.username;
     let password = this.loginForm.value.password;
 
+    this.isLoading = true;
+
     this.auth.login(username, password).subscribe(
       (response) => {
+        this.isLoading = false;
         this.router.navigate(['dashboard']);
       },
       (error) =>{
         this.error = error;
+        this.isLoading = false;
       });
   }
 

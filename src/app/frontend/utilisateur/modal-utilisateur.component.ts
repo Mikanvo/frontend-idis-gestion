@@ -24,12 +24,13 @@ export class ModalUtilisateurComponent implements OnInit {
   userForm: FormGroup;
   allRoles: Array<Role> = new Array<Role>();
 
-  allPersonnes: Array<Personne>  = new Array<Personne>();
+  allPersonnes: Array<any>  = new Array<any>();
 
   typeUser: string = "employe";
 
   public onClose: Subject<any>;
 
+  isFocused = true;
   isLoading: boolean = false;
 
   error: string = "";

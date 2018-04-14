@@ -18,10 +18,12 @@ import {ModalRemoveUtilisateurComponent} from './modal-remove-utilisateur.compon
 import {PaginationModule} from '../../components/pagination/pagination.module';
 import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
 import {PersonneService} from '../../services/personne/personne.service';
+import {FocusModule} from 'angular2-focus';
 @NgModule({
   imports: [
     CommonModule,
     UtilisateurRoutingModule,
+    FocusModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule ,
@@ -47,7 +49,8 @@ import {PersonneService} from '../../services/personne/personne.service';
   declarations: [
     UtilisateursComponent,
     ModalUtilisateurComponent,
-    ModalRemoveUtilisateurComponent],
+    ModalRemoveUtilisateurComponent,
+  ],
   entryComponents: [ModalUtilisateurComponent, ModalRemoveUtilisateurComponent],
   providers: [
     {
