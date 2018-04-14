@@ -1,15 +1,13 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 import {ListeUtilisateurs} from '../../models/utilisateur/liste-utilisateurs';
 import {TokenService} from '../../services/token/token.service';
 import {RoleService} from '../../services/role/role.service';
-import {CustomRole} from '../../models/role/custom-role';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {ModalUtilisateurComponent} from './modal-utilisateur.component';
-import {isArray} from 'util';
 import {ModalRemoveUtilisateurComponent} from './modal-remove-utilisateur.component';
 import {Role} from '../../models/role/role';
 
@@ -142,16 +140,9 @@ export class UtilisateursComponent implements OnInit {
     (<ModalUtilisateurComponent>this.modalRef.content).onClose.subscribe(result => {
       console.log(result);
       if (result.type === 'i') {
-        /*this.allUsers.utilisateurs.unshift(result.user);
-        this.allUsers.nombreUtilisateurs += 1;
-        this.allUsers.totalUtilisateurs += 1;*/
         this.searchUsers();
       }
       if (result.type === 'u') {
-        /*let index = this.allUsers.utilisateurs.findIndex((user) => result.user.id);
-        console.log("Before update: ", this.allUsers.utilisateurs[index]);
-        this.allUsers.utilisateurs[index] = result.user;
-        console.log("After update: ", this.allUsers.utilisateurs[index]);*/
         this.searchUsers();
       }
     });
@@ -175,7 +166,6 @@ export class UtilisateursComponent implements OnInit {
         this.allUsers.utilisateurs[index].enable = 1;
       }
       if (result.type === 'r') {
-        /*this.allUsers.utilisateurs.splice(index, 1);*/
         this.searchUsers();
       }
     });

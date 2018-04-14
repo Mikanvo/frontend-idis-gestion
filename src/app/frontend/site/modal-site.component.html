@@ -51,8 +51,8 @@
       <div class="form-group row col-md-6">
         <label for="contact" class="control-label col-md-3">Contact</label>
         <div class="col-md-9">
-          <input [ngClass]="{'is-invalid': (!!siteForm?.controls['contact']?.errors?.minlength || !!siteForm?.controls['contact']?.errors?.required) && (siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched)),
-               'is-valid': (!siteForm?.controls['contact']?.errors?.minlength || !siteForm?.controls['contact']?.errors?.required) && (!siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched))}"
+          <input [ngClass]="{'is-invalid': (!!siteForm?.controls['contact']?.errors?.minlength || !!siteForm?.controls['contact']?.errors?.required || !!siteForm?.controls['contact']?.errors?.pattern) && (siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched)),
+               'is-valid': (!siteForm?.controls['contact']?.errors?.minlength || !siteForm?.controls['contact']?.errors?.required || !siteForm?.controls['contact']?.errors?.pattern) && (!siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched))}"
                  id="contact" type="tel" class="form-control"
                  formControlName="contact">
           <div
@@ -60,6 +60,7 @@
             class="invalid-feedback">
             <span [hidden]="!siteForm.controls['contact'].errors?.required">Le <strong>contact</strong> est obligatoire.</span>
             <span [hidden]="!siteForm.controls['contact'].errors?.minlength">Le <strong>contact</strong> doit être de 8 chiffres au minimum.</span>
+            <span [hidden]="!siteForm.controls['contact'].errors?.pattern">Le <strong>contact</strong> est invalide.</span>
           </div>
         </div>
       </div>

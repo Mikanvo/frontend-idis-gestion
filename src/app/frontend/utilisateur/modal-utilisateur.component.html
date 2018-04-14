@@ -18,7 +18,7 @@
       <div class="col-md-9">
         <input [ngClass]="{'is-invalid': (!!userForm?.controls['username']?.errors?.minlength || !!userForm?.controls['username']?.errors?.required) && (userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched)),
                'is-valid': (!userForm?.controls['username']?.errors?.minlength || !userForm?.controls['username']?.errors?.required) && (!userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched))}"
-               id="username" type="text" class="form-control" placeholder="Pseudo"
+               id="username" type="text" class="form-control"
                formControlName="username">
         <div
           *ngIf="userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched)"
@@ -68,12 +68,31 @@
                    multiple="true"
                    bindLabel="roleName"
                    formControlName="roles"
+                   (change)="changePersonne($event)"
                    placeholder="Aucun rôle sélectionné">
         </ng-select>
         <div
           *ngIf="userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched)"
           class="invalid-perso">
           <span [hidden]="!userForm.controls['roles'].errors?.required">Le <strong>rôle</strong> est obligatoire.</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row" *ngIf="allPersonnes?.length > 0 && typeUser">
+      <label for="personne" class="control-label col-md-3"><span *ngIf="typeUser === 'client'">Client</span><span *ngIf="typeUser === 'employe'">Employe</span></label>
+      <div class="col-md-9">
+        <ng-select [ngClass]="{'is-invalid': (!!userForm?.controls['personne']?.errors?.required) && (userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched)),
+                   'is-valid': (!userForm?.controls['personne']?.errors?.required) && (!userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched))}"
+                   id="personne" class="form-control" *ngIf="allPersonnes?.length > 0"
+                   [items]="allPersonnes"
+                   [bindLabel]="typeUser === 'client'? 'codeClient': 'matricule'"
+                   formControlName="personne"
+                   placeholder="Aucune personne sélectionnée">
+        </ng-select>
+        <div
+          *ngIf="userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched)"
+          class="invalid-perso">
+          <span [hidden]="!userForm.controls['personne'].errors?.required">Veuillez sélectionner une <strong>personne</strong>.</span>
         </div>
       </div>
     </div>

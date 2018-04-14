@@ -32,7 +32,6 @@ import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
     }),
     BsDropdownModule.forRoot(),
     TabsModule,
-    ToastrModule.forRoot(), // ToastrModule added
     CarouselModule.forRoot(),
     CollapseModule.forRoot(),
     PopoverModule.forRoot(),

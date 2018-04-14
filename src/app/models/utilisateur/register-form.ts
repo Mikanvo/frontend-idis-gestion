@@ -1,4 +1,5 @@
 import {Role} from '../role/role';
+import {Personne} from '../personne/personne';
 
 export class RegisterForm {
   id: number;
@@ -8,5 +9,6 @@ export class RegisterForm {
   createAt: Date;
   updateAt: Date;
   enable: number;
+  personne: Personne;
   roles: Array<Role>;
 }

@@ -17,6 +17,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {ModalRemoveUtilisateurComponent} from './modal-remove-utilisateur.component';
 import {PaginationModule} from '../../components/pagination/pagination.module';
 import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
+import {PersonneService} from '../../services/personne/personne.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -56,7 +57,8 @@ import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
       }
     },
     UtilisateurService,
-    RoleService
+    RoleService,
+    PersonneService
   ]
 })
 export class UtilisateurModule { }

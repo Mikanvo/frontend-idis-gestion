@@ -6,12 +6,19 @@ import {AuthenticationService} from '../services/auth/authentication.service';
 
 // Alert Component
 import { AlertModule } from 'ngx-bootstrap/alert';
+import {LaddaModule} from 'angular2-ladda';
 
 @NgModule({
   imports: [
     CommonModule,
     AlertModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LaddaModule.forRoot({
+      style: "expand-left",
+      spinnerSize: 40,
+      spinnerColor: "white",
+      spinnerLines: 12
+    }),
   ],
   declarations: [LoginComponent],
   providers: [AuthenticationService]

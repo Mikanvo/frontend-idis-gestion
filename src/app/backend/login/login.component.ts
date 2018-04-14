@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import { AlertConfig } from 'ngx-bootstrap/alert';
 import {AuthenticationService} from '../../services/auth/authentication.service';
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
   ) {
   }
 
@@ -44,16 +44,15 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['dashboard']);
       },
       (error) =>{
-        console.log(JSON.stringify(error));
-        this.error = "erreur";
+        this.error = error;
       });
   }
 
   createForm() {
 
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required),
     });
 
   }

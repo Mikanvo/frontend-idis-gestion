@@ -14,7 +14,7 @@
             <div class="col-md-4">
               <div class="input-group mb-4">
                 <div class="input-group-prepend">
-                  <span class="input-group-text text-color-blue">Pseudo</span>
+                  <span class="input-group-text">Pseudo</span>
                 </div>
                 <input (keyup)="searchPseudo()" class="form-control" type="text"
                        [(ngModel)]="username">
@@ -23,7 +23,7 @@
             <div class="col-md-4">
               <div class="input-group mb-4">
                 <div class="input-group-prepend">
-                  <span class="input-group-text text-color-blue">Rôle</span>
+                  <span class="input-group-text">Rôle</span>
                 </div>
                 <ng-select class="form-control" *ngIf="allRoles.length > 0"
                            [items]="allRoles"
@@ -37,7 +37,7 @@
             <div class="col-md-4">
               <div class="input-group mb-4">
                 <div class="input-group-prepend">
-                  <span class="input-group-text text-color-blue">Statut</span>
+                  <span class="input-group-text">Statut</span>
                 </div>
                 <ng-select [clearable]="false" class="form-control" [(ngModel)]="enable" (change)="searchStatut()">
                   <ng-option [value]="2">Tout</ng-option>
@@ -52,10 +52,13 @@
                    #mf="mfDataTable" [mfRowsOnPage]="size">
               <thead>
               <tr>
-                <th style="width: 20%">
+                <th style="width: 15%">
                   <mfDefaultSorter by="username" [mfShowSortableArrows]="true">Pseudo</mfDefaultSorter>
                 </th>
-                <th style="width: 40%" class="text-center">
+                <th style="width: 25%">
+                  <mfDefaultSorter [mfShowSortableArrows]="false">Nom utilisateur</mfDefaultSorter>
+                </th>
+                <th style="width: 20%" class="text-center">
                   <mfDefaultSorter by="roles" [mfShowSortableArrows]="true">Rôles</mfDefaultSorter>
                 </th>
                 <th style="width: 40%" class="text-center">
@@ -66,6 +69,7 @@
               <tbody>
               <tr *ngFor="let user of mf.data; let i = index">
                 <td>{{user.username}}</td>
+                <td>{{user?.personne?.raisonSociale}}</td>
                 <td class="text-center">
                   <span *ngFor="let role of user?.roles">{{role?.roleName}} &nbsp;</span>
                 </td>
@@ -87,7 +91,7 @@
                 </td>
               </tr>
               <tr *ngIf="allUsers?.utilisateurs.length === 0">
-                <td colspan="3" class="text-center">Aucun resultat trouvé</td>
+                <td colspan="4" class="text-center">Aucun resultat trouvé</td>
               </tr>
               </tbody>
             </table>

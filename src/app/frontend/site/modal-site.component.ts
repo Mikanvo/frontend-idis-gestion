@@ -5,9 +5,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subject} from 'rxjs/Subject';
 import {Site} from '../../models/site/site';
 import {SiteService} from '../../services/site/site.service';
-import {Custom} from '../../models/custom';
 import {PaysService} from '../../services/pays/pays.service';
-import {isArray} from "util";
 import {Pays} from '../../models/pays/pays';
 
 @Component({
@@ -22,6 +20,8 @@ export class ModalSiteComponent implements OnInit {
   public onClose: Subject<any>;
 
   allPays: Array<Pays> = new Array<Pays>();
+
+  mask = [/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/];
 
   isLoading: boolean = false;
 
@@ -98,7 +98,7 @@ export class ModalSiteComponent implements OnInit {
       id: new FormControl(this.site.id),
       nomSite: new FormControl(this.site.nomSite, [Validators.required, Validators.minLength(4)]),
       codeSite: new FormControl(this.site.codeSite, [Validators.required, Validators.minLength(3)]),
-      contact: new FormControl(this.site.contact, [Validators.required, Validators.minLength(8)]),
+      contact: new FormControl(this.site.contact, [Validators.required, Validators.minLength(8), Validators.pattern('[0-9 ]*')]),
       adresse: new FormControl(this.site.adresse),
       description: new FormControl(this.site.description),
       pays: new FormControl(this.site.pays, [Validators.required])

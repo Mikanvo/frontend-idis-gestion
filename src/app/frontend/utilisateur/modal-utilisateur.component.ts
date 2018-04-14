@@ -1,15 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
-import {CustomRole} from '../../models/role/custom-role';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 import {RoleService} from '../../services/role/role.service';
 import {Role} from '../../models/role/role';
 import {Subject} from 'rxjs/Subject';
 import {RegisterForm} from '../../models/utilisateur/register-form';
 import {PasswordValidator} from '../../directives/validators/password-validator';
+import {Personne} from '../../models/personne/personne';
+import {PersonneService} from '../../services/personne/personne.service';
 
 @Component({
   selector: 'app-modal-utilisateur',
@@ -17,10 +18,15 @@ import {PasswordValidator} from '../../directives/validators/password-validator'
   styleUrls: ['./modal-utilisateur.component.scss']
 })
 export class ModalUtilisateurComponent implements OnInit {
+
   public user: RegisterForm = new RegisterForm();
   public type: string;
   userForm: FormGroup;
   allRoles: Array<Role> = new Array<Role>();
+
+  allPersonnes: Array<Personne>  = new Array<Personne>();
+
+  typeUser: string = "employe";
 
   public onClose: Subject<any>;
 
@@ -34,6 +40,7 @@ export class ModalUtilisateurComponent implements OnInit {
 
   constructor(private utilisateurService: UtilisateurService,
               private roleService: RoleService,
+              private personneService: PersonneService,
               private fb: FormBuilder,
               public modalRef: BsModalRef,
               private toastr: ToastrService
@@ -49,7 +56,7 @@ export class ModalUtilisateurComponent implements OnInit {
 
   public showUserModal(type: string, user: Utilisateur): void {
     this.type = type;
-
+    console.log(user);
     if(user !== null){
       this.user.username =  user.username;
       this.user.roles =  user.roles;
@@ -58,8 +65,17 @@ export class ModalUtilisateurComponent implements OnInit {
         username: user.username || '',
         password: '',
         repassword: '',
+        personne: user.personne,
         roles: user.roles || []
       });
+
+      if(this.hasRole(user.roles, "CLIENT")){
+        this.typeUser = "client";
+        this.getAllClients();
+      }else{
+        this.typeUser = "employe";
+        this.getAllEmployes();
+      }
     }
 
     let id = this.userForm.get('id');
@@ -83,10 +99,38 @@ export class ModalUtilisateurComponent implements OnInit {
       username: new FormControl(this.user.username, [Validators.required, Validators.minLength(4)]),
       password: new FormControl(this.user.password, [Validators.required, Validators.minLength(4)]),
       repassword: new FormControl(this.user.repassword, [Validators.required]),
+      personne: new FormControl(this.user.personne, [Validators.required]),
       roles: new FormControl(this.user.roles, [Validators.required])
     }, {
       validator: PasswordValidator.matchPassword// your validation method
     });
+
+  }
+
+  changePersonne(event){
+    if(event.length > 0){
+      if(this.hasRole(event, "CLIENT")){
+        this.typeUser = "client";
+        this.getAllClients();
+      }else{
+        this.typeUser = "employe";
+        this.getAllEmployes();
+      }
+
+      if((this.hasRole(event, "ADMIN") && this.hasRole(event, "CLIENT")) || (this.hasRole(event, "USER") && this.hasRole(event, "CLIENT"))){
+        this.typeUser = "";
+        this.userForm.patchValue({
+          personne: null
+        });
+        this.allPersonnes = null;
+      }
+    }else{
+      this.typeUser = "";
+      this.userForm.patchValue({
+        personne: null
+      });
+      this.allPersonnes = null;
+    }
 
   }
 
@@ -95,6 +139,27 @@ export class ModalUtilisateurComponent implements OnInit {
       this.allRoles = roles;
       console.log(roles);
     });
+  }
+
+  getAllClients(){
+    this.personneService.getAllClients().subscribe((clients) => {
+      this.allPersonnes = clients;
+    });
+  }
+
+  getAllEmployes(){
+    this.personneService.getAllEmployes().subscribe((employes) => {
+      this.allPersonnes = employes;
+    });
+  }
+
+  hasRole(roles: Array<Role>, role: string){
+    if(roles){
+      for(let r of roles){
+        if(r.roleName == role) return true;
+      }
+    }
+    return false;
   }
 
   public onCancel(): void {
@@ -129,8 +194,7 @@ export class ModalUtilisateurComponent implements OnInit {
     this.user.password = this.userForm.value.password;
     this.user.repassword = this.userForm.value.repassword;
     this.user.roles = this.userForm.value.roles;
-
-    console.log(this.user);
+    this.user.personne = this.userForm.value.personne;
 
     this.utilisateurService.addUser(this.user)
       .subscribe((user: Utilisateur) => {
@@ -157,6 +221,7 @@ export class ModalUtilisateurComponent implements OnInit {
     this.user.password = this.userForm.getRawValue().password;
     this.user.repassword = this.userForm.getRawValue().repassword;
     this.user.roles = this.userForm.getRawValue().roles;
+    this.user.personne = this.userForm.getRawValue().personne;
 
     this.utilisateurService.updateUser(this.user)
       .subscribe((user: Utilisateur) => {

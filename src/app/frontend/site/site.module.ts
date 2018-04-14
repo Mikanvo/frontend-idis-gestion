@@ -9,7 +9,6 @@ import {
   TooltipModule
 } from 'ngx-bootstrap';
 import {LaddaModule} from 'angular2-ladda';
-import {NgxSelectModule} from 'ngx-select-ex';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastrModule} from 'ngx-toastr';
 import {PaginationModule} from '../../components/pagination/pagination.module';
@@ -17,6 +16,7 @@ import {DataTableModule} from 'ng2-data-table';
 import {SiteService} from '../../services/site/site.service';
 import {PaysService} from '../../services/pays/pays.service';
 import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
+import {TextMaskModule} from 'angular2-text-mask';
 
 @NgModule({
   imports: [
@@ -42,6 +42,7 @@ import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
     TooltipModule.forRoot(),
     AlertModule.forRoot(),
     ModalModule.forRoot(),
+    TextMaskModule,
     PaginationModule
   ],
   declarations: [
