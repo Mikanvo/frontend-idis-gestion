@@ -33,6 +33,8 @@ export class ModalUtilisateurComponent implements OnInit {
   isFocused = true;
   isLoading: boolean = false;
 
+  hasClientAndOther: boolean = false;
+
   error: string = "";
   alert: any = {
     type: "danger",
@@ -109,6 +111,7 @@ export class ModalUtilisateurComponent implements OnInit {
   }
 
   changePersonne(event){
+    this.hasClientAndOther = false;
     if(event.length > 0){
       if(this.hasRole(event, "CLIENT")){
         this.typeUser = "client";
@@ -124,6 +127,7 @@ export class ModalUtilisateurComponent implements OnInit {
           personne: null
         });
         this.allPersonnes = null;
+        this.hasClientAndOther = true;
       }
     }else{
       this.typeUser = "";

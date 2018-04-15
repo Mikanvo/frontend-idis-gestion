@@ -61,8 +61,8 @@
     <div class="form-group row">
       <label for="roles" class="control-label col-md-3">Rôles</label>
       <div class="col-md-9">
-        <ng-select [ngClass]="{'is-invalid': (!!userForm?.controls['roles']?.errors?.required) && (userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched)),
-                   'is-valid': (!userForm?.controls['roles']?.errors?.required) && (!userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))}"
+        <ng-select [ngClass]="{'is-invalid': ((!!userForm?.controls['roles']?.errors?.required) && (userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || (hasClientAndOther),
+                   'is-valid': ((!userForm?.controls['roles']?.errors?.required) && (!userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || (!hasClientAndOther)}"
                    id="roles" class="form-control" *ngIf="allRoles?.length > 0"
                    [items]="allRoles"
                    multiple="true"
@@ -76,13 +76,17 @@
           class="invalid-perso">
           <span [hidden]="!userForm.controls['roles'].errors?.required">Le <strong>rôle</strong> est obligatoire.</span>
         </div>
+        <div
+          *ngIf="hasClientAndOther" class="invalid-perso">
+          <span>Le rôle <strong>client</strong> ne peut être combiner à un autre rôle.</span>
+        </div>
       </div>
     </div>
     <div class="form-group row" *ngIf="allPersonnes?.length > 0 && typeUser">
       <label for="personne" class="control-label col-md-3"><span *ngIf="typeUser === 'client'">Client</span><span *ngIf="typeUser === 'employe'">Employe</span></label>
       <div class="col-md-9">
-        <ng-select [ngClass]="{'is-invalid': (!!userForm?.controls['personne']?.errors?.required) && (userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched)),
-                   'is-valid': (!userForm?.controls['personne']?.errors?.required) && (!userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched))}"
+        <ng-select [ngClass]="{'is-invalid': ((!!userForm?.controls['personne']?.errors?.required) && (userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched))) || (hasClientAndOther),
+                   'is-valid': ((!userForm?.controls['personne']?.errors?.required) && (!userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched)))}"
                    id="personne" class="form-control" *ngIf="allPersonnes?.length > 0"
                    [items]="allPersonnes"
                    bindLabel="raisonSociale"

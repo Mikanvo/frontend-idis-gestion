@@ -68,7 +68,12 @@ export const navigation = [
       {
         name: 'Utilisateurs',
         url: '/parametres/utilisateur',
-        icon: 'icon-user'
+        icon: 'icon-people'
+      },
+      {
+        name: 'Fonctions',
+        url: '/parametres/fonction',
+        icon: 'icon-wrench'
       },
       {
         name: 'Sites',
@@ -78,7 +83,7 @@ export const navigation = [
       {
         name: 'Pays',
         url: '/parametres/pays',
-        icon: 'icon-map'
+        icon: 'icon-globe'
       }
     ]
   }

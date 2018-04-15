@@ -60,7 +60,13 @@ export const routes: Routes = [
         path: 'parametres/pays',
         loadChildren: './frontend/pays/pays.module#PaysModule',
         canActivate:[AdminGuard]
+      },
+      {
+        path: 'parametres/fonction',
+        loadChildren: './frontend/fonction/fonction.module#FonctionModule',
+        canActivate:[AdminGuard]
       }
+
     ]
   }
 ];
