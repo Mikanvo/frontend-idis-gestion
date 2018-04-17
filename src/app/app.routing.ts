@@ -37,7 +37,7 @@ export const routes: Routes = [
         canActivate:[AdminOrUserGuard]
       },
       {
-        path: 'facture',
+        path: 'finances/facture',
         loadChildren: './frontend/facture/facture.module#FactureModule',
         canActivate:[AdminOrUserGuard]
       },

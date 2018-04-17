@@ -9,8 +9,8 @@ import {Role} from '../../models/role/role';
 import {Subject} from 'rxjs/Subject';
 import {RegisterForm} from '../../models/utilisateur/register-form';
 import {PasswordValidator} from '../../directives/validators/password-validator';
-import {Personne} from '../../models/personne/personne';
-import {PersonneService} from '../../services/personne/personne.service';
+import {EmployeService} from '../../services/employe/employe.service';
+import {ClientService} from '../../services/client/client.service';
 
 @Component({
   selector: 'app-modal-utilisateur',
@@ -43,7 +43,8 @@ export class ModalUtilisateurComponent implements OnInit {
 
   constructor(private utilisateurService: UtilisateurService,
               private roleService: RoleService,
-              private personneService: PersonneService,
+              private employeService: EmployeService,
+              private clientService: ClientService,
               private fb: FormBuilder,
               public modalRef: BsModalRef,
               private toastr: ToastrService
@@ -147,13 +148,13 @@ export class ModalUtilisateurComponent implements OnInit {
   }
 
   getAllClients(){
-    this.personneService.getAllClients().subscribe((clients) => {
+    this.clientService.getAllClients().subscribe((clients) => {
       this.allPersonnes = clients;
     });
   }
 
   getAllEmployes(){
-    this.personneService.getAllEmployes().subscribe((employes) => {
+    this.employeService.getAllEmployes().subscribe((employes) => {
       this.allPersonnes = employes;
     });
   }

@@ -14,7 +14,7 @@
             <div class="col-md-4 offset-md-2">
               <div class="input-group mb-4">
                 <div class="input-group-prepend">
-                  <span class="input-group-text text-color-blue">Pseudo</span>
+                  <span class="input-group-text">Pseudo</span>
                 </div>
                 <input (keyup)="searchNomPays()" class="form-control" type="text"
                        [(ngModel)]="nomPays">
@@ -24,7 +24,7 @@
             <div class="col-md-4">
               <div class="input-group mb-4">
                 <div class="input-group-prepend">
-                  <span class="input-group-text text-color-blue">Statut</span>
+                  <span class="input-group-text">Statut</span>
                 </div>
                 <ng-select [clearable]="false" class="form-control" [(ngModel)]="enable" (change)="searchStatut()">
                   <ng-option [value]="2">Tout</ng-option>

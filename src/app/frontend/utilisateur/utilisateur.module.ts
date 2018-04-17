@@ -17,8 +17,9 @@ import {ToastrModule} from 'ngx-toastr';
 import {ModalRemoveUtilisateurComponent} from './modal-remove-utilisateur.component';
 import {PaginationModule} from '../../components/pagination/pagination.module';
 import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
-import {PersonneService} from '../../services/personne/personne.service';
 import {FocusModule} from 'angular2-focus';
+import {EmployeService} from '../../services/employe/employe.service';
+import {ClientService} from '../../services/client/client.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -61,7 +62,8 @@ import {FocusModule} from 'angular2-focus';
     },
     UtilisateurService,
     RoleService,
-    PersonneService
+    EmployeService,
+    ClientService
   ]
 })
 export class UtilisateurModule { }

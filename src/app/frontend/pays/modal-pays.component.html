@@ -18,7 +18,7 @@
       <div class="col-md-9">
         <input [ngClass]="{'is-invalid': (!!paysForm?.controls['nomPays']?.errors?.minlength || !!paysForm?.controls['nomPays']?.errors?.required) && (paysForm.controls['nomPays'].errors && (paysForm.controls['nomPays'].dirty || paysForm.controls['nomPays'].touched)),
                'is-valid': (!paysForm?.controls['nomPays']?.errors?.minlength || !paysForm?.controls['nomPays']?.errors?.required) && (!paysForm.controls['nomPays'].errors && (paysForm.controls['nomPays'].dirty || paysForm.controls['nomPays'].touched))}"
-               id="nomPays" type="text" class="form-control" placeholder="Nom pays"
+               id="nomPays" type="text" class="form-control"
                formControlName="nomPays">
         <div
           *ngIf="paysForm.controls['nomPays'].errors && (paysForm.controls['nomPays'].dirty || paysForm.controls['nomPays'].touched)"
@@ -31,7 +31,7 @@
     <div class="form-group row">
       <label for="nomPays" class="control-label col-md-3">Description</label>
       <div class="col-md-9">
-        <textarea id="description" cols="30" rows="2" class="form-control" placeholder="Description pays"
+        <textarea id="description" cols="30" rows="2" class="form-control"
                formControlName="description"></textarea>
       </div>
     </div>

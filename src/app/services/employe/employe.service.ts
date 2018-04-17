@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import {HandleErrorService} from '../error/handle-error.service';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {HandleErrorService} from '../error/handle-error.service';
 import {BASE_URL} from '../const/constants.service';
-import {catchError, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs/Observable';
-import {Site} from '../../models/site/site';
-import {ListeSites} from '../../models/site/liste-sites';
+import {catchError, tap} from 'rxjs/operators';
+import {Employe} from '../../models/employe/employe';
+import {ListeEmployes} from '../../models/employe/liste-employes';
 
 @Injectable()
-export class SiteService {
+export class EmployeService {
 
   constructor(private http: HttpClient,
               private handleErrorService: HandleErrorService) {
   }
 
-  public getAllSites(): Observable<Array<Site>> {
-    return this.http.get<Array<Site>>(`${BASE_URL}/admin/all-sites`)
+  public getAllEmployes(): Observable<Array<Employe>> {
+    return this.http.get<Array<Employe>>(`${BASE_URL}/user/all-employes`)
       .pipe(
         tap(
           (data) => {console.log(data)},
@@ -25,15 +25,14 @@ export class SiteService {
       );
   }
 
-  public searchSites(nomSite: string, codeSite: string, nomPays: string, enable: number, page: number, size: number): Observable<ListeSites> {
+  public searchEmployes(matricule: string, raisonSociale: string, enable: number, page: number, size: number): Observable<ListeEmployes> {
     let httpParams = new HttpParams()
-      .append('nomSite', nomSite)
-      .append('codeSite', codeSite)
-      .append('nomPays', nomPays)
+      .append('matricule', matricule)
+      .append('raisonSociale', raisonSociale)
       .append('enable', enable.toString())
       .append('page', page.toString())
       .append('size', size.toString());
-    return this.http.get<ListeSites>(`${BASE_URL}/admin/search-sites`, {params: httpParams})
+    return this.http.get<ListeEmployes>(`${BASE_URL}/user/search-employes`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -43,9 +42,9 @@ export class SiteService {
       );
   }
 
-  public addSite(site: Site) {
+  public addEmploye(employe: Employe) {
 
-    return this.http.post<Site>(`${BASE_URL}/admin/add-site`, site)
+    return this.http.post<Employe>(`${BASE_URL}/user/add-employe`, employe)
       .pipe(
         tap(data => console.log(data) ),
         catchError(this.handleErrorService.handleError)
@@ -53,9 +52,9 @@ export class SiteService {
 
   }
 
-  public updateSite(site: Site) {
+  public updateEmploye(employe: Employe) {
 
-    return this.http.post<Site>(`${BASE_URL}/admin/update-site`, site)
+    return this.http.post<Employe>(`${BASE_URL}/user/update-employe`, employe)
       .pipe(
         tap(site => console.log(site) ),
         catchError(this.handleErrorService.handleError)
@@ -63,10 +62,10 @@ export class SiteService {
 
   }
 
-  public getSite(id: number) {
+  public getEmploye(matricule: string) {
     let httpParams = new HttpParams()
-      .append('id', id.toString());
-    return this.http.get<Site>(`${BASE_URL}/admin/take-site`, {params: httpParams})
+      .append('matricule', matricule);
+    return this.http.get<Employe>(`${BASE_URL}/user/take-employe`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -76,24 +75,24 @@ export class SiteService {
       );
   }
 
-  public disableSite(site: Site) {
-    return this.http.post<Site>(`${BASE_URL}/admin/disable-site`, site)
+  public disableEmploye(employe: Employe) {
+    return this.http.post<Employe>(`${BASE_URL}/user/disable-employe`, employe)
       .pipe(
         tap(disable => console.log(disable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public enableSite(site: Site) {
-    return this.http.post<Site>(`${BASE_URL}/admin/enable-site`, site)
+  public enableEmploye(employe: Employe) {
+    return this.http.post<Employe>(`${BASE_URL}/admin/enable-employe`, employe)
       .pipe(
         tap(enable => console.log(enable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public removeSite(site: Site) {
-    return this.http.post<Site>(`${BASE_URL}/admin/remove-site`, site)
+  public removeEmploye(employe: Employe) {
+    return this.http.post<Employe>(`${BASE_URL}/admin/remove-employe`, employe)
       .pipe(
         tap(remove => console.log(remove) ),
         catchError(this.handleErrorService.handleError)

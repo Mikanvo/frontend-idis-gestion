@@ -48,11 +48,20 @@ export const navigation = [
     ]
   },
   {
-    name: 'Factures',
-    url: '/facture',
-    icon: 'icon-calculator',
+    name: 'Finances',
+    url: '/finances',
+    icon: 'icon-diamond',
     admin: 'ADMIN',
     user: 'USER',
+    children: [
+      {
+        name: 'Factures',
+        url: '/finances/facture',
+        icon: 'icon-calculator',
+        admin: 'ADMIN',
+        user: 'USER',
+      }
+    ]
   },
   {
     name: 'Paramètres',

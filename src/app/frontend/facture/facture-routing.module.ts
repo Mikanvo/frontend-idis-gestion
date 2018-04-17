@@ -7,8 +7,15 @@ const routes: Routes = [
     path: '',
     component: FacturesComponent,
     data: {
-      title: 'Facture'
-    }
+      title: 'Finances'
+    }, children: [
+      {
+        path: '',
+        data: {
+          title: 'Factures'
+        }
+      }
+    ]
   }
 ];
 
