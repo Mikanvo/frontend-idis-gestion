@@ -14,14 +14,6 @@ export class FullLayoutComponent implements OnInit{
   ){}
 
   ngOnInit(){
-    this.loadToken();
   }
 
-  loadToken(){
-    let token = this.tokenService.getAsyncToken();
-    console.log(token);
-    if(token === null){
-      //this.router.navigate(['login']);
-    }
-  }
 }

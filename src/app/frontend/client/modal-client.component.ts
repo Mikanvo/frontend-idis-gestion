@@ -75,7 +75,7 @@ export class ModalClientComponent implements OnInit {
       raisonSociale: new FormControl(this.client.raisonSociale, [Validators.required, Validators.minLength(4)]),
       contact: new FormControl(this.client.contact, [Validators.required, Validators.minLength(8), Validators.pattern('[0-9 ]*')]),
       email: new FormControl(this.client.email, [Validators.required, Validators.email]),
-      adresse: new FormControl(this.client.adresse)
+      adresse: new FormControl(this.client.adresse, [Validators.required])
     });
 
   }

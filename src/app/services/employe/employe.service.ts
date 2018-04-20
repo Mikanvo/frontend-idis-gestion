@@ -6,12 +6,22 @@ import {Observable} from 'rxjs/Observable';
 import {catchError, tap} from 'rxjs/operators';
 import {Employe} from '../../models/employe/employe';
 import {ListeEmployes} from '../../models/employe/liste-employes';
+import {Subject} from 'rxjs/Subject';
+import {map} from 'rxjs/operator/map';
 
 @Injectable()
 export class EmployeService {
 
+  employesSubject = new Subject<any>();
+  employesSubject$ = this.employesSubject.asObservable();
+  listeEmployes: ListeEmployes;
+
   constructor(private http: HttpClient,
               private handleErrorService: HandleErrorService) {
+  }
+
+  emitEmploye(){
+    this.employesSubject.next(this.listeEmployes);
   }
 
   public getAllEmployes(): Observable<Array<Employe>> {
@@ -25,9 +35,10 @@ export class EmployeService {
       );
   }
 
-  public searchEmployes(matricule: string, raisonSociale: string, enable: number, page: number, size: number): Observable<ListeEmployes> {
+  public searchEmployes(matricule: string, nomSite: string, raisonSociale: string, enable: number, page: number, size: number): Observable<ListeEmployes> {
     let httpParams = new HttpParams()
       .append('matricule', matricule)
+      .append('nomSite', nomSite)
       .append('raisonSociale', raisonSociale)
       .append('enable', enable.toString())
       .append('page', page.toString())
@@ -35,7 +46,11 @@ export class EmployeService {
     return this.http.get<ListeEmployes>(`${BASE_URL}/user/search-employes`, {params: httpParams})
       .pipe(
         tap(
-          data => console.log(data),
+          data => {
+            console.log(data)
+            this.listeEmployes = data;
+            this.emitEmploye();
+          },
           error => console.log(error)
         ),
         catchError(this.handleErrorService.handleError)
@@ -46,7 +61,9 @@ export class EmployeService {
 
     return this.http.post<Employe>(`${BASE_URL}/user/add-employe`, employe)
       .pipe(
-        tap(data => console.log(data) ),
+        tap(data => {
+          console.log(data)
+        } ),
         catchError(this.handleErrorService.handleError)
       );
 

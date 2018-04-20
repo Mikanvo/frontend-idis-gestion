@@ -10,5 +10,4 @@ export class Personne{
   createAt: Date;
   updateAt: Date;
   enable: number;
-  site: Site;
 }

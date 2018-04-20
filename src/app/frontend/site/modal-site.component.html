@@ -72,7 +72,6 @@
                      id="pays" class="form-control" *ngIf="allPays?.length > 0"
                      [items]="allPays"
                      bindLabel="nomPays"
-                     (data)="paysValue($event)"
                      formControlName="pays"
                      placeholder="Aucun pays sélectionné">
           </ng-select>

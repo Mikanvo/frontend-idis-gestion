@@ -71,8 +71,16 @@
     <div class="form-group row">
       <label for="adresse" class="control-label col-md-3">Adresse</label>
       <div class="col-md-9">
-        <textarea cols="30" rows="2" id="adresse" class="form-control"
+        <textarea [ngClass]="{'is-invalid': (!!clientForm?.controls['adresse']?.errors?.required) && (clientForm.controls['adresse'].errors && (clientForm.controls['adresse'].dirty || clientForm.controls['adresse'].touched)),
+                  'is-valid': (!clientForm?.controls['adresse']?.errors?.required) && (!clientForm.controls['adresse'].errors && (clientForm.controls['adresse'].dirty || clientForm.controls['adresse'].touched))}"
+                  icols="30" rows="2" id="adresse" class="form-control"
                   formControlName="adresse"></textarea>
+        <div
+          *ngIf="clientForm.controls['adresse'].errors && (clientForm.controls['adresse'].dirty || clientForm.controls['adresse'].touched)"
+          class="invalid-feedback">
+          <span
+            [hidden]="!clientForm.controls['adresse'].errors?.required">L'<strong>adresse</strong> est obligatoire.</span>
+        </div>
       </div>
     </div>
     <input id="id" type="hidden" formControlName="id">
