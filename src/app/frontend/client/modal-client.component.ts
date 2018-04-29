@@ -1,18 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subject} from 'rxjs/Subject';
 import {Client} from '../../models/client/client';
 import {ClientService} from '../../services/client/client.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-client',
   templateUrl: './modal-client.component.html',
   styleUrls: ['./modal-client.component.scss']
 })
-export class ModalClientComponent implements OnInit {
+export class ModalClientComponent implements OnInit, OnDestroy {
   public client: Client = new Client();
+  clientSubscription: Subscription = null;
+
   public type: string;
   clientForm: FormGroup;
   public onClose: Subject<any>;
@@ -115,7 +118,7 @@ export class ModalClientComponent implements OnInit {
     this.client.adresse = this.clientForm.value.adresse;
     this.client.email = this.clientForm.value.email;
 
-    this.clientService.addClient(this.client)
+    this.clientSubscription = this.clientService.addClient(this.client)
       .subscribe((client: Client) => {
         let data = {
           type: this.type,
@@ -143,7 +146,7 @@ export class ModalClientComponent implements OnInit {
     this.client.adresse = this.clientForm.getRawValue().adresse;
     this.client.email = this.clientForm.getRawValue().email;
 
-    this.clientService.updateClient(this.client)
+    this.clientSubscription = this.clientService.updateClient(this.client)
       .subscribe((client: Client) => {
         let data = {
           type: this.type,
@@ -163,6 +166,10 @@ export class ModalClientComponent implements OnInit {
 
   dismiss() {
     this.error = '';
+  }
+
+  ngOnDestroy(){
+    this.clientSubscription !== null ? this.clientSubscription.unsubscribe() : null;
   }
 
 }

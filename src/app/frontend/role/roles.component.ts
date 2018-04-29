@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {ListeRoles} from '../../models/role/liste-roles';
 import {RoleService} from '../../services/role/role.service';
@@ -8,17 +8,19 @@ import {TokenService} from '../../services/token/token.service';
 import {Role} from '../../models/role/role';
 import {ModalRoleComponent} from './modal-role.component';
 import {ModalRemoveRoleComponent} from './modal-remove-role.component';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss']
 })
-export class RolesComponent implements OnInit {
+export class RolesComponent implements OnInit, OnDestroy {
 
   modalRef: BsModalRef;
 
   allRoles: ListeRoles;
+  roleSubscription: Subscription = null;
   roleName: string = '';
   enable: number = 2;
   currentPage: number = 0;
@@ -47,7 +49,7 @@ export class RolesComponent implements OnInit {
 
 // ---------------------------------- START API REQUEST-----------------------------------------------------
   searchRoles() {
-    this.roleService.searchRoles(this.roleName, this.enable, this.currentPage, this.size)
+    this.roleSubscription = this.roleService.searchRoles(this.roleName, this.enable, this.currentPage, this.size)
       .subscribe((roles) => {
         this.allRoles = roles;
         this.pages = new Array(roles.totalPages);
@@ -117,10 +119,7 @@ export class RolesComponent implements OnInit {
 
     (<ModalRoleComponent>this.modalRef.content).onClose.subscribe(result => {
       console.log(result);
-      if (result.type === 'i') {
-        this.searchRoles();
-      }
-      if (result.type === 'u') {
+      if (result.type === 'i' || result.type === 'u') {
         this.searchRoles();
       }
     });
@@ -136,7 +135,6 @@ export class RolesComponent implements OnInit {
     );
 
     (<ModalRemoveRoleComponent>this.modalRef.content).onClose.subscribe(result => {
-      console.log(result);
       if (result.type === 'd') {
         this.allRoles.roles[index].enable = 0;
       }
@@ -148,6 +146,10 @@ export class RolesComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy(){
+    this.roleSubscription !== null ? this.roleSubscription.unsubscribe() : null;
   }
 
 }

@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {ToastrService} from 'ngx-toastr';
 import {Fonction} from '../../models/fonction/fonction';
 import {FonctionService} from '../../services/fonction/fonction.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-remove-fonction',
   templateUrl: './modal-remove-fonction.component.html',
   styleUrls: ['./modal-remove-fonction.component.scss']
 })
-export class ModalRemoveFonctionComponent implements OnInit {
+export class ModalRemoveFonctionComponent implements OnInit, OnDestroy {
 
   public fonction: Fonction = new Fonction();
+  fonctionSubscription: Subscription = null;
   public type: string;
   public onClose: Subject<any>;
 
@@ -36,7 +38,7 @@ export class ModalRemoveFonctionComponent implements OnInit {
   confirm(){
     this.isLoading = true;
     if(this.type === 'd'){
-      this.fonctionService.disableFonction(this.fonction)
+      this.fonctionSubscription = this.fonctionService.disableFonction(this.fonction)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -54,7 +56,7 @@ export class ModalRemoveFonctionComponent implements OnInit {
     }
 
     if(this.type === 'r'){
-      this.fonctionService.removeFonction(this.fonction)
+      this.fonctionSubscription =  this.fonctionService.removeFonction(this.fonction)
         .subscribe((resp) =>{
           let data = {
             type: this.type,
@@ -71,7 +73,7 @@ export class ModalRemoveFonctionComponent implements OnInit {
     }
 
     if(this.type === 'e'){
-      this.fonctionService.enableFonction(this.fonction)
+      this.fonctionSubscription = this.fonctionService.enableFonction(this.fonction)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -112,6 +114,10 @@ export class ModalRemoveFonctionComponent implements OnInit {
 
   close(){
     this.modalRef.hide();
+  }
+
+  ngOnDestroy(){
+    this.fonctionSubscription !== null ? this.fonctionSubscription.unsubscribe() : null;
   }
 
 }

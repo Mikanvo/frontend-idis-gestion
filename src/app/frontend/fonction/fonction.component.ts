@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FonctionService} from '../../services/fonction/fonction.service';
 import {BsModalService} from 'ngx-bootstrap/modal';
@@ -8,17 +8,19 @@ import {ModalFonctionComponent} from './modal-fonction.component';
 import {Fonction} from '../../models/fonction/fonction';
 import {ModalRemoveFonctionComponent} from './modal-remove-fonction.component';
 import {ListeFonctions} from '../../models/fonction/liste-fonctions';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-fonction',
   templateUrl: './fonction.component.html',
   styleUrls: ['./fonction.component.scss']
 })
-export class FonctionComponent implements OnInit {
+export class FonctionComponent implements OnInit, OnDestroy {
 
   modalRef: BsModalRef;
 
   allFonctions: ListeFonctions;
+  fonctionSubscription: Subscription = null;
   nomFonction: string = '';
   enable: number = 2;
   currentPage: number = 0;
@@ -47,7 +49,7 @@ export class FonctionComponent implements OnInit {
 
 // ---------------------------------- START API REQUEST-----------------------------------------------------
   searchFonction() {
-    this.fonctionService.searchFonction(this.nomFonction, this.enable, this.currentPage, this.size)
+    this.fonctionSubscription = this.fonctionService.searchFonction(this.nomFonction, this.enable, this.currentPage, this.size)
       .subscribe((fonction) => {
         this.allFonctions = fonction;
         this.pages = new Array(fonction.totalPages);
@@ -148,6 +150,10 @@ export class FonctionComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy(){
+    this.fonctionSubscription !== null ? this.fonctionSubscription.unsubscribe() : null;
   }
 
 }

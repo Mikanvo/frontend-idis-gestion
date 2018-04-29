@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {FormBuilder} from '@angular/forms';
@@ -11,18 +11,22 @@ import {Site} from '../../models/site/site';
 import {ModalRemoveSiteComponent} from './modal-remove-site.component';
 import {Pays} from '../../models/pays/pays';
 import {PaysService} from '../../services/pays/pays.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-sites',
   templateUrl: './sites.component.html',
   styleUrls: ['./sites.component.scss']
 })
-export class SitesComponent implements OnInit {
+export class SitesComponent implements OnInit, OnDestroy {
 
   modalRef: BsModalRef;
 
   allSites: ListeSites;
+  siteSubscription: Subscription = null;
   allPays: Array<Pays> = new Array<Pays>();
+  paysSubscription: Subscription = null;
+
   pays: Pays = null;
   nomSite: string = '';
   codeSite: string = '';
@@ -46,7 +50,7 @@ export class SitesComponent implements OnInit {
   }
 
   getAllPays() {
-    this.paysService.getAllPays().subscribe((pays) => {
+    this.paysSubscription = this.paysService.getAllPays().subscribe((pays) => {
       this.allPays = pays;
     });
   }
@@ -69,7 +73,7 @@ export class SitesComponent implements OnInit {
     if(this.pays !== null){
       nomPays = this.pays.nomPays;
     }
-    this.siteService.searchSites(this.nomSite, this.codeSite, nomPays, this.enable, this.currentPage, this.size)
+    this.siteSubscription =  this.siteService.searchSites(this.nomSite, this.codeSite, nomPays, this.enable, this.currentPage, this.size)
       .subscribe((sites) => {
         this.allSites = sites;
         this.pages = new Array(sites.totalPages);
@@ -168,6 +172,11 @@ export class SitesComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy(){
+    this.siteSubscription !== null ? this.siteSubscription.unsubscribe() : null;
+    this.paysSubscription !== null ? this.paysSubscription.unsubscribe() : null;
   }
 
 }

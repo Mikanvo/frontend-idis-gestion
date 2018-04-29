@@ -1,19 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Role} from '../../models/role/role';
 import {Subject} from 'rxjs/Subject';
 import {Pays} from '../../models/pays/pays';
 import {PaysService} from '../../services/pays/pays.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-pays',
   templateUrl: './modal-pays.component.html',
   styleUrls: ['./modal-pays.component.scss']
 })
-export class ModalPaysComponent implements OnInit {
+export class ModalPaysComponent implements OnInit, OnDestroy {
   public pays: Pays = new Pays();
+  paysSubscription: Subscription = null;
   public type: string;
   paysForm: FormGroup;
   public onClose: Subject<any>;
@@ -41,7 +42,6 @@ export class ModalPaysComponent implements OnInit {
   public showPaysModal(type: string, pays: Pays): void {
     this.type = type;
     if (pays !== null) {
-      this.pays.nomPays = pays.nomPays;
       this.paysForm.setValue({
         id: pays.id || '',
         nomPays: pays.nomPays || '',
@@ -102,7 +102,7 @@ export class ModalPaysComponent implements OnInit {
     this.pays.nomPays = this.paysForm.value.nomPays;
     this.pays.description = this.paysForm.value.description;
 
-    this.paysService.addPays(this.pays)
+    this.paysSubscription = this.paysService.addPays(this.pays)
       .subscribe((pays: Pays) => {
         let data = {
           type: this.type,
@@ -126,7 +126,7 @@ export class ModalPaysComponent implements OnInit {
     this.pays.nomPays = this.paysForm.getRawValue().nomPays;
     this.pays.description = this.paysForm.getRawValue().description;
 
-    this.paysService.updatePays(this.pays)
+    this.paysSubscription = this.paysService.updatePays(this.pays)
       .subscribe((pays: Pays) => {
         let data = {
           type: this.type,
@@ -146,6 +146,10 @@ export class ModalPaysComponent implements OnInit {
 
   dismiss(){
     this.error = "";
+  }
+
+  ngOnDestroy(){
+    this.paysSubscription !== null ? this.paysSubscription.unsubscribe() : null;
   }
 
 }

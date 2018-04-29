@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {ListePays} from '../../models/pays/liste-pays';
 import {PaysService} from '../../services/pays/pays.service';
@@ -8,17 +8,19 @@ import {TokenService} from '../../services/token/token.service';
 import {ModalPaysComponent} from './modal-pays.component';
 import {Pays} from '../../models/pays/pays';
 import {ModalRemovePaysComponent} from './modal-remove-pays.component';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-pays',
   templateUrl: './pays.component.html',
   styleUrls: ['./pays.component.scss']
 })
-export class PaysComponent implements OnInit {
+export class PaysComponent implements OnInit, OnDestroy {
 
   modalRef: BsModalRef;
 
   allPays: ListePays;
+  paysSubscription: Subscription = null;
   nomPays: string = '';
   enable: number = 2;
   currentPage: number = 0;
@@ -47,7 +49,7 @@ export class PaysComponent implements OnInit {
 
 // ---------------------------------- START API REQUEST-----------------------------------------------------
   searchPays() {
-    this.paysService.searchPays(this.nomPays, this.enable, this.currentPage, this.size)
+    this.paysSubscription = this.paysService.searchPays(this.nomPays, this.enable, this.currentPage, this.size)
       .subscribe((pays) => {
         this.allPays = pays;
         this.pages = new Array(pays.totalPages);
@@ -148,6 +150,10 @@ export class PaysComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy(){
+    this.paysSubscription !== null ? this.paysSubscription.unsubscribe() : null;
   }
 
 }

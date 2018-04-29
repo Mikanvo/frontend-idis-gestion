@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {ToastrService} from 'ngx-toastr';
 import {Pays} from '../../models/pays/pays';
 import {PaysService} from '../../services/pays/pays.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-remove-pays',
   templateUrl: './modal-remove-pays.component.html',
   styleUrls: ['./modal-remove-pays.component.scss']
 })
-export class ModalRemovePaysComponent implements OnInit {
+export class ModalRemovePaysComponent implements OnInit, OnDestroy {
 
   public pays: Pays = new Pays();
+  paysSubscription: Subscription = null;
   public type: string;
   public onClose: Subject<any>;
 
@@ -36,7 +38,7 @@ export class ModalRemovePaysComponent implements OnInit {
   confirm(){
     this.isLoading = true;
     if(this.type === 'd'){
-      this.paysService.disablePays(this.pays)
+      this.paysSubscription = this.paysService.disablePays(this.pays)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -54,7 +56,7 @@ export class ModalRemovePaysComponent implements OnInit {
     }
 
     if(this.type === 'r'){
-      this.paysService.removePays(this.pays)
+      this.paysSubscription = this.paysService.removePays(this.pays)
         .subscribe((resp) =>{
           let data = {
             type: this.type,
@@ -71,7 +73,7 @@ export class ModalRemovePaysComponent implements OnInit {
     }
 
     if(this.type === 'e'){
-      this.paysService.enablePays(this.pays)
+      this.paysSubscription = this.paysService.enablePays(this.pays)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -112,7 +114,10 @@ export class ModalRemovePaysComponent implements OnInit {
 
   close(){
     this.modalRef.hide();
+  }
 
+  ngOnDestroy(){
+    this.paysSubscription !== null ? this.paysSubscription.unsubscribe() : null;
   }
 
 }

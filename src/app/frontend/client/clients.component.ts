@@ -1,24 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ListeClients} from '../../models/client/liste-clients';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import {FormBuilder} from '@angular/forms';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {TokenService} from '../../services/token/token.service';
 import {ModalClientComponent} from '../client/modal-client.component';
 import {ModalRemoveClientComponent} from '../client/modal-remove-client.component';
 import {ClientService} from '../../services/client/client.service';
 import {Client} from '../../models/client/client';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.scss']
 })
-export class ClientsComponent implements OnInit {
+export class ClientsComponent implements OnInit, OnDestroy {
 
   modalRef: BsModalRef;
 
   allClients: ListeClients;
+  clientSubscription: Subscription = null;
+
   codeClient: string = '';
   raisonSociale: string = '';
   enable: number = 2;
@@ -30,7 +32,6 @@ export class ClientsComponent implements OnInit {
   constructor(
     private clientService: ClientService,
     private tokenService: TokenService,
-    private fb: FormBuilder,
     private modalService: BsModalService
   ) { }
 
@@ -52,7 +53,7 @@ export class ClientsComponent implements OnInit {
 
 // ---------------------------------- START API REQUEST-----------------------------------------------------
   searchClients() {
-    this.clientService.searchClients(this.codeClient, this.raisonSociale, this.enable, this.currentPage, this.size)
+    this.clientSubscription = this.clientService.searchClients(this.codeClient, this.raisonSociale, this.enable, this.currentPage, this.size)
       .subscribe((clients) => {
         this.allClients = clients;
         this.pages = new Array(clients.totalPages);
@@ -153,6 +154,10 @@ export class ClientsComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy(){
+    this.clientSubscription !== null ? this.clientSubscription.unsubscribe() : null;
   }
 
 }

@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 import {ToastrService} from 'ngx-toastr';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-remove-utilisateur',
   templateUrl: './modal-remove-utilisateur.component.html',
   styleUrls: ['./modal-remove-utilisateur.component.scss']
 })
-export class ModalRemoveUtilisateurComponent implements OnInit {
+export class ModalRemoveUtilisateurComponent implements OnInit, OnDestroy {
 
   public user: Utilisateur = new Utilisateur();
+  userSubscription: Subscription = null;
   public type: string;
   public onClose: Subject<any>;
 
@@ -31,13 +33,12 @@ export class ModalRemoveUtilisateurComponent implements OnInit {
   public showRemoveModal(type: string, user: Utilisateur): void {
     this.type = type;
     this.user =  user;
-    console.log(type, user);
   }
 
   confirm(){
     this.isLoading = true;
     if(this.type === 'd'){
-      this.utilisateurService.disableUser(this.user)
+      this.userSubscription = this.utilisateurService.disableUser(this.user)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -55,7 +56,7 @@ export class ModalRemoveUtilisateurComponent implements OnInit {
     }
 
     if(this.type === 'r'){
-      this.utilisateurService.removeUser(this.user)
+      this.userSubscription = this.utilisateurService.removeUser(this.user)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -73,7 +74,7 @@ export class ModalRemoveUtilisateurComponent implements OnInit {
     }
 
     if(this.type === 'e'){
-      this.utilisateurService.enableUser(this.user)
+      this.userSubscription = this.utilisateurService.enableUser(this.user)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -114,7 +115,9 @@ export class ModalRemoveUtilisateurComponent implements OnInit {
 
   close(){
     this.modalRef.hide();
-
   }
 
+  ngOnDestroy(){
+    this.userSubscription !== null ? this.userSubscription.unsubscribe() : null;
+  }
 }

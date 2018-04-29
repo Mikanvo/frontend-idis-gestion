@@ -1,18 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {Subject} from 'rxjs/Subject';
 import {Fonction} from '../../models/fonction/fonction';
 import {FonctionService} from '../../services/fonction/fonction.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-fonction',
   templateUrl: './modal-fonction.component.html',
   styleUrls: ['./modal-fonction.component.scss']
 })
-export class ModalFonctionComponent implements OnInit {
+export class ModalFonctionComponent implements OnInit, OnDestroy {
   public fonction: Fonction = new Fonction();
+  fonctionSubscription: Subscription = null;
   public type: string;
   fonctionForm: FormGroup;
   public onClose: Subject<any>;
@@ -40,7 +42,6 @@ export class ModalFonctionComponent implements OnInit {
   public showFonctionModal(type: string, fonction: Fonction): void {
     this.type = type;
     if (fonction !== null) {
-      this.fonction.nomFonction = fonction.nomFonction;
       this.fonctionForm.setValue({
         id: fonction.id || '',
         nomFonction: fonction.nomFonction || '',
@@ -101,7 +102,7 @@ export class ModalFonctionComponent implements OnInit {
     this.fonction.nomFonction = this.fonctionForm.value.nomFonction;
     this.fonction.description = this.fonctionForm.value.description;
 
-    this.fonctionService.addFonction(this.fonction)
+    this.fonctionSubscription = this.fonctionService.addFonction(this.fonction)
       .subscribe((fonction: Fonction) => {
         let data = {
           type: this.type,
@@ -125,7 +126,7 @@ export class ModalFonctionComponent implements OnInit {
     this.fonction.nomFonction = this.fonctionForm.getRawValue().nomFonction;
     this.fonction.description = this.fonctionForm.getRawValue().description;
 
-    this.fonctionService.updateFonction(this.fonction)
+    this.fonctionSubscription = this.fonctionService.updateFonction(this.fonction)
       .subscribe((fonction: Fonction) => {
         let data = {
           type: this.type,
@@ -145,6 +146,10 @@ export class ModalFonctionComponent implements OnInit {
 
   dismiss(){
     this.error = "";
+  }
+
+  ngOnDestroy(){
+    this.fonctionSubscription !== null ? this.fonctionSubscription.unsubscribe() : null;
   }
 
 }

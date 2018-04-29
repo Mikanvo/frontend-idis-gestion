@@ -9,6 +9,7 @@ import {Site} from '../../models/site/site';
 import {SiteService} from '../../services/site/site.service';
 import {Fonction} from '../../models/fonction/fonction';
 import {FonctionService} from '../../services/fonction/fonction.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-employe',
@@ -18,8 +19,11 @@ import {FonctionService} from '../../services/fonction/fonction.service';
 export class ModalEmployeComponent implements OnInit, OnDestroy {
 
   public employe: Employe = new Employe();
+  employeSubscription: Subscription = null;
   allSites: Array<Site> = new Array<Site>();
+  siteSubscription: Subscription = null;
   allFonctions: Array<Fonction> = new Array<Fonction>();
+  fonctionSubscription: Subscription = null;
   public type: string;
   employeForm: FormGroup;
   public onClose: Subject<any>;
@@ -49,20 +53,23 @@ export class ModalEmployeComponent implements OnInit, OnDestroy {
   }
 
   getAllSites(){
-    this.siteService.getAllSites().subscribe((sites) => {
+    this.siteSubscription = this.siteService.getAllSites().subscribe((sites) => {
       this.allSites = sites;
     });
   }
 
   getAllFonctions(){
-    this.fonctionService.getAllFonctions().subscribe((fonctions) => {
+    this.fonctionSubscription = this.fonctionService.getAllFonctions().subscribe((fonctions) => {
       this.allFonctions = fonctions;
     });
   }
 
   public showEmployeModal(type: string, employe: Employe): void {
     this.type = type;
-    console.log(employe);
+
+    let matricule = this.employeForm.get('matricule');
+    (this.type) ? matricule.disable() : matricule.enable();
+
     if (employe !== null) {
 
       this.employeForm.setValue({
@@ -77,7 +84,7 @@ export class ModalEmployeComponent implements OnInit, OnDestroy {
       });
 
       let id = this.employeForm.get('id');
-      let matricule = this.employeForm.get('matricule');
+
       let site = this.employeForm.get('site');
       let fonction = this.employeForm.get('fonction');
       let raisonSociale = this.employeForm.get('raisonSociale');
@@ -86,7 +93,6 @@ export class ModalEmployeComponent implements OnInit, OnDestroy {
       let email = this.employeForm.get('email');
 
       (this.type) ? id.disable() : id.enable();
-      (this.type === 's' || this.type === 'u') ? matricule.disable() : matricule.enable();
       (this.type === 's') ? raisonSociale.disable() : raisonSociale.enable();
       (this.type === 's') ? site.disable() : site.enable();
       (this.type === 's') ? fonction.disable() : fonction.enable();
@@ -149,7 +155,7 @@ export class ModalEmployeComponent implements OnInit, OnDestroy {
     this.employe.adresse = this.employeForm.value.adresse;
     this.employe.email = this.employeForm.value.email;
 
-    this.employeService.addEmploye(this.employe)
+    this.employeSubscription = this.employeService.addEmploye(this.employe)
       .subscribe((employe: Employe) => {
         let data = {
           type: this.type,
@@ -179,7 +185,7 @@ export class ModalEmployeComponent implements OnInit, OnDestroy {
     this.employe.adresse = this.employeForm.getRawValue().adresse;
     this.employe.email = this.employeForm.getRawValue().email;
 
-    this.employeService.updateEmploye(this.employe)
+    this.employeSubscription = this.employeService.updateEmploye(this.employe)
       .subscribe((employe: Employe) => {
         let data = {
           type: this.type,
@@ -202,7 +208,9 @@ export class ModalEmployeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-
+    this.employeSubscription !== null ? this.employeSubscription.unsubscribe() : null;
+    this.siteSubscription !== null ? this.siteSubscription.unsubscribe() : null;
+    this.fonctionSubscription !== null ? this.fonctionSubscription.unsubscribe() : null;
   }
 
 }

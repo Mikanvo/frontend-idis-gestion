@@ -1,19 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {RoleService} from '../../services/role/role.service';
 import {Role} from '../../models/role/role';
 import {Subject} from 'rxjs/Subject';
-import {PasswordValidator} from '../../directives/validators/password-validator';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-role',
   templateUrl: './modal-role.component.html',
   styleUrls: ['./modal-role.component.scss']
 })
-export class ModalRoleComponent implements OnInit {
+export class ModalRoleComponent implements OnInit, OnDestroy {
+
   public role: Role = new Role();
+  roleSubscription: Subscription = null;
   public type: string;
   roleForm: FormGroup;
   public onClose: Subject<any>;
@@ -42,7 +44,6 @@ export class ModalRoleComponent implements OnInit {
     this.type = type;
     console.log(role);
     if (role !== null) {
-      this.role.roleName = role.roleName;
       this.roleForm.setValue({
         id: role.id || '',
         roleName: role.roleName || '',
@@ -98,7 +99,7 @@ export class ModalRoleComponent implements OnInit {
     this.isLoading = true;
     this.role.roleName = this.roleForm.value.roleName;
 
-    this.roleService.addRole(this.role)
+    this.roleSubscription = this.roleService.addRole(this.role)
       .subscribe((role: Role) => {
         let data = {
           type: this.type,
@@ -121,8 +122,7 @@ export class ModalRoleComponent implements OnInit {
     this.role.id = this.roleForm.getRawValue().id;
     this.role.roleName = this.roleForm.getRawValue().roleName;
 
-    console.log(this.role);
-    this.roleService.updateRole(this.role)
+    this.roleSubscription = this.roleService.updateRole(this.role)
       .subscribe((role: Role) => {
         let data = {
           type: this.type,
@@ -142,6 +142,10 @@ export class ModalRoleComponent implements OnInit {
 
   dismiss(){
     this.error = "";
+  }
+
+  ngOnDestroy(){
+    this.roleSubscription !== null ? this.roleSubscription.unsubscribe() : null;
   }
 
 }

@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {ToastrService} from 'ngx-toastr';
-import {Role} from '../../models/role/role';
-import {RoleService} from '../../services/role/role.service';
 import {SiteService} from '../../services/site/site.service';
 import {Site} from '../../models/site/site';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-remove-site',
   templateUrl: './modal-remove-site.component.html',
   styleUrls: ['./modal-remove-site.component.scss']
 })
-export class ModalRemoveSiteComponent implements OnInit {
+export class ModalRemoveSiteComponent implements OnInit, OnDestroy {
 
   public site: Site = new Site();
+  siteSubscription: Subscription = null;
   public type: string;
   public onClose: Subject<any>;
 
@@ -38,7 +38,7 @@ export class ModalRemoveSiteComponent implements OnInit {
   confirm(){
     this.isLoading = true;
     if(this.type === 'd'){
-      this.siteService.disableSite(this.site)
+      this.siteSubscription = this.siteService.disableSite(this.site)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -56,7 +56,7 @@ export class ModalRemoveSiteComponent implements OnInit {
     }
 
     if(this.type === 'r'){
-      this.siteService.removeSite(this.site)
+      this.siteSubscription = this.siteService.removeSite(this.site)
         .subscribe((resp) =>{
           let data = {
             type: this.type,
@@ -73,7 +73,7 @@ export class ModalRemoveSiteComponent implements OnInit {
     }
 
     if(this.type === 'e'){
-      this.siteService.enableSite(this.site)
+      this.siteSubscription = this.siteService.enableSite(this.site)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -114,7 +114,10 @@ export class ModalRemoveSiteComponent implements OnInit {
 
   close(){
     this.modalRef.hide();
+  }
 
+  ngOnDestroy(){
+    this.siteSubscription !== null ? this.siteSubscription.unsubscribe() : null;
   }
 
 }

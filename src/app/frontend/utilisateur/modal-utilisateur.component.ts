@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ToastrService} from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
@@ -11,22 +11,28 @@ import {RegisterForm} from '../../models/utilisateur/register-form';
 import {PasswordValidator} from '../../directives/validators/password-validator';
 import {EmployeService} from '../../services/employe/employe.service';
 import {ClientService} from '../../services/client/client.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-utilisateur',
   templateUrl: './modal-utilisateur.component.html',
   styleUrls: ['./modal-utilisateur.component.scss']
 })
-export class ModalUtilisateurComponent implements OnInit {
+export class ModalUtilisateurComponent implements OnInit, OnDestroy {
 
   public user: RegisterForm = new RegisterForm();
+  userSubscription: Subscription = null;
+
   public type: string;
   userForm: FormGroup;
+
   allRoles: Array<Role> = new Array<Role>();
+  roleSubscription: Subscription = null;
 
-  allPersonnes: Array<any>  = new Array<any>();
+  allPersonnes: Array<any> = new Array<any>();
+  personneSubscription: Subscription = null;
 
-  typeUser: string = "employe";
+  typeUser: string = 'employe';
 
   public onClose: Subject<any>;
 
@@ -35,9 +41,9 @@ export class ModalUtilisateurComponent implements OnInit {
 
   hasClientAndOther: boolean = false;
 
-  error: string = "";
+  error: string = '';
   alert: any = {
-    type: "danger",
+    type: 'danger',
     dismissible: true
   };
 
@@ -47,8 +53,7 @@ export class ModalUtilisateurComponent implements OnInit {
               private clientService: ClientService,
               private fb: FormBuilder,
               public modalRef: BsModalRef,
-              private toastr: ToastrService
-  ) {
+              private toastr: ToastrService) {
 
   }
 
@@ -61,9 +66,8 @@ export class ModalUtilisateurComponent implements OnInit {
   public showUserModal(type: string, user: Utilisateur): void {
     this.type = type;
     console.log(user);
-    if(user !== null){
-      this.user.username =  user.username;
-      this.user.roles =  user.roles;
+    if (user !== null) {
+
       this.userForm.setValue({
         id: user.id || '',
         username: user.username || '',
@@ -73,11 +77,11 @@ export class ModalUtilisateurComponent implements OnInit {
         roles: user.roles || []
       });
 
-      if(this.hasRole(user.roles, "CLIENT")){
-        this.typeUser = "client";
+      if (this.hasRole(user.roles, 'CLIENT')) {
+        this.typeUser = 'client';
         this.getAllClients();
-      }else{
-        this.typeUser = "employe";
+      } else {
+        this.typeUser = 'employe';
         this.getAllEmployes();
       }
     }
@@ -111,27 +115,27 @@ export class ModalUtilisateurComponent implements OnInit {
 
   }
 
-  changePersonne(event){
+  changePersonne(event) {
     this.hasClientAndOther = false;
-    if(event.length > 0){
-      if(this.hasRole(event, "CLIENT")){
-        this.typeUser = "client";
+    if (event.length > 0) {
+      if (this.hasRole(event, 'CLIENT')) {
+        this.typeUser = 'client';
         this.getAllClients();
-      }else{
-        this.typeUser = "employe";
+      } else {
+        this.typeUser = 'employe';
         this.getAllEmployes();
       }
 
-      if((this.hasRole(event, "ADMIN") && this.hasRole(event, "CLIENT")) || (this.hasRole(event, "USER") && this.hasRole(event, "CLIENT"))){
-        this.typeUser = "";
+      if ((this.hasRole(event, 'ADMIN') && this.hasRole(event, 'CLIENT')) || (this.hasRole(event, 'USER') && this.hasRole(event, 'CLIENT'))) {
+        this.typeUser = '';
         this.userForm.patchValue({
           personne: null
         });
         this.allPersonnes = null;
         this.hasClientAndOther = true;
       }
-    }else{
-      this.typeUser = "";
+    } else {
+      this.typeUser = '';
       this.userForm.patchValue({
         personne: null
       });
@@ -141,28 +145,28 @@ export class ModalUtilisateurComponent implements OnInit {
   }
 
   getAllRoles() {
-    this.roleService.getAllRoles().subscribe((roles) => {
+    this.roleSubscription = this.roleService.getAllRoles().subscribe((roles) => {
       this.allRoles = roles;
       console.log(roles);
     });
   }
 
-  getAllClients(){
-    this.clientService.getAllClients().subscribe((clients) => {
+  getAllClients() {
+    this.personneSubscription = this.clientService.getAllClients().subscribe((clients) => {
       this.allPersonnes = clients;
     });
   }
 
-  getAllEmployes(){
-    this.employeService.getAllEmployes().subscribe((employes) => {
+  getAllEmployes() {
+    this.personneSubscription = this.employeService.getAllEmployes().subscribe((employes) => {
       this.allPersonnes = employes;
     });
   }
 
-  hasRole(roles: Array<Role>, role: string){
-    if(roles){
-      for(let r of roles){
-        if(r.roleName == role) return true;
+  hasRole(roles: Array<Role>, role: string) {
+    if (roles) {
+      for (let r of roles) {
+        if (r.roleName == role) return true;
       }
     }
     return false;
@@ -172,23 +176,24 @@ export class ModalUtilisateurComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  enterPress(){
-    if(this.type === "i"){
+  enterPress() {
+    if (this.type === 'i') {
       this.saveUser();
     }
-    if(this.type === "u"){
+    if (this.type === 'u') {
       this.updateUser();
     }
   }
 
   showSave(msg: string) {
-    this.toastr.success(msg, "Enregistrer", {
+    this.toastr.success(msg, 'Enregistrer', {
       closeButton: true,
       timeOut: 3000,
     });
   }
+
   showUpdate(msg: string) {
-    this.toastr.warning(msg, "Modification", {
+    this.toastr.warning(msg, 'Modification', {
       closeButton: true,
       timeOut: 3000,
     });
@@ -202,7 +207,7 @@ export class ModalUtilisateurComponent implements OnInit {
     this.user.roles = this.userForm.value.roles;
     this.user.personne = this.userForm.value.personne;
 
-    this.utilisateurService.addUser(this.user)
+    this.userSubscription = this.utilisateurService.addUser(this.user)
       .subscribe((user: Utilisateur) => {
         let data = {
           type: this.type,
@@ -210,7 +215,7 @@ export class ModalUtilisateurComponent implements OnInit {
         };
         this.isLoading = false;
         this.onClose.next(data);
-        this.showSave("Utilisateur enregistré avec succès");
+        this.showSave('Utilisateur enregistré avec succès');
         this.modalRef.hide();
       }, (err) => {
         console.log(err);
@@ -229,7 +234,7 @@ export class ModalUtilisateurComponent implements OnInit {
     this.user.roles = this.userForm.getRawValue().roles;
     this.user.personne = this.userForm.getRawValue().personne;
 
-    this.utilisateurService.updateUser(this.user)
+    this.userSubscription = this.utilisateurService.updateUser(this.user)
       .subscribe((user: Utilisateur) => {
         let data = {
           type: this.type,
@@ -237,7 +242,7 @@ export class ModalUtilisateurComponent implements OnInit {
         };
         this.isLoading = false;
         this.onClose.next(data);
-        this.showUpdate("Utilisateur modifié avec succès");
+        this.showUpdate('Utilisateur modifié avec succès');
         this.modalRef.hide();
       }, (err) => {
         console.log(err);
@@ -247,8 +252,14 @@ export class ModalUtilisateurComponent implements OnInit {
 
   }
 
-  dismiss(){
-    this.error = "";
+  dismiss() {
+    this.error = '';
+  }
+
+  ngOnDestroy(){
+    this.userSubscription !== null ? this.userSubscription.unsubscribe() : null;
+    this.roleSubscription !== null ? this.roleSubscription.unsubscribe() : null;
+    this.personneSubscription !== null ? this.personneSubscription.unsubscribe() : null;
   }
 
 }

@@ -1,5 +1,3 @@
-import {Site} from '../site/site';
-
 export class Personne{
   type: string;
   id: number;

@@ -61,8 +61,8 @@
     <div class="form-group row">
       <label for="roles" class="control-label col-md-3">Rôles</label>
       <div class="col-md-9">
-        <ng-select [ngClass]="{'is-invalid': ((!!userForm?.controls['roles']?.errors?.required) && (userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || (hasClientAndOther),
-                   'is-valid': ((!userForm?.controls['roles']?.errors?.required) && (!userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || (!hasClientAndOther)}"
+        <ng-select [ngClass]="{'is-invalid': ((!!userForm?.controls['roles']?.errors?.required) && (userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || ((!!userForm?.controls['roles']?.errors?.required) && (hasClientAndOther)),
+                   'is-valid': ((!userForm?.controls['roles']?.errors?.required) && (!userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || ((!userForm?.controls['roles']?.errors?.required) && (!hasClientAndOther))}"
                    id="roles" class="form-control" *ngIf="allRoles?.length > 0"
                    [items]="allRoles"
                    multiple="true"

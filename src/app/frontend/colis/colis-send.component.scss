@@ -1,0 +1,12 @@
+.card {
+  margin-bottom: 0 !important;
+}
+.card{
+  border-bottom: 0 !important;
+}
+.card:last-child{
+  border-bottom: 1px solid #c2cfd6 !important;
+}
+.card-header{
+  font-weight: bold;
+}

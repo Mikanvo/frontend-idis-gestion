@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 import {ListeUtilisateurs} from '../../models/utilisateur/liste-utilisateurs';
 import {TokenService} from '../../services/token/token.service';
@@ -10,13 +10,14 @@ import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {ModalUtilisateurComponent} from './modal-utilisateur.component';
 import {ModalRemoveUtilisateurComponent} from './modal-remove-utilisateur.component';
 import {Role} from '../../models/role/role';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-utilisateurs',
   templateUrl: './utilisateurs.component.html',
   styleUrls: ['./utilisateurs.component.scss']
 })
-export class UtilisateursComponent implements OnInit {
+export class UtilisateursComponent implements OnInit, OnDestroy {
 
   //------------- START MODALS ---------------------------
   modalRef: BsModalRef;
@@ -24,7 +25,11 @@ export class UtilisateursComponent implements OnInit {
   //------------- END FORMS -----------------------------
 
   allUsers: ListeUtilisateurs;
+  userSubscription: Subscription = null;
+
   allRoles: Array<Role> = new Array<Role>();
+  roleSubscription: Subscription = null;
+
   role: Role = null;
   username: string = '';
   enable: number = 2;
@@ -59,7 +64,7 @@ export class UtilisateursComponent implements OnInit {
     if(this.role !== null){
       roleName = this.role.roleName;
     }
-    this.utilisateurService.searchUsers(this.username, roleName, this.enable, this.currentPage, this.size)
+    this.userSubscription = this.utilisateurService.searchUsers(this.username, roleName, this.enable, this.currentPage, this.size)
       .subscribe((users) => {
         this.allUsers = users;
         this.pages = new Array(users.totalPages);
@@ -70,7 +75,7 @@ export class UtilisateursComponent implements OnInit {
   }
 
   getAllRoles() {
-    this.roleService.getAllRoles().subscribe((roles) => {
+    this.roleSubscription = this.roleService.getAllRoles().subscribe((roles) => {
       this.allRoles = roles;
     });
   }
@@ -170,6 +175,11 @@ export class UtilisateursComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy(){
+    this.userSubscription !== null ? this.userSubscription.unsubscribe() : null;
+    this.roleSubscription !== null ? this.roleSubscription.unsubscribe() : null;
   }
 
 }

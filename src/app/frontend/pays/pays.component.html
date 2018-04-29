@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <button class="btn btn-primary" placement="top" tooltip="Rôle" (click)="openModal(null, 'i')"><i
+          <button class="btn btn-primary" placement="top" tooltip="Pays" (click)="openModal(null, 'i')"><i
             class="fa fa-plus"></i> Ajouter
           </button>
           <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
@@ -14,7 +14,7 @@
             <div class="col-md-4 offset-md-2">
               <div class="input-group mb-4">
                 <div class="input-group-prepend">
-                  <span class="input-group-text">Pseudo</span>
+                  <span class="input-group-text">Nom</span>
                 </div>
                 <input (keyup)="searchNomPays()" class="form-control" type="text"
                        [(ngModel)]="nomPays">

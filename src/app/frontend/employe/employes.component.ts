@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {EmployeService} from '../../services/employe/employe.service';
 import {FormBuilder} from '@angular/forms';
@@ -18,12 +18,13 @@ import {Subscription} from 'rxjs/Subscription';
   templateUrl: './employes.component.html',
   styleUrls: ['./employes.component.scss']
 })
-export class EmployesComponent implements OnInit {
+export class EmployesComponent implements OnInit, OnDestroy {
 
   modalRef: BsModalRef;
 
   allEmployes: ListeEmployes;
-  employeSubscription: Subscription;
+  employeSubscription: Subscription = null;
+  siteSubscription: Subscription = null;
   allSites: Array<Site> = new Array<Site>();
   site: Site = null;
   matricule: string = '';
@@ -48,7 +49,7 @@ export class EmployesComponent implements OnInit {
   }
 
   getAllSite() {
-    this.siteService.getAllSites().subscribe((site) => {
+    this.siteSubscription = this.siteService.getAllSites().subscribe((site) => {
       this.allSites = site;
     });
   }
@@ -75,7 +76,7 @@ export class EmployesComponent implements OnInit {
     if(this.site !== null){
       nomSite = this.site.nomSite;
     }
-     this.employeService.searchEmployes(this.matricule, nomSite, this.raisonSociale, this.enable, this.currentPage, this.size)
+     this.employeSubscription = this.employeService.searchEmployes(this.matricule, nomSite, this.raisonSociale, this.enable, this.currentPage, this.size)
       .subscribe((employes: ListeEmployes) => {
         this.allEmployes = employes;
         this.pages = new Array(employes.totalPages);
@@ -176,5 +177,9 @@ export class EmployesComponent implements OnInit {
 
   }
 
+  ngOnDestroy(){
+    this.employeSubscription !== null ? this.employeSubscription.unsubscribe() : null;
+    this.siteSubscription !== null ? this.siteSubscription.unsubscribe() : null;
+  }
 
 }

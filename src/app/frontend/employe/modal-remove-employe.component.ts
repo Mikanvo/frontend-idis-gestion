@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {ToastrService} from 'ngx-toastr';
 import {EmployeService} from '../../services/employe/employe.service';
 import {Employe} from '../../models/employe/employe';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-remove-employe',
   templateUrl: './modal-remove-employe.component.html',
   styleUrls: ['./modal-remove-employe.component.scss']
 })
-export class ModalRemoveEmployeComponent implements OnInit {
+export class ModalRemoveEmployeComponent implements OnInit, OnDestroy {
 
   public employe: Employe = new Employe();
+  employeSubscription: Subscription = null;
   public type: string;
   public onClose: Subject<any>;
 
@@ -36,7 +38,7 @@ export class ModalRemoveEmployeComponent implements OnInit {
   confirm(){
     this.isLoading = true;
     if(this.type === 'd'){
-      this.employeService.disableEmploye(this.employe)
+     this.employeSubscription = this.employeService.disableEmploye(this.employe)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -54,7 +56,7 @@ export class ModalRemoveEmployeComponent implements OnInit {
     }
 
     if(this.type === 'r'){
-      this.employeService.removeEmploye(this.employe)
+      this.employeSubscription = this.employeService.removeEmploye(this.employe)
         .subscribe((resp) =>{
           let data = {
             type: this.type,
@@ -71,7 +73,7 @@ export class ModalRemoveEmployeComponent implements OnInit {
     }
 
     if(this.type === 'e'){
-      this.employeService.enableEmploye(this.employe)
+      this.employeSubscription = this.employeService.enableEmploye(this.employe)
         .subscribe((resp) =>{
           console.log(resp);
           let data = {
@@ -112,7 +114,10 @@ export class ModalRemoveEmployeComponent implements OnInit {
 
   close(){
     this.modalRef.hide();
+  }
 
+  ngOnDestroy(){
+    this.employeSubscription !== null ? this.employeSubscription.unsubscribe() : null;
   }
 
 }

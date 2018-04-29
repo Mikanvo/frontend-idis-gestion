@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -7,21 +7,21 @@ import {Site} from '../../models/site/site';
 import {SiteService} from '../../services/site/site.service';
 import {PaysService} from '../../services/pays/pays.service';
 import {Pays} from '../../models/pays/pays';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-modal-site',
   templateUrl: './modal-site.component.html',
   styleUrls: ['./modal-site.component.scss']
 })
-export class ModalSiteComponent implements OnInit {
+export class ModalSiteComponent implements OnInit, OnDestroy {
   public site: Site = new Site();
+  siteSubscription: Subscription = null;
+  allPays: Array<Pays> = new Array<Pays>();
+  paysSubscription: Subscription = null;
   public type: string;
   siteForm: FormGroup;
   public onClose: Subject<any>;
-
-  allPays: Array<Pays> = new Array<Pays>();
-
-  mask = [/\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/];
 
   isLoading: boolean = false;
 
@@ -46,7 +46,7 @@ export class ModalSiteComponent implements OnInit {
   }
 
   getAllPays() {
-    this.paysService.getAllPays().subscribe((pays) => {
+    this.paysSubscription = this.paysService.getAllPays().subscribe((pays) => {
       this.allPays = pays;
     });
   }
@@ -54,13 +54,6 @@ export class ModalSiteComponent implements OnInit {
   public showSiteModal(type: string, site: Site): void {
     this.type = type;
     if (site !== null) {
-
-      this.site.nomSite = site.nomSite;
-      this.site.codeSite = site.codeSite;
-      this.site.contact = site.contact;
-      this.site.adresse = site.adresse;
-      this.site.description = site.description;
-      this.site.pays = site.pays;
 
       this.siteForm.setValue({
         id: site.id || '',
@@ -146,7 +139,7 @@ export class ModalSiteComponent implements OnInit {
     this.site.description = this.siteForm.value.description;
     this.site.pays = this.siteForm.value.pays;
 
-    this.siteService.addSite(this.site)
+    this.siteSubscription = this.siteService.addSite(this.site)
       .subscribe((site: Site) => {
         let data = {
           type: this.type,
@@ -174,7 +167,7 @@ export class ModalSiteComponent implements OnInit {
     this.site.description = this.siteForm.getRawValue().description;
     this.site.pays = this.siteForm.getRawValue().pays;
 
-    this.siteService.updateSite(this.site)
+    this.siteSubscription = this.siteService.updateSite(this.site)
       .subscribe((site: Site) => {
         let data = {
           type: this.type,
@@ -194,6 +187,11 @@ export class ModalSiteComponent implements OnInit {
 
   dismiss() {
     this.error = '';
+  }
+
+  ngOnDestroy(){
+    this.siteSubscription !== null ? this.siteSubscription.unsubscribe() : null;
+    this.paysSubscription !== null ? this.paysSubscription.unsubscribe() : null;
   }
 
 }
