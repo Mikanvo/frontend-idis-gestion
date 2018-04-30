@@ -186,7 +186,7 @@ export class ModalUtilisateurComponent implements OnInit, OnDestroy {
   }
 
   showSave(msg: string) {
-    this.toastr.success(msg, 'Enregistrer', {
+    this.toastr.success(msg, 'Enregistrement', {
       closeButton: true,
       timeOut: 3000,
     });

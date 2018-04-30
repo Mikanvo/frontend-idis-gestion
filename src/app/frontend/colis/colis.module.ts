@@ -17,6 +17,8 @@ import {PaginationModule} from '../../components/pagination/pagination.module';
 import {ColisService} from '../../services/colis/colis.service';
 import {ClientService} from '../../services/client/client.service';
 import {SiteService} from '../../services/site/site.service';
+import {QRCodeModule} from 'angularx-qrcode';
+import {NgxQRCodeModule} from 'ngx-qrcode2';
 
 @NgModule({
   imports: [
@@ -42,6 +44,8 @@ import {SiteService} from '../../services/site/site.service';
     TooltipModule.forRoot(),
     AlertModule.forRoot(),
     ModalModule.forRoot(),
+    QRCodeModule,
+    NgxQRCodeModule,
     TextMaskModule,
     PaginationModule
   ],
