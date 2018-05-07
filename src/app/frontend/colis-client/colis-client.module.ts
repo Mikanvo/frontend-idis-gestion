@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {ColisReceiveComponent} from './colis-receive.component';
-import {ColisSendComponent} from './colis-send.component';
-import {ColisRoutingModule} from './colis-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   AlertModule, BsDropdownModule, CarouselModule, CollapseModule, ModalModule, PopoverModule, ProgressbarModule, TabsModule,
@@ -19,13 +16,13 @@ import {ClientService} from '../../services/client/client.service';
 import {SiteService} from '../../services/site/site.service';
 import {QRCodeModule} from 'angularx-qrcode';
 import {NgxQRCodeModule} from 'ngx-qrcode2';
-import { ModalRemoveColisComponent } from './modal-remove-colis.component';
-import {SuiviColisComponent} from './suivi-colis.component';
+import {ColisClientRoutingModule} from './colis-client-routing.module';
+import {ColisClientComponent} from './colis-client.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    ColisRoutingModule,
+    ColisClientRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule ,
@@ -52,14 +49,7 @@ import {SuiviColisComponent} from './suivi-colis.component';
     PaginationModule
   ],
   declarations: [
-    ColisReceiveComponent,
-    ColisSendComponent,
-    ModalRemoveColisComponent,
-    SuiviColisComponent
-  ],
-  entryComponents: [
-    ModalRemoveColisComponent,
-    SuiviColisComponent
+    ColisClientComponent
   ],
   providers: [
     {
@@ -73,4 +63,4 @@ import {SuiviColisComponent} from './suivi-colis.component';
     SiteService
   ]
 })
-export class ColisModule { }
+export class ColisClientModule { }

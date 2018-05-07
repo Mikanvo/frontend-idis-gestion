@@ -12,7 +12,7 @@
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="input-group mb-4">
                     <div class="input-group-prepend">
                       <span class="input-group-text">Référence</span>
@@ -22,17 +22,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-4">
-                  <div class="input-group mb-4">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Client</span>
-                    </div>
-                    <input (keyup)="searchNomClient()" class="form-control" type="text"
-                           [(ngModel)]="nomClient">
-                  </div>
-                </div>
-
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <div class="input-group mb-4">
                     <div class="input-group-prepend">
                       <span class="input-group-text">Destinataire</span>
@@ -41,40 +31,23 @@
                            [(ngModel)]="nomDestinataire">
                   </div>
                 </div>
-
-                <!--<div class="col-md-3">
-                  <div class="input-group mb-4">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text text-color-blue">Statut</span>
-                    </div>
-                    <ng-select [clearable]="false" class="form-control" [(ngModel)]="enable" (change)="searchStatut()">
-                      <ng-option [value]="2">Tout</ng-option>
-                      <ng-option [value]="1">Actif</ng-option>
-                      <ng-option [value]="0">Inactif</ng-option>
-                    </ng-select>
-                  </div>
-                </div>-->
               </div>
               <div *ngIf="allColis?.colis">
                 <table class="table table-condensed table-bordered data-table" [mfData]="allColis?.colis"
                        #mf="mfDataTable" [mfRowsOnPage]="size">
                   <thead>
                   <tr>
-                    <th style="width: 15%" class="text-center">
+                    <th style="width: 30%" class="text-center">
                       <mfDefaultSorter by="reference" [mfShowSortableArrows]="true">Référence</mfDefaultSorter>
                     </th>
-                    <th style="width: 20%" class="text-center">
-                      <mfDefaultSorter by="client" [mfShowSortableArrows]="false">Client
-                      </mfDefaultSorter>
-                    </th>
-                    <th style="width: 20%" class="text-center">
+                    <th style="width: 30%" class="text-center">
                       <mfDefaultSorter by="destinataire" [mfShowSortableArrows]="false">Destinataire
                       </mfDefaultSorter>
                     </th>
-                    <th style="width: 15%" class="text-center">
+                    <th style="width: 30%" class="text-center">
                       <mfDefaultSorter by="valeurColis" [mfShowSortableArrows]="true">Valeur</mfDefaultSorter>
                     </th>
-                    <th style="width: 30%" class="text-center">
+                    <th style="width: 10%" class="text-center">
                       <mfDefaultSorter>Actions</mfDefaultSorter>
                     </th>
                   </tr>
@@ -82,7 +55,6 @@
                   <tbody>
                   <tr *ngFor="let colis of mf.data; let i = index">
                     <td>{{colis.reference}}</td>
-                    <td>{{colis.client.raisonSociale}}</td>
                     <td>{{colis.nomDestinataire}}</td>
                     <td>{{colis.valeurColis}}</td>
                     <td class="text-center">
@@ -126,12 +98,30 @@
             <div class="card">
               <div class="card-header" *ngIf="type === 's'">
                 <ul class="timeline" id="timeline">
+                  <li class="li" [ngClass]="{'complete': colis?.enregistrementColis !== null}">
+                    <div class="timestamp">
+                      <span class="author">{{colis?.enregistrementColis?.utilisateur?.personne?.raisonSociale}}</span>
+                      <span class="date">{{colis?.enregistrementColis?.dateEnregistrement | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                    <div class="status">
+                      <h4>Enregistrement</h4>
+                    </div>
+                  </li>
+                  <li class="li" [ngClass]="{'complete': colis?.expeditionColis !== null}">
+                    <div class="timestamp">
+                      <span class="author">{{colis?.expeditionColis?.utilisateur?.personne?.raisonSociale}}</span>
+                      <span class="date">{{colis?.expeditionColis?.dateExpedition | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                    <div class="status">
+                      <h4>Expédition</h4>
+                    </div>
+                  </li>
                   <li class="li" [ngClass]="{'complete': colis?.arriveeColis !== null}">
                     <div class="timestamp">
                       <span class="author">{{colis?.arriveeColis?.utilisateur?.personne?.raisonSociale}}</span>
                       <span class="date">{{colis?.arriveeColis?.dateArrivee | date: 'dd/MM/yyyy'}}</span>
                     </div>
-                    <div class="status" (click)="suiviColis('arrivee',colis)">
+                    <div class="status">
                       <h4>Arrivée</h4>
                     </div>
                   </li>
@@ -140,7 +130,7 @@
                       <span class="author">{{colis?.receptionColis?.utilisateur?.personne?.raisonSociale}}</span>
                       <span class="date">{{colis?.receptionColis?.dateReception | date: 'dd/MM/yyyy'}}</span>
                     </div>
-                    <div class="status" (click)="suiviColis('reception',colis)">
+                    <div class="status">
                       <h4>Réception</h4>
                     </div>
                   </li>
@@ -149,54 +139,11 @@
                       <span class="author">{{colis?.livraisonColis?.utilisateur?.personne?.raisonSociale}}</span>
                       <span class="date">{{colis?.livraisonColis?.dateLivraison | date: 'dd/MM/yyyy'}}</span>
                     </div>
-                    <div class="status" (click)="suiviColis('livraison',colis)">
+                    <div class="status">
                       <h4>Livraison</h4>
                     </div>
                   </li>
                 </ul>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <input id="id" type="hidden" formControlName="id">
-                  <div class="form-group row col-md-6">
-                    <label for="client" class="control-label col-md-4 text-right">Client</label>
-                    <div class="col-md-8">
-                      <ng-select [ngClass]="{'is-invalid': ((!!colisForm?.controls['client']?.errors?.required) && (colisForm.controls['client'].errors && (colisForm.controls['client'].dirty || colisForm.controls['client'].touched))),
-                   'is-valid': ((!colisForm?.controls['client']?.errors?.required) && (!colisForm.controls['client'].errors && (colisForm.controls['client'].dirty || colisForm.controls['client'].touched)))}"
-                                 id="client" class="form-control" *ngIf="allClients?.length > 0"
-                                 [items]="allClients"
-                                 bindLabel="raisonSociale"
-                                 formControlName="client"
-                                 placeholder="Aucun client sélectionnée">
-                      </ng-select>
-                      <div
-                        *ngIf="colisForm.controls['client'].errors && (colisForm.controls['client'].dirty || colisForm.controls['client'].touched)"
-                        class="invalid-perso">
-                        <span
-                          [hidden]="!colisForm.controls['client'].errors?.required">Veuillez sélectionner un <strong>client</strong>.</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row col-md-6">
-                    <label for="site" class="control-label col-md-4 text-right">Site</label>
-                    <div class="col-md-8">
-                      <ng-select [ngClass]="{'is-invalid': (!!colisForm?.controls['siteDestinataire']?.errors?.required) && (colisForm.controls['siteDestinataire'].errors && (colisForm.controls['siteDestinataire'].dirty || colisForm.controls['siteDestinataire'].touched)),
-                   'is-valid': (!colisForm?.controls['siteDestinataire']?.errors?.required) && (!colisForm.controls['siteDestinataire'].errors && (colisForm.controls['siteDestinataire'].dirty || colisForm.controls['siteDestinataire'].touched))}"
-                                 id="site" class="form-control" *ngIf="allSites?.length > 0"
-                                 [items]="allSites"
-                                 bindLabel="nomSite"
-                                 formControlName="siteDestinataire"
-                                 placeholder="Aucun site sélectionné">
-                      </ng-select>
-                      <div
-                        *ngIf="colisForm.controls['siteDestinataire'].errors && (colisForm.controls['siteDestinataire'].dirty || colisForm.controls['siteDestinataire'].touched)"
-                        class="invalid-perso">
-            <span
-              [hidden]="!colisForm.controls['siteDestinataire'].errors?.required">Le <strong>site</strong> est obligatoire.</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="card">
@@ -387,19 +334,6 @@
                   </tbody>
                 </table>
               </div>
-              <!--<div class="card-footer">
-                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'" (click)="clearColisForm()">
-                  <i class="fa fa-refresh"></i> Effacer
-                </button>
-                <button *ngIf="type === 'i'" [ladda]="isLoading" type="button" class="btn btn-primary float-right"
-                        [disabled]='colisForm.status==="INVALID"' (click)="saveColis()">
-                  Enregistrer
-                </button>
-                <button *ngIf="type === 'u'" [ladda]="isLoading" type="button" class="btn btn-warning float-right"
-                        [disabled]='colisForm.status==="INVALID"' (click)="updateColis()">
-                  Modifier
-                </button>
-              </div>-->
             </div>
           </form>
         </tab>

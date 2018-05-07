@@ -30,6 +30,12 @@ export const navigation = [
   },
   {
     name: 'Colis',
+    url: '/colis-client',
+    icon: 'icon-bag',
+    admin: 'CLIENT'
+  },
+  {
+    name: 'Colis',
     url: '/colis',
     icon: 'icon-bag',
     admin: 'ADMIN',

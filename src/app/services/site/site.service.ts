@@ -25,6 +25,17 @@ export class SiteService {
       );
   }
 
+  public getAllSitesColis(): Observable<Array<Site>> {
+    return this.http.get<Array<Site>>(`${BASE_URL}/admin/all-sites-colis`)
+      .pipe(
+        tap(
+          (data) => {console.log(data)},
+          error => console.log(error)
+        ),
+        catchError(this.handleErrorService.handleError)
+      );
+  }
+
   public searchSites(nomSite: string, codeSite: string, nomPays: string, enable: number, page: number, size: number): Observable<ListeSites> {
     let httpParams = new HttpParams()
       .append('nomSite', nomSite)

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {ColisService} from '../../services/colis/colis.service';
+import {ClientService} from '../../services/client/client.service';
+import {EmployeService} from '../../services/employe/employe.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,13 +16,18 @@ export class DashboardComponent implements OnInit {
   public brandWarning = '#f8cb00';
   public brandDanger = '#f86c6b';
 
-  // dropdown buttons
-  // public status: { isopen } = { isopen: false };
-  // public toggleDropdown($event: MouseEvent): void {
-  //   $event.preventDefault();
-  //   $event.stopPropagation();
-  //   this.status.isopen = !this.status.isopen;
-  // }
+  countEmployes: string;
+  countClients: string;
+  countSendColis: string;
+  countReceiveColis: string;
+
+  constructor(
+    private colisService: ColisService,
+    private clientService: ClientService,
+    private employeService: EmployeService
+  ){
+
+  }
 
   // lineChart1
   public lineChart1Data: Array<any> = [
@@ -467,7 +475,39 @@ export class DashboardComponent implements OnInit {
       this.mainChartData2.push(this.random(80, 100));
       this.mainChartData3.push(65);
     }
+    this.getCountClients();
+    this.getCountEmployes();
+    this.getCountSendColis();
+    this.getCountReceiveColis();
   }
 
   radioModel: string = 'Month';
+
+  getCountEmployes(){
+    this.employeService.countEmployes()
+      .subscribe((count) =>{
+        this.countEmployes = count;
+      });
+  }
+
+  getCountClients(){
+    this.clientService.countClients()
+      .subscribe((count) =>{
+        this.countClients = count;
+      });
+  }
+
+  getCountSendColis(){
+    this.colisService.countSendColis()
+      .subscribe((count) =>{
+        this.countSendColis = count;
+      });
+  }
+
+  getCountReceiveColis(){
+    this.colisService.countReceiveColis()
+      .subscribe((count) =>{
+        this.countReceiveColis = count;
+      });
+  }
 }

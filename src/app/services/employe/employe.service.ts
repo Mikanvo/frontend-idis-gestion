@@ -115,4 +115,15 @@ export class EmployeService {
         catchError(this.handleErrorService.handleError)
       );
   }
+
+  public countEmployes(): Observable<string> {
+    return this.http.get<string>(`${BASE_URL}/user/count-employes`)
+      .pipe(
+        tap(
+          (data) => {console.log(data)},
+          error => console.log(error)
+        ),
+        catchError(this.handleErrorService.handleError)
+      );
+  }
 }

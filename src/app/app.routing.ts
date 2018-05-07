@@ -5,6 +5,7 @@ import {FullLayoutComponent} from './containers';
 import {AdminGuard} from './guards/admin.guard';
 import {AdminOrUserOrClientGuard} from './guards/admin-or-user-or-client.guard';
 import {AdminOrUserGuard} from './guards/admin-or-user.guard';
+import {ClientGuard} from './guards/client.guard';
 
 export const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -35,6 +36,11 @@ export const routes: Routes = [
         path: 'colis',
         loadChildren: './frontend/colis/colis.module#ColisModule',
         canActivate:[AdminOrUserGuard]
+      },
+      {
+        path: 'colis-client',
+        loadChildren: './frontend/colis-client/colis-client.module#ColisClientModule',
+        canActivate:[ClientGuard]
       },
       {
         path: 'finances/facture',

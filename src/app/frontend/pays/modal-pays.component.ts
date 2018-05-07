@@ -13,7 +13,7 @@ import {Subscription} from 'rxjs/Subscription';
   styleUrls: ['./modal-pays.component.scss']
 })
 export class ModalPaysComponent implements OnInit, OnDestroy {
-  public pays: Pays = new Pays();
+  pays: Pays = new Pays();
   paysSubscription: Subscription = null;
   public type: string;
   paysForm: FormGroup;

@@ -98,4 +98,15 @@ export class ClientService {
         catchError(this.handleErrorService.handleError)
       );
   }
+
+  public countClients(): Observable<string> {
+    return this.http.get<string>(`${BASE_URL}/user/count-clients`)
+      .pipe(
+        tap(
+          (data) => {console.log(data)},
+          error => console.log(error)
+        ),
+        catchError(this.handleErrorService.handleError)
+      );
+  }
 }

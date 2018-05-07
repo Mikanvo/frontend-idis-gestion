@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import {SiteService} from '../../services/site/site.service';
-import {SuiviColisComponent} from './suivi-colis.component';
 import {TabDirective} from 'ngx-bootstrap/tabs';
 import {Subject} from 'rxjs/Subject';
 import {TokenService} from '../../services/token/token.service';
@@ -16,15 +15,14 @@ import {ClientService} from '../../services/client/client.service';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {Client} from '../../models/client/client';
 import {TabsetComponent} from 'ngx-bootstrap';
-import {ModalRemoveColisComponent} from './modal-remove-colis.component';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
-  selector: 'app-colis-receive',
-  templateUrl: './colis-receive.component.html',
-  styleUrls: ['./colis-receive.component.scss']
+  selector: 'app-colis-client',
+  templateUrl: './colis-clients.component.html',
+  styleUrls: ['./colis-client.component.scss']
 })
-export class ColisReceiveComponent implements OnInit {
+export class ColisClientComponent implements OnInit {
   @ViewChild('staticTabs') staticTabs: TabsetComponent;
 
   modalRef: BsModalRef;
@@ -47,9 +45,7 @@ export class ColisReceiveComponent implements OnInit {
   colisSubscription: Subscription = null;
 
   reference: string = '';
-  nomClient: string = '';
   nomDestinataire: string = '';
-  enable: number = 2;
   currentPage: number = 0;
   size: number = 10;
   page: number = this.currentPage + 1;
@@ -67,9 +63,9 @@ export class ColisReceiveComponent implements OnInit {
 
   ngOnInit() {
     this.type = "i";
-    this.receiveSearchColis();
-    this.getAllClients();
-    this.getAllSites();
+    this.clientSearchColis();
+    //this.getAllClients();
+    //this.getAllSites();
     this.createColis();
     console.log(this.colisForm);
   }
@@ -110,9 +106,8 @@ export class ColisReceiveComponent implements OnInit {
   clearSearchColis() {
     this.reference = '';
     this.nomDestinataire = '';
-    this.nomClient = '';
     this.currentPage = 0;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   selectTab(tab_id: number) {
@@ -122,24 +117,16 @@ export class ColisReceiveComponent implements OnInit {
   }
 
   searchReference() {
-    this.receiveSearchColis();
-  }
-
-  searchNomClient() {
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   searchNomDestinataire() {
-    this.receiveSearchColis();
-  }
-
-  searchStatut() {
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   // ---------------------------------- START API REQUEST-----------------------------------------------------
-  receiveSearchColis() {
-    this.colisSubscription = this.colisService.receiveSearchColis(this.reference, this.nomClient, this.nomDestinataire, this.enable, this.currentPage, this.size)
+  clientSearchColis() {
+    this.colisSubscription = this.colisService.clientSearchColis(this.reference, this.nomDestinataire, this.currentPage, this.size)
       .subscribe((colis) => {
         this.allColis = colis;
         this.pages = new Array(colis.totalPages);
@@ -166,12 +153,12 @@ export class ColisReceiveComponent implements OnInit {
 
   searchPage(page: number) {
     this.currentPage = page;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   searchLimit(limit: number) {
     this.size = limit;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   hasRole(role: string) {
@@ -180,27 +167,27 @@ export class ColisReceiveComponent implements OnInit {
 
   nextPage(page: number) {
     this.currentPage = page;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   previousPage(page: number) {
     this.currentPage = page;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   firstPage(page: number) {
     this.currentPage = page;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   lastPage(page: number) {
     this.currentPage = page;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   reload() {
     this.currentPage = 0;
-    this.receiveSearchColis();
+    this.clientSearchColis();
   }
 
   // ---------------------------- START FORM COLIS --------------------------------------------
@@ -383,103 +370,6 @@ export class ColisReceiveComponent implements OnInit {
 
   // ------------------------------ END TOAST ------------------------------------------
 
-  // ------------------------------- START MODAL REMOVAL -------------------------------------
-
-  openRemoveModal(colis: Colis, type: string, index: number) {
-    this.modalRef = this.modalService.show(ModalRemoveColisComponent, {class: 'modal-sm'});
-
-    (<ModalRemoveColisComponent>this.modalRef.content).showRemoveModal(
-      type,
-      colis
-    );
-
-    (<ModalRemoveColisComponent>this.modalRef.content).onClose.subscribe(result => {
-      console.log(result);
-      if (result.type === 'd') {
-        this.allColis.colis[index].enable = 0;
-      }
-      if (result.type === 'e') {
-        this.allColis.colis[index].enable = 1;
-      }
-      if (result.type === 'r') {
-        this.receiveSearchColis();
-      }
-    });
-
-  }
-
-  // ------------------------------- END MODAL REMOVAL ---------------------------------------
-
-  //----------------------------- START SUIVI COLIS ---------------------------------------
-
-  suiviColis(suivi: string, colis: Colis){
-
-    let type = '';
-    switch(suivi){
-      case 'arrivee':
-        if(this.colis.expeditionColis !== null){
-          if(this.colis.arriveeColis === null){
-            type = 'i';
-            this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-primary'});
-          }else{
-            type = 'u';
-            this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-warning'});
-          }
-        }else{
-          this.showAlerte("Le colis n'a pas encore été expédié!");
-        }
-
-        break;
-
-      case 'reception':
-        if(this.colis.arriveeColis !== null){
-          if(this.colis.receptionColis === null){
-            type = 'i';
-            this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-primary'});
-          }else{
-            type = 'u';
-            this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-warning'});
-          }
-        }else{
-          this.showAlerte("L'arrivée doit être renseignée avant!");
-        }
-        break;
-
-      case 'livraison':
-        if(this.colis.arriveeColis !== null && this.colis.receptionColis !== null){
-          if(this.colis.livraisonColis === null){
-            type = 'i';
-            this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-primary'});
-          }else{
-            type = 'u';
-            this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-warning'});
-          }
-        }else{
-          this.showAlerte("L'arrivée et la réception doivent être renseignéess avant!");
-        }
-        break;
-      default:
-        console.log('Error');
-        break;
-    }
-    (<SuiviColisComponent>this.modalRef.content).showColisModal(
-      type,
-      suivi,
-      colis
-    );
-
-    (<SuiviColisComponent>this.modalRef.content).onClose.subscribe(result => {
-      this.colis = result.colis;
-      this.receiveSearchColis();
-    });
-  }
-
-  showAlerte(msg: string) {
-    this.toastr.error(msg, "Alerte", {
-      closeButton: true,
-      timeOut: 3000,
-    });
-  }
 
   //----------------------------- END SUIVI COLIS ---------------------------------------
 

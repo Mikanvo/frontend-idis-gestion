@@ -15,6 +15,9 @@ import {ClientService} from '../../services/client/client.service';
 import {SiteService} from '../../services/site/site.service';
 import {Site} from '../../models/site/site';
 import {DetailsColis} from '../../models/colis/details-colis';
+import {BsModalService} from 'ngx-bootstrap/modal';
+import {ModalRemoveColisComponent} from './modal-remove-colis.component';
+import {SuiviColisComponent} from './suivi-colis.component';
 
 @Component({
   selector: 'app-colis-send',
@@ -24,6 +27,8 @@ import {DetailsColis} from '../../models/colis/details-colis';
 export class ColisSendComponent implements OnInit {
 
   @ViewChild('staticTabs') staticTabs: TabsetComponent;
+
+  modalRef: BsModalRef;
 
   //---------------------------- START COLIS FORM -------------------------------
 
@@ -56,7 +61,9 @@ export class ColisSendComponent implements OnInit {
               private siteService: SiteService,
               private tokenService: TokenService,
               private fb: FormBuilder,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              private modalService: BsModalService
+              ) {
   }
 
   ngOnInit() {
@@ -149,7 +156,7 @@ export class ColisSendComponent implements OnInit {
   }
 
   getAllSites() {
-    this.siteService.getAllSites().subscribe((sites) => {
+    this.siteService.getAllSitesColis().subscribe((sites) => {
       this.allSites = sites;
     });
   }
@@ -374,6 +381,76 @@ export class ColisSendComponent implements OnInit {
   }
 
   // ------------------------------ END TOAST ------------------------------------------
+
+  // ------------------------------- START MODAL REMOVAL -------------------------------------
+
+  openRemoveModal(colis: Colis, type: string, index: number) {
+    this.modalRef = this.modalService.show(ModalRemoveColisComponent, {class: 'modal-sm'});
+
+    (<ModalRemoveColisComponent>this.modalRef.content).showRemoveModal(
+      type,
+      colis
+    );
+
+    (<ModalRemoveColisComponent>this.modalRef.content).onClose.subscribe(result => {
+      console.log(result);
+      if (result.type === 'd') {
+        this.allColis.colis[index].enable = 0;
+      }
+      if (result.type === 'e') {
+        this.allColis.colis[index].enable = 1;
+      }
+      if (result.type === 'r') {
+        this.sendSearchColis();
+      }
+    });
+
+  }
+
+  // ------------------------------- END MODAL REMOVAL ---------------------------------------
+
+  //----------------------------- START SUIVI COLIS ---------------------------------------
+
+  suiviColis(suivi: string, colis: Colis){
+
+    let type = '';
+    switch(suivi){
+      case 'enregistrement':
+        if(this.colis.enregistrementColis === null){
+          type = 'i';
+          this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-primary'});
+        }else{
+          type = 'u';
+          this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-warning'});
+        }
+        break;
+
+      case 'expedition':
+        if(this.colis.expeditionColis === null){
+          type = 'i';
+          this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-primary'});
+        }else{
+          type = 'u';
+          this.modalRef = this.modalService.show(SuiviColisComponent, {class: 'modal-md modal-warning'});
+        }
+        break;
+      default:
+        console.log('Error');
+        break;
+    }
+    (<SuiviColisComponent>this.modalRef.content).showColisModal(
+      type,
+      suivi,
+      colis
+    );
+
+    (<SuiviColisComponent>this.modalRef.content).onClose.subscribe(result => {
+      this.colis = result.colis;
+      this.sendSearchColis();
+    });
+  }
+
+  //----------------------------- END SUIVI COLIS ---------------------------------------
 
   ngOnDestroy() {
     this.colisSubscription !== null ? this.colisSubscription.unsubscribe() : null;
