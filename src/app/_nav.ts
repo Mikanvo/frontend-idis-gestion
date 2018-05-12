@@ -99,6 +99,26 @@ export const navigation = [
         name: 'Pays',
         url: '/parametres/pays',
         icon: 'icon-globe'
+      },
+      {
+        name: 'Types Factures',
+        url: '/parametres/type-facture',
+        icon: 'icon-diamond'
+      },
+      {
+        name: 'Types Règlements',
+        url: '/parametres/type-reglement',
+        icon: 'icon-diamond'
+      },
+      {
+        name: 'Devises',
+        url: '/parametres/devise',
+        icon: 'icon-diamond'
+      },
+      {
+        name: 'Tva',
+        url: '/parametres/tva',
+        icon: 'icon-diamond'
       }
     ]
   }

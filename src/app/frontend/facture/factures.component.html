@@ -1,3 +1,313 @@
-<p>
-  factures works!
-</p>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12 mb-4">
+      <!-- Nav tabs -->
+      <tabset #staticTabs>
+        <tab (select)="onSelect($event)" id="liste-facture">
+          <ng-template tabHeading><i class="icon-bag"></i> Facture</ng-template>
+          <div class="card">
+            <div class="card-header">
+              <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Numéro</span>
+                    </div>
+                    <input (keyup)="searchNumeroFacture()" class="form-control" type="text"
+                           [(ngModel)]="numeroFacture">
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Colis</span>
+                    </div>
+                    <input (keyup)="searchReferenceColis()" class="form-control" type="text"
+                           [(ngModel)]="referenceColis">
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Type</span>
+                    </div>
+                    <ng-select class="form-control" *ngIf="allTypesFactures?.length > 0"
+                               [items]="allTypesFactures"
+                               bindLabel="nomTypeFacture"
+                               (change)="searchNomTypeFacture($event)"
+                               placeholder="Aucun type sélectionné">
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text text-color-blue">Statut</span>
+                    </div>
+                    <ng-select [clearable]="false" class="form-control" [(ngModel)]="enable" (change)="searchStatut()">
+                      <ng-option [value]="2">Tout</ng-option>
+                      <ng-option [value]="1">Actif</ng-option>
+                      <ng-option [value]="0">Inactif</ng-option>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="allFactures?.factures">
+                <table class="table table-condensed table-bordered data-table" [mfData]="allFactures?.factures"
+                       #mf="mfDataTable" [mfRowsOnPage]="size">
+                  <thead>
+                  <tr>
+                    <th style="width: 15%" class="text-center">
+                      <mfDefaultSorter by="numeroFacture" [mfShowSortableArrows]="true">Numéro</mfDefaultSorter>
+                    </th>
+                    <th style="width: 20%" class="text-center">
+                      <mfDefaultSorter by="typeFacture" [mfShowSortableArrows]="false">Type
+                      </mfDefaultSorter>
+                    </th>
+                    <th style="width: 20%" class="text-center">
+                      <mfDefaultSorter by="client" [mfShowSortableArrows]="false">Client
+                      </mfDefaultSorter>
+                    </th>
+                    <th style="width: 15%" class="text-center">
+                      <mfDefaultSorter by="colis" [mfShowSortableArrows]="true">Colis</mfDefaultSorter>
+                    </th>
+                    <th style="width: 30%" class="text-center">
+                      <mfDefaultSorter>Actions</mfDefaultSorter>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let facture of mf.data; let i = index">
+                    <td>{{facture.numeroFacture}}</td>
+                    <td>{{facture.typeFacture.nomTypeFacture}}</td>
+                    <td>{{facture.colis.client.raisonSociale}}</td>
+                    <td>{{facture.colis.reference}}</td>
+                    <td class="text-center">
+                      <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(facture)">
+                        <i class="fa fa-edit"></i></button>
+                      <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="showForm(facture)"
+                      ><i
+                        class="fa fa-eye"></i></button>
+                      <button class="btn btn-danger" placement="top" tooltip="Désactiver" *ngIf="facture.enable === 1"
+                              (click)="openRemoveModal(facture, 'd', i)"><i
+                        class="fa fa-lock"></i></button>
+                      <button class="btn btn-success" placement="top" tooltip="Activer" *ngIf="facture.enable === 0"
+                              (click)="openRemoveModal(facture, 'e', i)"><i
+                        class="fa fa-unlock-alt"></i></button>
+                      <button class="btn btn-danger" placement="top" tooltip="Supprimer"
+                              (click)="openRemoveModal(facture, 'r', i)">
+                        <i class="fa fa-remove"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="allFactures?.factures.length === 0">
+                    <td colspan="5" class="text-center">Aucun resultat trouvé</td>
+                  </tr>
+                  </tbody>
+                </table>
+                <app-pagination
+                  [pages]="pages"
+                  [nombreElements]="allFactures?.nombreFactures"
+                  [totalElements]="allFactures?.totalFactures"
+                  [totalPages]="allFactures?.totalPages"
+                  [currentPage]="currentPage"
+                  [size]="size"
+                  [page]="page"
+                  (search)="searchPage($event)"
+                  (limit)="searchLimit($event)"
+                  (first)="firstPage($event)"
+                  (next)="nextPage($event)"
+                  (previous)="previousPage($event)"
+                  (last)="lastPage($event)"
+                ></app-pagination>
+              </div>
+
+            </div>
+          </div>
+        </tab>
+        <tab (select)="onSelect($event)" id="creer-facture">
+          <ng-template tabHeading>
+            <span *ngIf="type === 'i'" class="new">
+              <i class="fa fa-plus"></i> Créer facture
+            </span>
+            <span *ngIf="type === 'u'" class="update">
+              <i class="fa fa-edit"></i> Modifier facture
+            </span>
+            <span *ngIf="type === 's'" class="show">
+              <i class="fa fa-eye"></i> Afficher facture
+            </span>
+          </ng-template>
+          <form [formGroup]="factureForm" novalidate>
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <input id="id" type="hidden" formControlName="id">
+                  <div class="form-group row col-md-6">
+                    <label for="typeFacture" class="control-label col-md-4 text-right">Type</label>
+                    <div class="col-md-8">
+                      <ng-select [ngClass]="{'is-invalid': ((!!factureForm?.controls['typeFacture']?.errors?.required) && (factureForm.controls['typeFacture'].errors && (factureForm.controls['typeFacture'].dirty || factureForm.controls['typeFacture'].touched))),
+                   'is-valid': ((!factureForm?.controls['typeFacture']?.errors?.required) && (!factureForm.controls['typeFacture'].errors && (factureForm.controls['typeFacture'].dirty || factureForm.controls['typeFacture'].touched)))}"
+                                 id="typeFacture" class="form-control" *ngIf="allTypesFactures?.length > 0"
+                                 [items]="allTypesFactures"
+                                 bindLabel="nomTypeFacture"
+                                 formControlName="typeFacture"
+                                 placeholder="Aucun type sélectionnée">
+                      </ng-select>
+                      <div
+                        *ngIf="factureForm.controls['typeFacture'].errors && (factureForm.controls['typeFacture'].dirty || factureForm.controls['typeFacture'].touched)"
+                        class="invalid-perso">
+                        <span
+                          [hidden]="!factureForm.controls['typeFacture'].errors?.required">Veuillez sélectionner un <strong>type</strong>.</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row col-md-6">
+                    <label for="colis" class="control-label col-md-4 text-right">Colis</label>
+                    <div class="col-md-8">
+                      <ng-select [ngClass]="{'is-invalid': (!!factureForm?.controls['colis']?.errors?.required) && (factureForm.controls['colis'].errors && (factureForm.controls['colis'].dirty || factureForm.controls['colis'].touched)),
+                   'is-valid': (!factureForm?.controls['colis']?.errors?.required) && (!factureForm.controls['colis'].errors && (factureForm.controls['colis'].dirty || factureForm.controls['colis'].touched))}"
+                                 id="colis" class="form-control" *ngIf="allColis?.length > 0"
+                                 [items]="allColis"
+                                 bindLabel="reference"
+                                 (change)="searchNomColis($event)"
+                                 formControlName="colis"
+                                 placeholder="Aucun colis sélectionné">
+                      </ng-select>
+                      <div
+                        *ngIf="factureForm.controls['colis'].errors && (factureForm.controls['colis'].dirty || factureForm.controls['colis'].touched)"
+                        class="invalid-perso">
+            <span
+              [hidden]="!factureForm.controls['colis'].errors?.required">Le <strong>colis</strong> est obligatoire.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card" *ngIf="colis">
+              <div class="card-header">COLIS</div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="form-group row col-md-6">
+                    <label for="client" class="control-label col-md-4 text-right">Expéditeur</label>
+                    <div class="col-md-8">
+                      <input id="client" type="text" class="form-control" [value]="colis?.client?.raisonSociale" disabled>
+                    </div>
+                  </div>
+                  <div class="form-group row col-md-6">
+                    <label for="nomDestinataire" class="control-label col-md-4 text-right">Destinataire</label>
+                    <div class="col-md-8">
+                      <input id="nomDestinataire" type="text" class="form-control" [value]="colis?.nomDestinataire" disabled>
+                    </div>
+                  </div>
+                  <div class="form-group row col-md-6">
+                    <div class="col-md-12 text-center qrCode">
+                      <ngx-qrcode disabled
+                        [qrc-value]="colis?.qrCode"
+                        qrc-class="qrCode"
+                        qrc-errorCorrectionLevel="L">
+                      </ngx-qrcode>
+                    </div>
+                  </div>
+                  <div class="form-group row col-md-6">
+                    <label for="description" class="control-label col-md-4 text-right">Description</label>
+                    <div class="col-md-8">
+                      <textarea id="description" rows="3" cols="30" class="form-control" disabled>{{colis?.description}}</textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">LIGNES FACTURES</div>
+              <div class="card-body ligne-facture">
+                <table class="table table-condensed data-table">
+                  <thead>
+                  <tr>
+                    <th style="width: 20%" class="text-center">
+                      Designation
+                    </th>
+                    <th style="width: 20%" class="text-center">
+                      Quantité
+                    </th>
+                    <th style="width: 20%" class="text-center">
+                      Prix Unitaire
+                    </th>
+                    <th style="width: 30%" class="text-center">
+                      Prix Total
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody formArrayName="ligneFactures">
+                  <tr *ngFor="let lf of ligneFactures?.controls; let i = index;" [formGroupName]="i">
+                    <td>
+                      <input formControlName="designation" type="text" class="form-control">
+                    </td>
+                    <td>
+                      <input formControlName="quantite" type="number" class="form-control text-right">
+                    </td>
+                    <td>
+                      <input formControlName="prixUnitaire" type="number" class="form-control text-right" (change)="prixUnitaire($event, i)">
+                    </td>
+                    <td>
+                      <input formControlName="prixTotal" type="number" class="form-control text-right">
+                    </td>
+                  </tr>
+                  <tr *ngIf="colis?.detailsColis">
+                    <td colspan="3" class="text-right font-weight-bold">Montant HT</td>
+                    <td>
+                      <input type="number" class="form-control text-right" disabled [value]="montantHT">
+                    </td>
+                  </tr>
+                  <tr *ngIf="colis?.detailsColis">
+                    <td colspan="3" class="text-right font-weight-bold">TVA</td>
+                    <td>
+                      <ng-select [ngClass]="{'is-invalid': ((!!factureForm?.controls['tva']?.errors?.required) && (factureForm.controls['tva'].errors && (factureForm.controls['tva'].dirty || factureForm.controls['tva'].touched))),
+                   'is-valid': ((!factureForm?.controls['tva']?.errors?.required) && (!factureForm.controls['tva'].errors && (factureForm.controls['tva'].dirty || factureForm.controls['tva'].touched)))}"
+                                 id="tva" class="form-control tva" *ngIf="allTvas?.length > 0"
+                                 [items]="allTvas"
+                                 bindLabel="valeurTva"
+                                 placeholder="Aucune tva sélectionnée">
+                        <ng-template ng-label-tmp let-item="item">
+                          <b>{{item?.valeurTva | percent}}</b>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                          <b>{{item?.valeurTva | percent}}</b>
+                        </ng-template>
+                      </ng-select>
+                    </td>
+                  </tr>
+                  <tr *ngIf="colis?.detailsColis">
+                    <td colspan="3" class="text-right font-weight-bold">Montant TTC</td>
+                    <td>
+                      <input type="number" class="form-control text-right" disabled [value]="montantTTC">
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'" (click)="clearFactureForm()">
+                  <i class="fa fa-refresh"></i> Effacer
+                </button>
+                <button *ngIf="type === 'i'" [ladda]="isLoading" type="button" class="btn btn-primary float-right"
+                        [disabled]='factureForm.status==="INVALID"' (click)="saveFacture()">
+                  Enregistrer
+                </button>
+                <button *ngIf="type === 'u'" [ladda]="isLoading" type="button" class="btn btn-warning float-right"
+                        [disabled]='factureForm.status==="INVALID"' (click)="updateFacture()">
+                  Modifier
+                </button>
+              </div>
+            </div>
+          </form>
+        </tab>
+      </tabset>
+    </div><!--/.col-->
+  </div><!--/.row-->
+</div>

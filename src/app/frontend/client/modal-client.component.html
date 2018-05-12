@@ -12,7 +12,7 @@
       <strong>{{error}}</strong>
     </alert>
   </div>
-  <form (keyup.enter)="enterPress()" [formGroup]="clientForm" novalidate>
+  <form (keyup.enter)="clientForm.status==='VALID' ? enterPress() : null" [formGroup]="clientForm" novalidate>
     <div class="form-group row" *ngIf="type === 'u' || type === 's' ">
       <label for="codeClient" class="control-label col-md-3">Code client</label>
       <div class="col-md-9">

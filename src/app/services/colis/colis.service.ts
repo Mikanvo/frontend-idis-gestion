@@ -18,7 +18,7 @@ export class ColisService {
   ) { }
 
   public getAllSendColis(): Observable<Array<Colis>> {
-    return this.http.get<Array<Colis>>(`${BASE_URL}/user/all-colis`)
+    return this.http.get<Array<Colis>>(`${BASE_URL}/user/send/all-colis`)
       .pipe(
         tap(
           (data) => {console.log(data)},

@@ -12,7 +12,7 @@
       <strong>{{error}}</strong>
     </alert>
   </div>
-  <form (keyup.enter)="enterPress()" [formGroup]="employeForm" novalidate>
+  <form (keyup.enter)="employeForm.status==='VALID' ? enterPress() : null" [formGroup]="employeForm" novalidate>
     <div class="row">
       <div class="form-group row col-md-6" *ngIf="type === 'u' || type === 's'">
         <label for="matricule" class="control-label col-md-3">matricule</label>

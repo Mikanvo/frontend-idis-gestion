@@ -71,6 +71,26 @@ export const routes: Routes = [
         path: 'parametres/fonction',
         loadChildren: './frontend/fonction/fonction.module#FonctionModule',
         canActivate:[AdminGuard]
+      },
+      {
+        path: 'parametres/type-facture',
+        loadChildren: './frontend/type-facture/type-facture.module#TypeFactureModule',
+        canActivate:[AdminGuard]
+      },
+      {
+        path: 'parametres/type-reglement',
+        loadChildren: './frontend/type-reglement/type-reglement.module#TypeReglementModule',
+        canActivate:[AdminGuard]
+      },
+      {
+        path: 'parametres/devise',
+        loadChildren: './frontend/devise/devise.module#DeviseModule',
+        canActivate:[AdminGuard]
+      },
+      {
+        path: 'parametres/tva',
+        loadChildren: './frontend/tva/tva.module#TvaModule',
+        canActivate:[AdminGuard]
       }
 
     ]
