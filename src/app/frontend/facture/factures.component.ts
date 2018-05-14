@@ -21,6 +21,8 @@ import {Tva} from '../../models/tva/tva';
 import {Devise} from '../../models/devise/devise';
 import {TvaService} from '../../services/tva/tva.service';
 import {DeviseService} from '../../services/devise/devise.service';
+import {Utilisateur} from '../../models/utilisateur/utilisateur';
+import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 
 @Component({
   selector: 'app-factures',
@@ -46,11 +48,13 @@ export class FacturesComponent implements OnInit {
   montantHT: number = 0;
   montantTTC: number = 0;
   tva: number = 0;
+  inputTva: string = '';
   //---------------------------- END COLIS FORM -------------------------------
 
 
   allFactures: ListeFactures;
   allTypesFactures: Array<TypeFacture>;
+  user: Utilisateur = new Utilisateur();
   factureSubscription: Subscription = null;
 
   numeroFacture: string = '';
@@ -67,6 +71,7 @@ export class FacturesComponent implements OnInit {
               private typeFactureService: TypeFactureService,
               private tvaService: TvaService,
               private deviseService: DeviseService,
+              private userService: UtilisateurService,
               private tokenService: TokenService,
               private fb: FormBuilder,
               private toastr: ToastrService,
@@ -76,8 +81,9 @@ export class FacturesComponent implements OnInit {
   ngOnInit() {
     this.type = 'i';
     this.searchFactures();
+    this.getProfile();
     this.getAllColis();
-    this.getTAllTvas();
+    this.getAllTvas();
     this.getAllDevises();
     this.getTypesFactures();
     this.createFacture();
@@ -171,7 +177,7 @@ export class FacturesComponent implements OnInit {
       })
   }
 
-  getTAllTvas(){
+  getAllTvas(){
     this.tvaService.getAllTvas()
       .subscribe((tvas) => {
         this.allTvas = tvas;
@@ -190,6 +196,13 @@ export class FacturesComponent implements OnInit {
       .subscribe((typesFactures) => {
         this.allTypesFactures = typesFactures;
       })
+  }
+
+  getProfile() {
+    this.userService.getProfile().subscribe((user) => {
+      this.user = user;
+      this.tva = user.personne.site.tva.valeurTva;
+    });
   }
 
   // ---------------------------------- END API REQUEST-----------------------------------------------------
@@ -255,7 +268,6 @@ export class FacturesComponent implements OnInit {
     this.factureForm = this.fb.group({
       id: [this.facture.id],
       numeroFacture: [this.facture.numeroFacture],
-      tva: [this.facture.tva],
       typeFacture: [this.facture.typeFacture, Validators.required],
       colis: [this.facture.colis, Validators.required],
       ligneFactures: this.fb.array([this.createLigneFactures()])
@@ -289,14 +301,13 @@ export class FacturesComponent implements OnInit {
 
     this.type = 'u';
     this.facture = facture;
+    this.colis = facture.colis;
 
     this.clearFormArray(this.ligneFactures);
 
     this.factureForm.setValue({
       id: facture.id,
       numeroFacture: facture.numeroFacture,
-      dateEcheance: facture.dateEcheance,
-      montantFacture: facture.montantFacture,
       typeFacture: facture.typeFacture,
       colis: facture.colis,
       ligneFactures: []
@@ -304,12 +315,20 @@ export class FacturesComponent implements OnInit {
 
     let id = this.factureForm.get('id');
     let numeroFacture = this.factureForm.get('numeroFacture');
+    let colis = this.factureForm.get('colis');
     (this.type) ? id.disable() : id.enable();
     (this.type) ? numeroFacture.disable() : numeroFacture.enable();
+    (this.type) ? colis.disable() : colis.enable();
 
 
     if (facture.ligneFactures.length > 0) {
       this.setLigneFactures(facture.ligneFactures);
+      this.montantHT = 0;
+      facture.ligneFactures.forEach((lf) =>{
+        console.log(lf);
+        this.montantHT += lf.prixUnitaire*lf.detailsColis.quantite;
+      });
+      this.montantTTC = (1 + this.tva) * this.montantHT;
     }
     console.log(this.factureForm);
 
@@ -319,30 +338,52 @@ export class FacturesComponent implements OnInit {
   showForm(facture: Facture) {
     this.type = 's';
     this.facture = facture;
+    this.colis = facture.colis;
 
     this.clearFormArray(this.ligneFactures);
 
     this.factureForm.setValue({
       id: facture.id,
       numeroFacture: facture.numeroFacture,
-      dateEcheance: facture.dateEcheance,
-      montantFacture: facture.montantFacture,
       typeFacture: facture.typeFacture,
       colis: facture.colis,
       ligneFactures: []
     });
 
+    let id = this.factureForm.get('id');
+    let numeroFacture = this.factureForm.get('numeroFacture');
+    let colis = this.factureForm.get('colis');
+    let typeFacture = this.factureForm.get('typeFacture');
+    (this.type) ? id.disable() : id.enable();
+    (this.type) ? numeroFacture.disable() : numeroFacture.enable();
+    (this.type) ? colis.disable() : colis.enable();
+    (this.type) ? typeFacture.disable() : typeFacture.enable();
+
+
     if (facture.ligneFactures.length > 0) {
       this.setLigneFactures(facture.ligneFactures);
+      this.montantHT = 0;
+      facture.ligneFactures.forEach((lf) =>{
+        console.log(lf);
+        this.montantHT += lf.prixUnitaire*lf.detailsColis.quantite;
+      });
+      this.montantTTC = (1 + this.tva) * this.montantHT;
     }
-
-    this.factureForm.disable();
+    console.log(this.factureForm);
 
     this.selectTab(1);
   }
 
   setLigneFactures(ligneFactures: LigneFacture[]) {
-    const ligneFacturesFGs = ligneFactures.map(lf => this.fb.group(lf));
+    const ligneFacturesFGs = ligneFactures.map(lf => this.fb.group({
+      id: [{value: lf.id, disabled: true}],
+      detailsColis: lf.detailsColis,
+      designation: [{value: lf.detailsColis.designation, disabled: true}],
+      quantite: [{value: lf.detailsColis.quantite, disabled: true}],
+      prixUnitaire: [{value: lf.prixUnitaire, disabled: this.type === 's'}],
+      prixTotal: [{value: lf.prixUnitaire*lf.detailsColis.quantite, disabled: true}]
+    }));
+
     const lfFormArray = this.fb.array(ligneFacturesFGs);
     this.factureForm.setControl('ligneFactures', lfFormArray);
   }
@@ -373,11 +414,12 @@ export class FacturesComponent implements OnInit {
         prixUnitaire: lf.get('prixUnitaire').value,
         prixTotal: parseInt(lf.get('prixUnitaire').value) * parseInt(lf.get('quantite').value)
       });
+      this.montantHT = 0;
       this.ligneFactures.controls.forEach((lf) =>{
         console.log(lf.get('prixTotal').value);
         this.montantHT += lf.get('prixTotal').value;
       });
-      this.montantTTC = (1 + 1/this.tva) * this.montantHT;
+      this.montantTTC = (1 + this.tva) * this.montantHT;
     }else{
       this.ligneFactures.controls[index].reset({
         id: lf.get('id').value,
@@ -392,9 +434,10 @@ export class FacturesComponent implements OnInit {
   }
 
   saveFacture() {
-    console.log(this.factureForm.value.ligneFactures);
-    /*this.isLoading = true;
-    this.facture.typeFacture = this.factureForm.value.valeurFacture;
+    console.log(this.factureForm.value);
+    this.isLoading = true;
+    this.facture.type = "FACTURE";
+    this.facture.typeFacture = this.factureForm.value.typeFacture;
     this.facture.colis = this.factureForm.value.colis;
     this.facture.ligneFactures = this.factureForm.value.ligneFactures;
 
@@ -405,20 +448,20 @@ export class FacturesComponent implements OnInit {
         this.clearFactureForm();
         this.isLoading = false;
         this.selectTab(0);
-        this.showSave('Facture enregistré avec succès!')
+        this.showSave('Facture enregistrée avec succès!')
       }, (err) => {
         console.log(err);
         this.isLoading = false;
-      })*/
+      })
   }
 
   updateFacture() {
     console.log(this.factureForm);
     this.isLoading = true;
+    this.facture.type = "FACTURE";
     this.facture.id = this.factureForm.getRawValue().id;
     this.facture.numeroFacture = this.factureForm.getRawValue().numeroFacture;
     this.facture.typeFacture = this.factureForm.getRawValue().typeFacture;
-    this.facture.tva = this.factureForm.getRawValue().tva;
     this.facture.colis = this.factureForm.getRawValue().colis;
     this.facture.ligneFactures = this.factureForm.getRawValue().ligneFactures;
 
@@ -429,7 +472,7 @@ export class FacturesComponent implements OnInit {
         this.clearFactureForm();
         this.isLoading = false;
         this.selectTab(0);
-        this.showUpdate('Facture modifié avec succès!')
+        this.showUpdate('Facture modifiée avec succès!')
       }, (err) => {
         console.log(err);
         this.isLoading = false;

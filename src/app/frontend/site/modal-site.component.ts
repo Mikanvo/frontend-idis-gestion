@@ -8,6 +8,10 @@ import {SiteService} from '../../services/site/site.service';
 import {PaysService} from '../../services/pays/pays.service';
 import {Pays} from '../../models/pays/pays';
 import {Subscription} from 'rxjs/Subscription';
+import {Devise} from '../../models/devise/devise';
+import {Tva} from '../../models/tva/tva';
+import {TvaService} from '../../services/tva/tva.service';
+import {DeviseService} from '../../services/devise/devise.service';
 
 @Component({
   selector: 'app-modal-site',
@@ -17,6 +21,8 @@ import {Subscription} from 'rxjs/Subscription';
 export class ModalSiteComponent implements OnInit, OnDestroy {
   public site: Site = new Site();
   siteSubscription: Subscription = null;
+  allTvas: Array<Tva> = new Array<Tva>();
+  allDevises: Array<Devise> = new Array<Devise>();
   allPays: Array<Pays> = new Array<Pays>();
   paysSubscription: Subscription = null;
   public type: string;
@@ -32,6 +38,8 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
   };
 
   constructor(private siteService: SiteService,
+              private tvaService: TvaService,
+              private deviseService: DeviseService,
               private paysService: PaysService,
               private fb: FormBuilder,
               public modalRef: BsModalRef,
@@ -41,8 +49,24 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.onClose = new Subject();
+    this.getAllTvas();
+    this.getAllDevises();
     this.getAllPays();
     this.createForm();
+  }
+
+  getAllTvas(){
+    this.tvaService.getAllTvas()
+      .subscribe((tvas) => {
+        this.allTvas = tvas;
+      })
+  }
+
+  getAllDevises(){
+    this.deviseService.getAllDevises()
+      .subscribe((devises) => {
+        this.allDevises = devises;
+      })
   }
 
   getAllPays() {
@@ -62,6 +86,8 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
         contact: site.contact || '',
         adresse: site.adresse || '',
         description: site.description || '',
+        tva: site.tva || {},
+        devise: site.devise || {},
         pays: site.pays || {}
       });
 
@@ -71,6 +97,8 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
       let contact = this.siteForm.get('contact');
       let adresse = this.siteForm.get('adresse');
       let description = this.siteForm.get('description');
+      let tva = this.siteForm.get('tva');
+      let devise = this.siteForm.get('devise');
       let pays = this.siteForm.get('pays');
 
       (this.type) ? id.disable() : id.enable();
@@ -79,6 +107,8 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
       (this.type === 's') ? contact.disable() : contact.enable();
       (this.type === 's') ? adresse.disable() : adresse.enable();
       (this.type === 's') ? description.disable() : description.enable();
+      (this.type === 's') ? tva.disable() : tva.enable();
+      (this.type === 's') ? devise.disable() : devise.enable();
       (this.type === 's') ? pays.disable() : pays.enable();
 
     }
@@ -94,6 +124,8 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
       contact: new FormControl(this.site.contact, [Validators.required, Validators.minLength(8), Validators.pattern('[0-9 ]*')]),
       adresse: new FormControl(this.site.adresse),
       description: new FormControl(this.site.description),
+      tva: new FormControl(this.site.tva, [Validators.required]),
+      devise: new FormControl(this.site.devise, [Validators.required]),
       pays: new FormControl(this.site.pays, [Validators.required])
     });
 
@@ -137,6 +169,8 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
     this.site.contact = this.siteForm.value.contact;
     this.site.adresse = this.siteForm.value.adresse;
     this.site.description = this.siteForm.value.description;
+    this.site.tva = this.siteForm.value.tva;
+    this.site.devise = this.siteForm.value.devise;
     this.site.pays = this.siteForm.value.pays;
 
     this.siteSubscription = this.siteService.addSite(this.site)
@@ -165,6 +199,8 @@ export class ModalSiteComponent implements OnInit, OnDestroy {
     this.site.contact = this.siteForm.getRawValue().contact;
     this.site.adresse = this.siteForm.getRawValue().adresse;
     this.site.description = this.siteForm.getRawValue().description;
+    this.site.tva = this.siteForm.getRawValue().tva;
+    this.site.devise = this.siteForm.getRawValue().devise;
     this.site.pays = this.siteForm.getRawValue().pays;
 
     this.siteSubscription = this.siteService.updateSite(this.site)

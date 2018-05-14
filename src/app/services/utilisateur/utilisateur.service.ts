@@ -68,6 +68,17 @@ export class UtilisateurService {
       );
   }
 
+  public getProfile() {
+    return this.http.get<Utilisateur>(`${BASE_URL}/profile/user`)
+      .pipe(
+        tap(
+          data => console.log(data),
+          error => console.log(error)
+        ),
+        catchError(this.handleErrorService.handleError)
+      );
+  }
+
   public disableUser(user: Utilisateur) {
     return this.http.post<Utilisateur>(`${BASE_URL}/user/disable-user`, user)
       .pipe(

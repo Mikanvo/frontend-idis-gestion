@@ -239,9 +239,15 @@
                   <div class="form-group row col-md-6">
                     <label for="valeur" class="control-label col-md-4 text-right">Valeur</label>
                     <div class="col-md-8">
-                      <input [ngClass]="{'is-invalid': ((!!colisForm?.controls['valeurColis']?.errors?.required) && (colisForm.controls['valeurColis'].errors && (colisForm.controls['valeurColis'].dirty || colisForm.controls['valeurColis'].touched))),
+                      <div class="input-group mb-4">
+                        <input [ngClass]="{'is-invalid': ((!!colisForm?.controls['valeurColis']?.errors?.required) && (colisForm.controls['valeurColis'].errors && (colisForm.controls['valeurColis'].dirty || colisForm.controls['valeurColis'].touched))),
                    'is-valid': ((!colisForm?.controls['valeurColis']?.errors?.required) && (!colisForm.controls['valeurColis'].errors && (colisForm.controls['valeurColis'].dirty || colisForm.controls['valeurColis'].touched)))}"
-                             id="valeur" type="number" class="form-control" formControlName="valeurColis">
+                               id="valeur" type="number" class="form-control" formControlName="valeurColis">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{user?.personne?.site?.devise?.nomDevise}}</span>
+                        </div>
+                      </div>
+
                       <div
                         *ngIf="colisForm.controls['valeurColis'].errors && (colisForm.controls['valeurColis'].dirty || colisForm.controls['valeurColis'].touched)"
                         class="invalid-perso">

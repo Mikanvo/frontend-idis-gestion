@@ -21,6 +21,7 @@ import {QRCodeModule} from 'angularx-qrcode';
 import {NgxQRCodeModule} from 'ngx-qrcode2';
 import { ModalRemoveColisComponent } from './modal-remove-colis.component';
 import {SuiviColisComponent} from './suivi-colis.component';
+import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 
 @NgModule({
   imports: [
@@ -70,7 +71,8 @@ import {SuiviColisComponent} from './suivi-colis.component';
     },
     ColisService,
     ClientService,
-    SiteService
+    SiteService,
+    UtilisateurService
   ]
 })
 export class ColisModule { }

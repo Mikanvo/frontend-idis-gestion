@@ -18,6 +18,9 @@ import {DetailsColis} from '../../models/colis/details-colis';
 import {BsModalService} from 'ngx-bootstrap/modal';
 import {ModalRemoveColisComponent} from './modal-remove-colis.component';
 import {SuiviColisComponent} from './suivi-colis.component';
+import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
+import {Devise} from '../../models/devise/devise';
+import {Utilisateur} from '../../models/utilisateur/utilisateur';
 
 @Component({
   selector: 'app-colis-send',
@@ -40,6 +43,7 @@ export class ColisSendComponent implements OnInit {
   isLoading: boolean = false;
   allClients: Array<Client> = new Array<Client>();
   allSites: Array<Site> = new Array<Site>();
+  user: Utilisateur = new Utilisateur();
 
   //---------------------------- END COLIS FORM -------------------------------
 
@@ -59,6 +63,7 @@ export class ColisSendComponent implements OnInit {
   constructor(private colisService: ColisService,
               private clientService: ClientService,
               private siteService: SiteService,
+              private userService: UtilisateurService,
               private tokenService: TokenService,
               private fb: FormBuilder,
               private toastr: ToastrService,
@@ -68,6 +73,7 @@ export class ColisSendComponent implements OnInit {
 
   ngOnInit() {
     this.type = "i";
+    this.getProfile();
     this.sendSearchColis();
     this.getAllClients();
     this.getAllSites();
@@ -158,6 +164,12 @@ export class ColisSendComponent implements OnInit {
   getAllSites() {
     this.siteService.getAllSitesColis().subscribe((sites) => {
       this.allSites = sites;
+    });
+  }
+
+  getProfile() {
+    this.userService.getProfile().subscribe((user) => {
+      this.user = user;
     });
   }
 

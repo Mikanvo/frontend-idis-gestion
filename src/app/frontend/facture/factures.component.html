@@ -41,6 +41,12 @@
                                bindLabel="nomTypeFacture"
                                (change)="searchNomTypeFacture($event)"
                                placeholder="Aucun type sélectionné">
+                      <ng-template ng-label-tmp let-item="item">
+                        {{item?.nomTypeFacture | uppercase}}
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item">
+                        {{item?.nomTypeFacture | uppercase}}
+                      </ng-template>
                     </ng-select>
                   </div>
                 </div>
@@ -65,18 +71,24 @@
                     <th style="width: 15%" class="text-center">
                       <mfDefaultSorter by="numeroFacture" [mfShowSortableArrows]="true">Numéro</mfDefaultSorter>
                     </th>
-                    <th style="width: 20%" class="text-center">
+                    <th style="width: 10%" class="text-center">
                       <mfDefaultSorter by="typeFacture" [mfShowSortableArrows]="false">Type
                       </mfDefaultSorter>
                     </th>
-                    <th style="width: 20%" class="text-center">
+                    <th style="width: 15%" class="text-center">
                       <mfDefaultSorter by="client" [mfShowSortableArrows]="false">Client
                       </mfDefaultSorter>
                     </th>
                     <th style="width: 15%" class="text-center">
                       <mfDefaultSorter by="colis" [mfShowSortableArrows]="true">Colis</mfDefaultSorter>
                     </th>
-                    <th style="width: 30%" class="text-center">
+                    <th style="width: 10%" class="text-center">
+                      <mfDefaultSorter by="debit" [mfShowSortableArrows]="true">Débit</mfDefaultSorter>
+                    </th>
+                    <th style="width: 10%" class="text-center">
+                      <mfDefaultSorter by="credit" [mfShowSortableArrows]="true">Crédit</mfDefaultSorter>
+                    </th>
+                    <th style="width: 25%" class="text-center">
                       <mfDefaultSorter>Actions</mfDefaultSorter>
                     </th>
                   </tr>
@@ -84,9 +96,11 @@
                   <tbody>
                   <tr *ngFor="let facture of mf.data; let i = index">
                     <td>{{facture.numeroFacture}}</td>
-                    <td>{{facture.typeFacture.nomTypeFacture}}</td>
-                    <td>{{facture.colis.client.raisonSociale}}</td>
+                    <td>{{facture.typeFacture.nomTypeFacture | uppercase}}</td>
+                    <td>{{facture.colis.client.raisonSociale | uppercase}}</td>
                     <td>{{facture.colis.reference}}</td>
+                    <td class="text-right">{{facture.debit}}</td>
+                    <td class="text-right">{{facture.credit}}</td>
                     <td class="text-center">
                       <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(facture)">
                         <i class="fa fa-edit"></i></button>
@@ -157,6 +171,12 @@
                                  bindLabel="nomTypeFacture"
                                  formControlName="typeFacture"
                                  placeholder="Aucun type sélectionnée">
+                        <ng-template ng-label-tmp let-item="item">
+                          {{item?.nomTypeFacture | uppercase}}
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                          {{item?.nomTypeFacture | uppercase}}
+                        </ng-template>
                       </ng-select>
                       <div
                         *ngIf="factureForm.controls['typeFacture'].errors && (factureForm.controls['typeFacture'].dirty || factureForm.controls['typeFacture'].touched)"
@@ -186,6 +206,13 @@
                       </div>
                     </div>
                   </div>
+                  <div class="form-group row col-md-6" *ngIf="type === 'u' || type === 's'">
+                    <label for="numeroFacture" class="control-label col-md-4 text-right">Numéro</label>
+                    <div class="col-md-8">
+                      <input id="numeroFacture" type="text" class="form-control" formControlName="numeroFacture">
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -235,7 +262,7 @@
                     <th style="width: 20%" class="text-center">
                       Quantité
                     </th>
-                    <th style="width: 20%" class="text-center">
+                    <th style="width: 30%" class="text-center">
                       Prix Unitaire
                     </th>
                     <th style="width: 30%" class="text-center">
@@ -252,40 +279,53 @@
                       <input formControlName="quantite" type="number" class="form-control text-right">
                     </td>
                     <td>
-                      <input formControlName="prixUnitaire" type="number" class="form-control text-right" (change)="prixUnitaire($event, i)">
+                      <div class="input-group mb-4">
+                        <input formControlName="prixUnitaire" type="number" class="form-control text-right" (change)="prixUnitaire($event, i)">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{user?.personne?.site?.devise?.nomDevise}}</span>
+                        </div>
+                      </div>
                     </td>
                     <td>
-                      <input formControlName="prixTotal" type="number" class="form-control text-right">
+                      <div class="input-group mb-4">
+                        <input formControlName="prixTotal" type="number" class="form-control text-right">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{user?.personne?.site?.devise?.nomDevise}}</span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                   <tr *ngIf="colis?.detailsColis">
                     <td colspan="3" class="text-right font-weight-bold">Montant HT</td>
                     <td>
-                      <input type="number" class="form-control text-right" disabled [value]="montantHT">
+                      <div class="input-group mb-4">
+                        <input type="number" class="form-control text-right" disabled [value]="montantHT">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{user?.personne?.site?.devise?.nomDevise}}</span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
-                  <tr *ngIf="colis?.detailsColis">
+                  <tr *ngIf="colis?.detailsColis" class="tva">
                     <td colspan="3" class="text-right font-weight-bold">TVA</td>
                     <td>
-                      <ng-select [ngClass]="{'is-invalid': ((!!factureForm?.controls['tva']?.errors?.required) && (factureForm.controls['tva'].errors && (factureForm.controls['tva'].dirty || factureForm.controls['tva'].touched))),
-                   'is-valid': ((!factureForm?.controls['tva']?.errors?.required) && (!factureForm.controls['tva'].errors && (factureForm.controls['tva'].dirty || factureForm.controls['tva'].touched)))}"
-                                 id="tva" class="form-control tva" *ngIf="allTvas?.length > 0"
-                                 [items]="allTvas"
-                                 bindLabel="valeurTva"
-                                 placeholder="Aucune tva sélectionnée">
-                        <ng-template ng-label-tmp let-item="item">
-                          <b>{{item?.valeurTva | percent}}</b>
-                        </ng-template>
-                        <ng-template ng-option-tmp let-item="item">
-                          <b>{{item?.valeurTva | percent}}</b>
-                        </ng-template>
-                      </ng-select>
+                      <div class="input-group mb-4">
+                        <input type="number" class="form-control text-right" disabled [value]="tva*100">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">%</span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                   <tr *ngIf="colis?.detailsColis">
                     <td colspan="3" class="text-right font-weight-bold">Montant TTC</td>
                     <td>
-                      <input type="number" class="form-control text-right" disabled [value]="montantTTC">
+                      <div class="input-group mb-4">
+                        <input type="number" class="form-control text-right" disabled [value]="montantTTC">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{user?.personne?.site?.devise?.nomDevise}}</span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                   </tbody>

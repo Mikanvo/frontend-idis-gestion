@@ -1,12 +1,13 @@
-import {LigneFacture} from '../facture/ligne-facture';
 import {Colis} from '../colis/colis';
 import {Utilisateur} from '../utilisateur/utilisateur';
-import {TypeFacture} from '../type-facture/type-facture';
+import {Devise} from '../devise/devise';
 
 export class Mouvement{
   id: number;
+  type: string;
   debit: number;
   credit: number;
+  devise: Devise;
   colis: Colis;
   utilisateur: Utilisateur;
   createAt: Date;

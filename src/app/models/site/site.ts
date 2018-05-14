@@ -1,4 +1,6 @@
 import {Pays} from '../pays/pays';
+import {Devise} from '../devise/devise';
+import {Tva} from '../tva/tva';
 
 export class Site {
   id: number;
@@ -10,5 +12,7 @@ export class Site {
   createAt: Date;
   updateAt: Date;
   enable: number;
+  tva: Tva;
+  devise: Devise;
   pays: Pays
 }

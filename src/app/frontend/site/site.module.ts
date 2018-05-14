@@ -17,6 +17,8 @@ import {SiteService} from '../../services/site/site.service';
 import {PaysService} from '../../services/pays/pays.service';
 import {NG_SELECT_DEFAULT_CONFIG, NgSelectModule} from '@ng-select/ng-select';
 import {TextMaskModule} from 'angular2-text-mask';
+import {TvaService} from '../../services/tva/tva.service';
+import {DeviseService} from '../../services/devise/devise.service';
 
 @NgModule({
   imports: [
@@ -59,6 +61,8 @@ import {TextMaskModule} from 'angular2-text-mask';
       }
     },
     SiteService,
+    TvaService,
+    DeviseService,
     PaysService
   ]
 })

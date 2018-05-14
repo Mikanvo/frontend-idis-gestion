@@ -22,6 +22,7 @@ import {FactureService} from '../../services/facture/facture.service';
 import {TypeFactureService} from '../../services/type-facture/type-facture.service';
 import {TvaService} from '../../services/tva/tva.service';
 import {DeviseService} from '../../services/devise/devise.service';
+import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 
 @NgModule({
   imports: [
@@ -64,7 +65,8 @@ import {DeviseService} from '../../services/devise/devise.service';
     FactureService,
     TypeFactureService,
     TvaService,
-    DeviseService
+    DeviseService,
+    UtilisateurService
   ]
 })
 export class FactureModule { }

@@ -49,6 +49,52 @@
     </div>
     <div class="row">
       <div class="form-group row col-md-6">
+        <label for="tva" class="control-label col-md-3">TVA</label>
+        <div class="col-md-9">
+          <ng-select [ngClass]="{'is-invalid': (!!siteForm?.controls['tva']?.errors?.required) && (siteForm.controls['tva'].errors && (siteForm.controls['tva'].dirty || siteForm.controls['tva'].touched)),
+                   'is-valid': (!siteForm?.controls['tva']?.errors?.required) && (!siteForm.controls['tva'].errors && (siteForm.controls['tva'].dirty || siteForm.controls['tva'].touched))}"
+                     id="tva" class="form-control" *ngIf="allTvas?.length > 0"
+                     [items]="allTvas"
+                     bindLabel="valeurTva"
+                     formControlName="tva"
+                     placeholder="Aucune tva sélectionnée">
+            <ng-template ng-label-tmp let-item="item">
+              <b>{{item?.valeurTva | percent}}</b>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <b>{{item?.valeurTva | percent}}</b>
+            </ng-template>
+          </ng-select>
+          <div
+            *ngIf="siteForm.controls['tva'].errors && (siteForm.controls['tva'].dirty || siteForm.controls['tva'].touched)"
+            class="invalid-perso">
+            <span
+              [hidden]="!siteForm.controls['tva'].errors?.required">La <strong>tva</strong> est obligatoire.</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row col-md-6">
+        <label for="devise" class="control-label col-md-3">Devise</label>
+        <div class="col-md-9">
+          <ng-select [ngClass]="{'is-invalid': (!!siteForm?.controls['devise']?.errors?.required) && (siteForm.controls['devise'].errors && (siteForm.controls['devise'].dirty || siteForm.controls['devise'].touched)),
+                   'is-valid': (!siteForm?.controls['devise']?.errors?.required) && (!siteForm.controls['devise'].errors && (siteForm.controls['devise'].dirty || siteForm.controls['devise'].touched))}"
+                     id="devise" class="form-control" *ngIf="allDevises?.length > 0"
+                     [items]="allDevises"
+                     bindLabel="nomDevise"
+                     formControlName="devise"
+                     placeholder="Aucune devise sélectionnée">
+          </ng-select>
+          <div
+            *ngIf="siteForm.controls['devise'].errors && (siteForm.controls['devise'].dirty || siteForm.controls['devise'].touched)"
+            class="invalid-perso">
+            <span
+              [hidden]="!siteForm.controls['devise'].errors?.required">La <strong>devise</strong> est obligatoire.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group row col-md-6">
         <label for="contact" class="control-label col-md-3">Contact</label>
         <div class="col-md-9">
           <input [ngClass]="{'is-invalid': (!!siteForm?.controls['contact']?.errors?.minlength || !!siteForm?.controls['contact']?.errors?.required || !!siteForm?.controls['contact']?.errors?.pattern) && (siteForm.controls['contact'].errors && (siteForm.controls['contact'].dirty || siteForm.controls['contact'].touched)),
