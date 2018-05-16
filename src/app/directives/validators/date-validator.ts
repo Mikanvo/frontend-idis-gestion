@@ -8,7 +8,7 @@ export class DateValidator {
     if(AC.get('dateEcheance') !== null){
       let dateEcheance = AC.get('dateEcheance').value; // to get value in input tag
       if (dateEcheance !== null) {
-        if (dateEcheance <= dateToday) {
+        if (dateEcheance < dateToday) {
           console.log('false');
           AC.get('dateEcheance').setErrors({matchDate: true})
         } else {

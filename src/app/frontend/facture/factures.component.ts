@@ -73,6 +73,13 @@ export class FacturesComponent implements OnInit {
   pages: Array<number>;
   showBtn: boolean = false;
 
+  alert: any = {
+    type: 'danger',
+    dismissible: true
+  };
+
+  error: string = '';
+
   constructor(private factureService: FactureService,
               private colisService: ColisService,
               private typeFactureService: TypeFactureService,
@@ -503,6 +510,7 @@ export class FacturesComponent implements OnInit {
         this.showSave('Facture enregistrée avec succès!')
       }, (err) => {
         console.log(err);
+        this.error = err;
         this.isLoading = false;
       })
   }
@@ -529,6 +537,7 @@ export class FacturesComponent implements OnInit {
         this.showUpdate('Facture modifiée avec succès!')
       }, (err) => {
         console.log(err);
+        this.error = err;
         this.isLoading = false;
       })
   }
@@ -580,6 +589,10 @@ export class FacturesComponent implements OnInit {
 
   ngOnDestroy() {
     this.factureSubscription !== null ? this.factureSubscription.unsubscribe() : null;
+  }
+
+  dismiss() {
+    this.error = '';
   }
 
 }

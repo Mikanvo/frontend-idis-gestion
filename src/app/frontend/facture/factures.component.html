@@ -193,6 +193,11 @@
               <i class="fa fa-eye"></i> Afficher facture
             </span>
           </ng-template>
+          <div class="card-title" *ngIf="error">
+            <alert class="text-center" [type]="alert.type" [dismissible]="alert.dismissible" (onClose)="dismiss()">
+              <strong>{{error}}</strong>
+            </alert>
+          </div>
           <form [formGroup]="factureForm" novalidate>
             <div class="card">
               <div class="card-body">
