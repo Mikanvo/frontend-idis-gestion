@@ -460,9 +460,9 @@ export class FacturesComponent implements OnInit {
   }
 
   saveFacture() {
-    this.ligneFactures.controls.forEach((lf) =>{
+    /*this.ligneFactures.controls.forEach((lf) =>{
       lf.get('prixTotal').enable();
-    });
+    });*/
     this.isLoading = true;
     this.facture.type = "FACTURE";
     this.facture.typeFacture = this.factureForm.value.typeFacture;
@@ -471,11 +471,11 @@ export class FacturesComponent implements OnInit {
       let dateEcheance = JSON.stringify(this.factureForm.getRawValue().dateEcheance);
       this.facture.dateEcheance = dateEcheance.substr(1, dateEcheance.length - 2);
     }
-    this.facture.ligneFactures = this.factureForm.value.ligneFactures;
+    this.facture.ligneFactures = this.factureForm.getRawValue().ligneFactures;
 
-    this.ligneFactures.controls.forEach((lf) =>{
+    /*this.ligneFactures.controls.forEach((lf) =>{
       lf.get('prixTotal').disable();
-    });
+    });*/
 
     this.factureService.addFacture(this.facture)
       .subscribe((facture) => {
