@@ -71,20 +71,20 @@
                       <mfDefaultSorter by="destinataire" [mfShowSortableArrows]="false">Destinataire
                       </mfDefaultSorter>
                     </th>
-                    <th style="width: 15%" class="text-center">
+                    <th style="width: 20%" class="text-center">
                       <mfDefaultSorter by="valeurColis" [mfShowSortableArrows]="true">Valeur</mfDefaultSorter>
                     </th>
-                    <th style="width: 30%" class="text-center">
+                    <th style="width: 25%" class="text-center">
                       <mfDefaultSorter>Actions</mfDefaultSorter>
                     </th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr *ngFor="let colis of mf.data; let i = index">
-                    <td>{{colis.reference}}</td>
+                    <td class="font-weight-bold">{{colis.reference}}</td>
                     <td>{{colis.client.raisonSociale}}</td>
                     <td>{{colis.nomDestinataire}}</td>
-                    <td>{{colis.valeurColis}}</td>
+                    <td class="text-right font-weight-bold">{{colis.valeurColis}} {{user?.personne?.site?.devise?.nomDevise}}</td>
                     <td class="text-center">
                       <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(colis)">
                         <i class="fa fa-edit"></i></button>

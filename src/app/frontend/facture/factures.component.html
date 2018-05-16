@@ -314,7 +314,7 @@
                     <th style="width: 30%" class="text-center">
                       Prix Total
                     </th>
-                    <th style="width: 10%" class="text-center" *ngIf="showBtn === true">
+                    <th style="width: 10%" class="text-center" *ngIf="showBtn === true && type === 'u'">
                       Action
                     </th>
                   </tr>
@@ -344,7 +344,7 @@
                         </div>
                       </div>
                     </td>
-                    <td *ngIf="showBtn === true" class="text-center">
+                    <td *ngIf="showBtn === true && type === 'u'" class="text-center">
                       <button class="btn btn-danger" placement="top" tooltip="Supprimer"
                               (click)="deleteligneFacture(i)">
                         <i class="fa fa-remove"></i>
@@ -361,7 +361,7 @@
                         </div>
                       </div>
                     </td>
-                    <td *ngIf="showBtn"></td>
+                    <td *ngIf="showBtn === true && type === 'u'"></td>
                   </tr>
                   <tr *ngIf="colis?.detailsColis  && ligneFactures?.controls.length > 0" class="tva">
                     <td colspan="3" class="text-right font-weight-bold">TVA</td>
@@ -373,7 +373,7 @@
                         </div>
                       </div>
                     </td>
-                    <td *ngIf="showBtn"></td>
+                    <td *ngIf="showBtn === true && type === 'u'"></td>
                   </tr>
                   <tr *ngIf="colis?.detailsColis && ligneFactures?.controls.length > 0">
                     <td colspan="3" class="text-right font-weight-bold">Montant TTC</td>
@@ -385,7 +385,7 @@
                         </div>
                       </div>
                     </td>
-                    <td *ngIf="showBtn"></td>
+                    <td *ngIf="showBtn === true && type === 'u'"></td>
                   </tr>
 
                   </tbody>

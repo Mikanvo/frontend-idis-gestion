@@ -7,6 +7,7 @@ import {Site} from '../site/site';
 import {Utilisateur} from '../utilisateur/utilisateur';
 import {Client} from '../client/client';
 import {DetailsColis} from './details-colis';
+import {Devise} from '../devise/devise';
 
 export class Colis{
   id: number;
@@ -29,5 +30,6 @@ export class Colis{
   siteDestinataire: Site;
   utilisateur: Utilisateur;
   client: Client;
+  devise: Devise;
   detailsColis: Array<DetailsColis>;
 }

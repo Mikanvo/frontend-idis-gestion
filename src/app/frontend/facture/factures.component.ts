@@ -339,6 +339,12 @@ export class FacturesComponent implements OnInit {
       ligneFactures: []
     });
 
+    if(facture.typeFacture.nomTypeFacture.toLowerCase() === 'avoir'){
+      this.showBtn = true;
+    }else{
+      this.showBtn = false;
+    }
+
     let id = this.factureForm.get('id');
     let numeroFacture = this.factureForm.get('numeroFacture');
     let colis = this.factureForm.get('colis');
@@ -376,6 +382,12 @@ export class FacturesComponent implements OnInit {
       colis: facture.colis,
       ligneFactures: []
     });
+
+    if(facture.typeFacture.nomTypeFacture.toLowerCase() === 'avoir'){
+      this.showBtn = true;
+    }else{
+      this.showBtn = false;
+    }
 
     let id = this.factureForm.get('id');
     let numeroFacture = this.factureForm.get('numeroFacture');
@@ -460,9 +472,6 @@ export class FacturesComponent implements OnInit {
   }
 
   saveFacture() {
-    /*this.ligneFactures.controls.forEach((lf) =>{
-      lf.get('prixTotal').enable();
-    });*/
     this.isLoading = true;
     this.facture.type = "FACTURE";
     this.facture.typeFacture = this.factureForm.value.typeFacture;
@@ -472,10 +481,6 @@ export class FacturesComponent implements OnInit {
       this.facture.dateEcheance = dateEcheance.substr(1, dateEcheance.length - 2);
     }
     this.facture.ligneFactures = this.factureForm.getRawValue().ligneFactures;
-
-    /*this.ligneFactures.controls.forEach((lf) =>{
-      lf.get('prixTotal').disable();
-    });*/
 
     this.factureService.addFacture(this.facture)
       .subscribe((facture) => {

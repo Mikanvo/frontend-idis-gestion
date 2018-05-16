@@ -18,6 +18,8 @@ import {Client} from '../../models/client/client';
 import {TabsetComponent} from 'ngx-bootstrap';
 import {ModalRemoveColisComponent} from './modal-remove-colis.component';
 import {Subscription} from 'rxjs/Subscription';
+import {Utilisateur} from '../../models/utilisateur/utilisateur';
+import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 
 @Component({
   selector: 'app-colis-receive',
@@ -39,6 +41,7 @@ export class ColisReceiveComponent implements OnInit {
   isLoading: boolean = false;
   allClients: Array<Client> = new Array<Client>();
   allSites: Array<Site> = new Array<Site>();
+  user: Utilisateur = new Utilisateur();
 
   //---------------------------- END COLIS FORM -------------------------------
 
@@ -58,6 +61,7 @@ export class ColisReceiveComponent implements OnInit {
   constructor(private colisService: ColisService,
               private clientService: ClientService,
               private siteService: SiteService,
+              private userService: UtilisateurService,
               private tokenService: TokenService,
               private fb: FormBuilder,
               private toastr: ToastrService,
@@ -70,6 +74,7 @@ export class ColisReceiveComponent implements OnInit {
     this.receiveSearchColis();
     this.getAllClients();
     this.getAllSites();
+    this.getProfile();
     this.createColis();
     console.log(this.colisForm);
   }
@@ -159,6 +164,12 @@ export class ColisReceiveComponent implements OnInit {
   getAllSites() {
     this.siteService.getAllSitesColis().subscribe((sites) => {
       this.allSites = sites;
+    });
+  }
+
+  getProfile() {
+    this.userService.getProfile().subscribe((user) => {
+      this.user = user;
     });
   }
 
