@@ -4,7 +4,7 @@ import {TabDirective} from 'ngx-bootstrap/tabs';
 import {Subject} from 'rxjs/Subject';
 import {TokenService} from '../../services/token/token.service';
 import {FactureService} from '../../services/facture/facture.service';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {Facture} from '../../models/facture/facture';
 import {ColisService} from '../../services/colis/colis.service';
@@ -24,6 +24,8 @@ import {DeviseService} from '../../services/devise/devise.service';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
 import {ModalRemoveFactureComponent} from './modal-remove-facture.component';
+import {PasswordValidator} from '../../directives/validators/password-validator';
+import {DateValidator} from '../../directives/validators';
 
 @Component({
   selector: 'app-factures',
@@ -260,10 +262,17 @@ export class FacturesComponent implements OnInit {
 
   getNomTypeFacture(typeFacture: TypeFacture){
     if(typeFacture !== undefined){
+        let dateEcheance = this.factureForm.get('dateEcheance');
       if(typeFacture.nomTypeFacture.toLowerCase() === 'avoir'){
         this.showBtn = true;
+        //dateEcheance.clearValidators();
+        if(this.factureForm.contains('dateEcheance')){
+          this.factureForm.removeControl('dateEcheance');
+        }
       }else{
         this.showBtn = false;
+        //dateEcheance.setValidators([Validators.required]);
+        this.factureForm.addControl('dateEcheance', new FormControl(null, Validators.required));
       }
     }else{
       this.showBtn = false;
@@ -292,10 +301,12 @@ export class FacturesComponent implements OnInit {
     this.factureForm = this.fb.group({
       id: [this.facture.id],
       numeroFacture: [this.facture.numeroFacture],
-      dateEcheance: [this.facture.dateEcheance],
+      dateEcheance: [this.facture.dateEcheance, Validators.required],
       typeFacture: [this.facture.typeFacture, Validators.required],
       colis: [this.facture.colis, Validators.required],
       ligneFactures: this.fb.array([this.createLigneFactures()])
+    }, {
+      validator: DateValidator.matchDate// your validation method
     });
   }
 

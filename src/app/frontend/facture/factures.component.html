@@ -103,8 +103,12 @@
                     <td>{{facture?.typeFacture?.nomTypeFacture | uppercase}}</td>
                     <td>{{facture?.colis?.client?.raisonSociale | uppercase}}</td>
                     <td>{{facture?.colis?.reference}}</td>
-                    <td class="text-right font-weight-bold">{{facture?.debit}} {{user?.personne?.site?.devise?.nomDevise}}</td>
-                    <td class="text-right font-weight-bold">{{facture?.credit}} {{user?.personne?.site?.devise?.nomDevise}}</td>
+                    <td class="text-right font-weight-bold">{{facture?.debit}}
+                      {{user?.personne?.site?.devise?.nomDevise}}
+                    </td>
+                    <td class="text-right font-weight-bold">{{facture?.credit}}
+                      {{user?.personne?.site?.devise?.nomDevise}}
+                    </td>
                     <td class="text-center">
                       <!--<button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(facture)">
                         <i class="fa fa-edit"></i></button>
@@ -128,19 +132,25 @@
                         </button>
                         <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                             role="menu" aria-labelledby="button-basic">
-                          <li role="menuitem"><a class="dropdown-item text-warning font-weight-bold" (click)="editForm(facture)">
+                          <li role="menuitem"><a class="dropdown-item text-warning font-weight-bold"
+                                                 (click)="editForm(facture)">
                             <i class="fa fa-edit text-warning font-weight-bold"></i> Modifier</a>
                           </li>
-                          <li role="menuitem"><a class="dropdown-item text-default font-weight-bold" (click)="showForm(facture)"><i
+                          <li role="menuitem"><a class="dropdown-item text-default font-weight-bold"
+                                                 (click)="showForm(facture)"><i
                             class="fa fa-eye text-default font-weight-bold"></i> Afficher</a></li>
-                          <li role="menuitem"><a class="dropdown-item text-danger font-weight-bold" *ngIf="facture.enable === 1"
-                                                 (click)="openRemoveModal(facture, 'd', i)"><i class="fa fa-lock text-danger font-weight-bold"></i>
+                          <li role="menuitem"><a class="dropdown-item text-danger font-weight-bold"
+                                                 *ngIf="facture.enable === 1"
+                                                 (click)="openRemoveModal(facture, 'd', i)"><i
+                            class="fa fa-lock text-danger font-weight-bold"></i>
                             Désactiver</a></li>
-                          <li role="menuitem"><a class="dropdown-item text-success font-weight-bold" *ngIf="facture.enable === 0"
+                          <li role="menuitem"><a class="dropdown-item text-success font-weight-bold"
+                                                 *ngIf="facture.enable === 0"
                                                  (click)="openRemoveModal(facture, 'e', i)"><i
                             class="fa fa-unlock-alt text-success font-weight-bold"></i> Activer</a></li>
                           <li class="divider dropdown-divider"></li>
-                          <li role="menuitem"><a class="dropdown-item text-danger font-weight-bold" (click)="openRemoveModal(facture, 'r', i)"><i
+                          <li role="menuitem"><a class="dropdown-item text-danger font-weight-bold"
+                                                 (click)="openRemoveModal(facture, 'r', i)"><i
                             class="fa fa-remove text-danger font-weight-bold"></i> Supprimer</a></li>
                         </ul>
                       </div>
@@ -243,17 +253,19 @@
                   <div class="form-group row col-md-6" *ngIf="!showBtn">
                     <label for="dateEcheance" class="control-label col-md-4 text-right">Date Echéance</label>
                     <div class="col-md-8">
-                      <input id="dateEcheance" placeholder="Aucune date sélectionnée" type="text" class="form-control" bsDatepicker formControlName="dateEcheance" [bsConfig]="bsConfig">
+                      <input [ngClass]="{'is-invalid': (!!factureForm?.controls['dateEcheance']?.errors?.required || !!factureForm?.controls['dateEcheance']?.errors?.matchDate) && (factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched)),
+                            'is-valid': (!factureForm?.controls['dateEcheance']?.errors?.required || !factureForm?.controls['dateEcheance']?.errors?.matchDate) && (!factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched))}"
+                             id="dateEcheance" placeholder="Aucune date sélectionnée" type="text" class="form-control"
+                             bsDatepicker formControlName="dateEcheance" [bsConfig]="bsConfig">
 
-                      <!--<input [ngClass]="{'is-invalid': (!!factureForm?.controls['dateEcheance']?.errors?.required) && (factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched)),
-                   'is-valid': (!factureForm?.controls['dateEcheance']?.errors?.required) && (!factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched))}"
-                             id="dateEcheance" placeholder="Aucune date sélectionnée" type="text" class="form-control" bsDatepicker formControlName="dateEcheance" [bsConfig]="bsConfig">
-                      <div
+                     <div
                         *ngIf="factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched)"
                         class="invalid-perso">
+                       <span
+                         [hidden]="!factureForm.controls['dateEcheance'].errors?.required">La <strong>date d'échéance</strong> est obligatoire.</span>
             <span
-              [hidden]="!factureForm.controls['dateEcheance'].errors?.required">La <strong>date d'échéance</strong> est obligatoire.</span>
-                      </div>-->
+              [hidden]="!factureForm.controls['dateEcheance'].errors?.matchDate">La <strong>date d'échéance</strong> ne peut être inférieure à la date actuelle.</span>
+                      </div>
                     </div>
                   </div>
                 </div>
