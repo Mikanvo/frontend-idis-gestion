@@ -15,7 +15,7 @@ export class SiteService {
   }
 
   public getAllSites(): Observable<Array<Site>> {
-    return this.http.get<Array<Site>>(`${BASE_URL}/admin/all-sites`)
+    return this.http.get<Array<Site>>(`${BASE_URL}/user/all-sites`)
       .pipe(
         tap(
           (data) => {console.log(data)},
@@ -26,7 +26,7 @@ export class SiteService {
   }
 
   public getAllSitesColis(): Observable<Array<Site>> {
-    return this.http.get<Array<Site>>(`${BASE_URL}/admin/all-sites-colis`)
+    return this.http.get<Array<Site>>(`${BASE_URL}/user/all-sites-colis`)
       .pipe(
         tap(
           (data) => {console.log(data)},

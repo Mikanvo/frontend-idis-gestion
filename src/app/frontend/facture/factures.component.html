@@ -4,7 +4,11 @@
       <!-- Nav tabs -->
       <tabset #staticTabs>
         <tab (select)="onSelect($event)" id="liste-facture">
-          <ng-template tabHeading><i class="icon-bag"></i> Facture</ng-template>
+          <ng-template tabHeading>
+            <span class="font-weight-bold">
+              <i class="icon-bag font-weight-bold"></i> Facture
+            </span>
+          </ng-template>
           <div class="card">
             <div class="card-header">
               <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
@@ -82,27 +86,27 @@
                     <th style="width: 15%" class="text-center">
                       <mfDefaultSorter by="colis" [mfShowSortableArrows]="true">Colis</mfDefaultSorter>
                     </th>
-                    <th style="width: 10%" class="text-center">
+                    <th style="width: 15%" class="text-center">
                       <mfDefaultSorter by="debit" [mfShowSortableArrows]="true">Débit</mfDefaultSorter>
                     </th>
-                    <th style="width: 10%" class="text-center">
+                    <th style="width: 15%" class="text-center">
                       <mfDefaultSorter by="credit" [mfShowSortableArrows]="true">Crédit</mfDefaultSorter>
                     </th>
-                    <th style="width: 25%" class="text-center">
+                    <th style="width: 15%" class="text-center">
                       <mfDefaultSorter>Actions</mfDefaultSorter>
                     </th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr *ngFor="let facture of mf.data; let i = index">
-                    <td>{{facture.numeroFacture}}</td>
-                    <td>{{facture.typeFacture.nomTypeFacture | uppercase}}</td>
-                    <td>{{facture.colis.client.raisonSociale | uppercase}}</td>
-                    <td>{{facture.colis.reference}}</td>
-                    <td class="text-right">{{facture.debit}}</td>
-                    <td class="text-right">{{facture.credit}}</td>
+                    <td class="font-weight-bold">{{facture?.numeroFacture}}</td>
+                    <td>{{facture?.typeFacture?.nomTypeFacture | uppercase}}</td>
+                    <td>{{facture?.colis?.client?.raisonSociale | uppercase}}</td>
+                    <td>{{facture?.colis?.reference}}</td>
+                    <td class="text-right font-weight-bold">{{facture?.debit}} {{user?.personne?.site?.devise?.nomDevise}}</td>
+                    <td class="text-right font-weight-bold">{{facture?.credit}} {{user?.personne?.site?.devise?.nomDevise}}</td>
                     <td class="text-center">
-                      <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(facture)">
+                      <!--<button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(facture)">
                         <i class="fa fa-edit"></i></button>
                       <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="showForm(facture)"
                       ><i
@@ -116,11 +120,34 @@
                       <button class="btn btn-danger" placement="top" tooltip="Supprimer"
                               (click)="openRemoveModal(facture, 'r', i)">
                         <i class="fa fa-remove"></i>
-                      </button>
+                      </button>-->
+                      <div class="btn-group" dropdown [dropup]="false">
+                        <button id="button-basic" dropdownToggle type="button" class="btn btn-default dropdown-toggle"
+                                aria-controls="dropdown-basic">
+                          Sélectionner <span class="caret"></span>
+                        </button>
+                        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                            role="menu" aria-labelledby="button-basic">
+                          <li role="menuitem"><a class="dropdown-item text-warning font-weight-bold" (click)="editForm(facture)">
+                            <i class="fa fa-edit text-warning font-weight-bold"></i> Modifier</a>
+                          </li>
+                          <li role="menuitem"><a class="dropdown-item text-default font-weight-bold" (click)="showForm(facture)"><i
+                            class="fa fa-eye text-default font-weight-bold"></i> Afficher</a></li>
+                          <li role="menuitem"><a class="dropdown-item text-danger font-weight-bold" *ngIf="facture.enable === 1"
+                                                 (click)="openRemoveModal(facture, 'd', i)"><i class="fa fa-lock text-danger font-weight-bold"></i>
+                            Désactiver</a></li>
+                          <li role="menuitem"><a class="dropdown-item text-success font-weight-bold" *ngIf="facture.enable === 0"
+                                                 (click)="openRemoveModal(facture, 'e', i)"><i
+                            class="fa fa-unlock-alt text-success font-weight-bold"></i> Activer</a></li>
+                          <li class="divider dropdown-divider"></li>
+                          <li role="menuitem"><a class="dropdown-item text-danger font-weight-bold" (click)="openRemoveModal(facture, 'r', i)"><i
+                            class="fa fa-remove text-danger font-weight-bold"></i> Supprimer</a></li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr *ngIf="allFactures?.factures.length === 0">
-                    <td colspan="5" class="text-center">Aucun resultat trouvé</td>
+                    <td colspan="7" class="text-center">Aucun resultat trouvé</td>
                   </tr>
                   </tbody>
                 </table>
@@ -169,6 +196,7 @@
                                  id="typeFacture" class="form-control" *ngIf="allTypesFactures?.length > 0"
                                  [items]="allTypesFactures"
                                  bindLabel="nomTypeFacture"
+                                 (change)="getNomTypeFacture($event)"
                                  formControlName="typeFacture"
                                  placeholder="Aucun type sélectionnée">
                         <ng-template ng-label-tmp let-item="item">
@@ -212,7 +240,22 @@
                       <input id="numeroFacture" type="text" class="form-control" formControlName="numeroFacture">
                     </div>
                   </div>
+                  <div class="form-group row col-md-6" *ngIf="!showBtn">
+                    <label for="dateEcheance" class="control-label col-md-4 text-right">Date Echéance</label>
+                    <div class="col-md-8">
+                      <input id="dateEcheance" placeholder="Aucune date sélectionnée" type="text" class="form-control" bsDatepicker formControlName="dateEcheance" [bsConfig]="bsConfig">
 
+                      <!--<input [ngClass]="{'is-invalid': (!!factureForm?.controls['dateEcheance']?.errors?.required) && (factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched)),
+                   'is-valid': (!factureForm?.controls['dateEcheance']?.errors?.required) && (!factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched))}"
+                             id="dateEcheance" placeholder="Aucune date sélectionnée" type="text" class="form-control" bsDatepicker formControlName="dateEcheance" [bsConfig]="bsConfig">
+                      <div
+                        *ngIf="factureForm.controls['dateEcheance'].errors && (factureForm.controls['dateEcheance'].dirty || factureForm.controls['dateEcheance'].touched)"
+                        class="invalid-perso">
+            <span
+              [hidden]="!factureForm.controls['dateEcheance'].errors?.required">La <strong>date d'échéance</strong> est obligatoire.</span>
+                      </div>-->
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -223,28 +266,31 @@
                   <div class="form-group row col-md-6">
                     <label for="client" class="control-label col-md-4 text-right">Expéditeur</label>
                     <div class="col-md-8">
-                      <input id="client" type="text" class="form-control" [value]="colis?.client?.raisonSociale" disabled>
+                      <input id="client" type="text" class="form-control" [value]="colis?.client?.raisonSociale"
+                             disabled>
                     </div>
                   </div>
                   <div class="form-group row col-md-6">
                     <label for="nomDestinataire" class="control-label col-md-4 text-right">Destinataire</label>
                     <div class="col-md-8">
-                      <input id="nomDestinataire" type="text" class="form-control" [value]="colis?.nomDestinataire" disabled>
+                      <input id="nomDestinataire" type="text" class="form-control" [value]="colis?.nomDestinataire"
+                             disabled>
                     </div>
                   </div>
                   <div class="form-group row col-md-6">
                     <div class="col-md-12 text-center qrCode">
                       <ngx-qrcode disabled
-                        [qrc-value]="colis?.qrCode"
-                        qrc-class="qrCode"
-                        qrc-errorCorrectionLevel="L">
+                                  [qrc-value]="colis?.qrCode"
+                                  qrc-class="qrCode"
+                                  qrc-errorCorrectionLevel="L">
                       </ngx-qrcode>
                     </div>
                   </div>
                   <div class="form-group row col-md-6">
                     <label for="description" class="control-label col-md-4 text-right">Description</label>
                     <div class="col-md-8">
-                      <textarea id="description" rows="3" cols="30" class="form-control" disabled>{{colis?.description}}</textarea>
+                      <textarea id="description" rows="3" cols="30" class="form-control"
+                                disabled>{{colis?.description}}</textarea>
                     </div>
                   </div>
                 </div>
@@ -259,14 +305,17 @@
                     <th style="width: 20%" class="text-center">
                       Designation
                     </th>
-                    <th style="width: 20%" class="text-center">
+                    <th style="width: 15%" class="text-center">
                       Quantité
                     </th>
-                    <th style="width: 30%" class="text-center">
+                    <th style="width: 25%" class="text-center">
                       Prix Unitaire
                     </th>
                     <th style="width: 30%" class="text-center">
                       Prix Total
+                    </th>
+                    <th style="width: 10%" class="text-center" *ngIf="showBtn === true">
+                      Action
                     </th>
                   </tr>
                   </thead>
@@ -280,7 +329,8 @@
                     </td>
                     <td>
                       <div class="input-group mb-4">
-                        <input formControlName="prixUnitaire" type="number" class="form-control text-right" (change)="prixUnitaire($event, i)">
+                        <input formControlName="prixUnitaire" type="number" class="form-control text-right"
+                               (change)="prixUnitaire($event, i)">
                         <div class="input-group-prepend">
                           <span class="input-group-text">{{user?.personne?.site?.devise?.nomDevise}}</span>
                         </div>
@@ -294,8 +344,14 @@
                         </div>
                       </div>
                     </td>
+                    <td *ngIf="showBtn === true" class="text-center">
+                      <button class="btn btn-danger" placement="top" tooltip="Supprimer"
+                              (click)="deleteligneFacture(i)">
+                        <i class="fa fa-remove"></i>
+                      </button>
+                    </td>
                   </tr>
-                  <tr *ngIf="colis?.detailsColis">
+                  <tr *ngIf="colis?.detailsColis && ligneFactures?.controls.length > 0">
                     <td colspan="3" class="text-right font-weight-bold">Montant HT</td>
                     <td>
                       <div class="input-group mb-4">
@@ -305,8 +361,9 @@
                         </div>
                       </div>
                     </td>
+                    <td *ngIf="showBtn"></td>
                   </tr>
-                  <tr *ngIf="colis?.detailsColis" class="tva">
+                  <tr *ngIf="colis?.detailsColis  && ligneFactures?.controls.length > 0" class="tva">
                     <td colspan="3" class="text-right font-weight-bold">TVA</td>
                     <td>
                       <div class="input-group mb-4">
@@ -316,8 +373,9 @@
                         </div>
                       </div>
                     </td>
+                    <td *ngIf="showBtn"></td>
                   </tr>
-                  <tr *ngIf="colis?.detailsColis">
+                  <tr *ngIf="colis?.detailsColis && ligneFactures?.controls.length > 0">
                     <td colspan="3" class="text-right font-weight-bold">Montant TTC</td>
                     <td>
                       <div class="input-group mb-4">
@@ -327,12 +385,15 @@
                         </div>
                       </div>
                     </td>
+                    <td *ngIf="showBtn"></td>
                   </tr>
+
                   </tbody>
                 </table>
               </div>
               <div class="card-footer">
-                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'" (click)="clearFactureForm()">
+                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'"
+                        (click)="clearFactureForm()">
                   <i class="fa fa-refresh"></i> Effacer
                 </button>
                 <button *ngIf="type === 'i'" [ladda]="isLoading" type="button" class="btn btn-primary float-right"
