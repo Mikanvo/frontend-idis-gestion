@@ -48,6 +48,11 @@ export const routes: Routes = [
         canActivate:[AdminOrUserGuard]
       },
       {
+        path: 'finances/reglement',
+        loadChildren: './frontend/reglement/reglement.module#ReglementModule',
+        canActivate:[AdminOrUserGuard]
+      },
+      {
         path: 'parametres/role',
         loadChildren: './frontend/role/role.module#RoleModule',
         canActivate:[AdminGuard]

@@ -367,11 +367,14 @@ export class FacturesComponent implements OnInit {
     let numeroFacture = this.factureForm.get('numeroFacture');
     let colis = this.factureForm.get('colis');
     let typeFacture = this.factureForm.get('typeFacture');
+    let dateEcheance = this.factureForm.get('dateEcheance');
     (this.type) ? id.disable() : id.enable();
     (this.type) ? numeroFacture.disable() : numeroFacture.enable();
     (this.type) ? colis.disable() : colis.enable();
     (this.type) ? typeFacture.disable() : typeFacture.enable();
-
+    if(facture.typeFacture.nomTypeFacture.toLowerCase() === 'avoir'){
+      (this.type) ? dateEcheance.disable() : dateEcheance.enable();
+    }
 
     if (facture.ligneFactures.length > 0) {
       this.setLigneFactures(facture.ligneFactures);
@@ -506,6 +509,7 @@ export class FacturesComponent implements OnInit {
         this.clearSearchFacture();
         this.clearFactureForm();
         this.isLoading = false;
+        this.factureForm.addControl('dateEcheance', new FormControl(null, Validators.required));
         this.selectTab(0);
         this.showSave('Facture enregistrée avec succès!')
       }, (err) => {
@@ -523,8 +527,10 @@ export class FacturesComponent implements OnInit {
     this.facture.numeroFacture = this.factureForm.getRawValue().numeroFacture;
     this.facture.typeFacture = this.factureForm.getRawValue().typeFacture;
     this.facture.colis = this.factureForm.getRawValue().colis;
-    let dateEcheance = JSON.stringify(this.factureForm.getRawValue().dateEcheance);
-    this.facture.dateEcheance = dateEcheance.substr(1, dateEcheance.length - 2);
+    if(this.facture.typeFacture.nomTypeFacture.toLowerCase() === 'facture'){
+      let dateEcheance = JSON.stringify(this.factureForm.getRawValue().dateEcheance);
+      this.facture.dateEcheance = dateEcheance.substr(1, dateEcheance.length - 2);
+    }
     this.facture.ligneFactures = this.factureForm.getRawValue().ligneFactures;
 
     this.factureService.updateFacture(this.facture)

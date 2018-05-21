@@ -9,7 +9,4 @@ export class Facture extends Mouvement{
   dateEcheance: string;
   typeFacture: TypeFacture;
   ligneFactures: Array<LigneFacture>;
-  createAt: Date;
-  updateAt: Date;
-  enable: number;
 }

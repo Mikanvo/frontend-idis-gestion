@@ -66,6 +66,13 @@ export const navigation = [
         icon: 'icon-calculator',
         admin: 'ADMIN',
         user: 'USER',
+      },
+      {
+        name: 'Règlements',
+        url: '/finances/reglement',
+        icon: 'icon-calculator',
+        admin: 'ADMIN',
+        user: 'USER',
       }
     ]
   },

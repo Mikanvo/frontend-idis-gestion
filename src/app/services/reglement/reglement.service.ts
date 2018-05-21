@@ -4,17 +4,18 @@ import {catchError, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {HandleErrorService} from '../error/handle-error.service';
-import {Tva} from '../../models/tva/tva';
-import {ListeTva} from '../../models/tva/liste-tva';
+import {Reglement} from '../../models/reglement/reglement';
+import {ListeReglements} from '../../models/reglement/liste-reglements';
+import {Mouvement} from '../../models/mouvement/mouvement';
 
 @Injectable()
-export class TvaService {
+export class ReglementService {
 
   constructor(private http: HttpClient,
               private handleErrorService: HandleErrorService) { }
 
-  public getAllTvas(): Observable<Array<Tva>> {
-    return this.http.get<Array<Tva>>(`${BASE_URL}/user/all-tvas`)
+  public getAllReglements(): Observable<Array<Reglement>> {
+    return this.http.get<Array<Reglement>>(`${BASE_URL}/user/all-reglements`)
       .pipe(
         tap(
           (data) => {console.log(data)},
@@ -24,13 +25,14 @@ export class TvaService {
       );
   }
 
-  public searchTvas(valeurTva: number, enable: number, page: number, size: number): Observable<ListeTva> {
+  public searchReglements(numeroFacture: string, nomTypeReglement: string, enable: number, page: number, size: number){
     let httpParams = new HttpParams()
-      .append('valeurTva', valeurTva !== null ? valeurTva.toString(): null)
+      .append('numeroFacture', numeroFacture)
+      .append('nomTypeReglement', nomTypeReglement)
       .append('enable', enable.toString())
       .append('page', page.toString())
       .append('size', size.toString());
-    return this.http.get<ListeTva>(`${BASE_URL}/user/search-tvas`, {params: httpParams})
+    return this.http.get<ListeReglements>(`${BASE_URL}/user/search-reglements`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -40,9 +42,9 @@ export class TvaService {
       );
   }
 
-  public addTva(tva: Tva) {
+  public addReglement(reglement: Reglement) {
 
-    return this.http.post<Tva>(`${BASE_URL}/user/add-tva`, tva)
+    return this.http.post<Reglement>(`${BASE_URL}/user/add-reglement`, reglement)
       .pipe(
         tap(data => console.log(data) ),
         catchError(this.handleErrorService.handleError)
@@ -50,9 +52,9 @@ export class TvaService {
 
   }
 
-  public updateTva(tva: Tva) {
+  public updateReglement(reglement: Reglement) {
 
-    return this.http.post<Tva>(`${BASE_URL}/user/update-tva`, tva)
+    return this.http.post<Reglement>(`${BASE_URL}/user/update-reglement`, reglement)
       .pipe(
         tap(data => console.log(data) ),
         catchError(this.handleErrorService.handleError)
@@ -60,10 +62,10 @@ export class TvaService {
 
   }
 
-  public getTva(id: number) {
+  public getReglement(id: number) {
     let httpParams = new HttpParams()
       .append('id', id.toString());
-    return this.http.get<Tva>(`${BASE_URL}/user/take-tva`, {params: httpParams})
+    return this.http.get<Reglement>(`${BASE_URL}/user/take-reglement`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -73,24 +75,24 @@ export class TvaService {
       );
   }
 
-  public disableTva(tva: Tva) {
-    return this.http.post<Tva>(`${BASE_URL}/user/disable-tva`, tva)
+  public disableReglement(mouvement: Mouvement) {
+    return this.http.post<Reglement>(`${BASE_URL}/user/disable-reglement`, mouvement)
       .pipe(
         tap(disable => console.log(disable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public enableTva(tva: Tva) {
-    return this.http.post<Tva>(`${BASE_URL}/admin/enable-tva`, tva)
+  public enableReglement(mouvement: Mouvement) {
+    return this.http.post<Reglement>(`${BASE_URL}/admin/enable-reglement`, mouvement)
       .pipe(
         tap(enable => console.log(enable) ),
         catchError(this.handleErrorService.handleError)
       );
   }
 
-  public removeTva(tva: Tva) {
-    return this.http.post<Tva>(`${BASE_URL}/admin/remove-tva`, tva)
+  public removeReglement(mouvement: Mouvement) {
+    return this.http.post<Reglement>(`${BASE_URL}/admin/remove-reglement`, mouvement)
       .pipe(
         tap(remove => console.log(remove) ),
         catchError(this.handleErrorService.handleError)

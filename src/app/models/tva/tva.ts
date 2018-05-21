@@ -1,6 +1,6 @@
 export class Tva {
   id: number;
-  valeurTva: string;
+  valeurTva: number;
   description: string;
   createAt: Date;
   updateAt: Date;

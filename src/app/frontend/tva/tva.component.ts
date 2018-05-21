@@ -21,7 +21,7 @@ export class TvaComponent implements OnInit, OnDestroy {
 
   allTvas: ListeTva;
   tvaSubscription: Subscription = null;
-  valeurTva: number = 0;
+  valeurTva: number = null;
   enable: number = 2;
   currentPage: number = 0;
   size: number = 10;
