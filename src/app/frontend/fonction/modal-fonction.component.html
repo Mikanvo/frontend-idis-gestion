@@ -24,7 +24,7 @@
           *ngIf="fonctionForm.controls['nomFonction'].errors && (fonctionForm.controls['nomFonction'].dirty || fonctionForm.controls['nomFonction'].touched)"
           class="invalid-feedback">
           <span [hidden]="!fonctionForm.controls['nomFonction'].errors?.required">Le <strong>nom</strong> est obligatoire.</span>
-          <span [hidden]="!fonctionForm.controls['nomFonction'].errors?.minlength">Le <strong>nom</strong> doit être de 4 caractères au minimum.</span>
+          <span [hidden]="!fonctionForm.controls['nomFonction'].errors?.minlength">Le <strong>nom</strong> doit être de 2 caractères au minimum.</span>
         </div>
       </div>
     </div>

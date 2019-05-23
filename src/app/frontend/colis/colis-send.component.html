@@ -88,7 +88,7 @@
                     <td class="text-center">
                       <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(colis)">
                         <i class="fa fa-edit"></i></button>
-                      <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="showForm(colis)"
+                      <button class="btn btn-light" placement="top" tooltip="Afficher" (click)="showForm(colis)"
                       ><i
                         class="fa fa-eye"></i></button>
                       <button class="btn btn-danger" placement="top" tooltip="Désactiver" *ngIf="colis.enable === 1"
@@ -256,15 +256,6 @@
                       </div>
                     </div>
                   </div>
-                  <div class="form-group row col-md-6" *ngIf="type === 'u' || type === 's'">
-                    <div class="col-md-12 text-center qrCode">
-                      <ngx-qrcode
-                        [qrc-value]="colis?.qrCode"
-                        qrc-class="qrCode"
-                        qrc-errorCorrectionLevel="L">
-                      </ngx-qrcode>
-                    </div>
-                  </div>
                   <div class="form-group row col-md-6">
                     <label for="description" class="control-label col-md-4 text-right">Description</label>
                     <div class="col-md-8">
@@ -278,6 +269,16 @@
             <span
               [hidden]="!colisForm.controls['description'].errors?.required">La <strong>description</strong> est obligatoire.</span>
                       </div>
+                    </div>
+                  </div>
+                  <div class="form-group row col-md-6" *ngIf="type === 'u' || type === 's'">
+                    <div class="col-md-12 qrCode text-right">
+                      <ngx-qrcode
+                              [qrc-value]="colis?.qrCode"
+                              qrc-class="qrCode"
+                              qrc-version = "8"
+                              qrc-errorCorrectionLevel="L">
+                      </ngx-qrcode>
                     </div>
                   </div>
                 </div>

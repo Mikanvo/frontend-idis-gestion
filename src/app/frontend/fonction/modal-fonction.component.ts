@@ -64,7 +64,7 @@ export class ModalFonctionComponent implements OnInit, OnDestroy {
 
     this.fonctionForm = this.fb.group({
       id: new FormControl(''),
-      nomFonction: new FormControl(this.fonction.nomFonction, [Validators.required, Validators.minLength(4)]),
+      nomFonction: new FormControl(this.fonction.nomFonction, [Validators.required, Validators.minLength(2)]),
       description: new FormControl(this.fonction.description)
     });
 

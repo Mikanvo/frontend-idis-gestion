@@ -22,6 +22,7 @@ import {NgxQRCodeModule} from 'ngx-qrcode2';
 import { ModalRemoveColisComponent } from './modal-remove-colis.component';
 import {SuiviColisComponent} from './suivi-colis.component';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
+import {NgxPrintModule} from "ngx-print";
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import {UtilisateurService} from '../../services/utilisateur/utilisateur.service
     QRCodeModule,
     NgxQRCodeModule,
     TextMaskModule,
-    PaginationModule
+    PaginationModule,
+    NgxPrintModule
   ],
   declarations: [
     ColisReceiveComponent,
