@@ -243,7 +243,7 @@ export class ReglementsComponent implements OnInit {
   }
 
   searchNumeroFacture(facture: Facture) {
-    console.log(this.reglementForm);
+
     if(facture !== undefined){
       this.facture = facture;
     }else {

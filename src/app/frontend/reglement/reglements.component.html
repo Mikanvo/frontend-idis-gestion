@@ -11,7 +11,7 @@
           </ng-template>
           <div class="card">
             <div class="card-header">
-              <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
+              <button class="btn btn-light float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
               </button>
             </div>
             <div class="card-body">
@@ -19,10 +19,9 @@
                 <div class="col-md-4">
                   <div class="input-group mb-4">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">Reglement</span>
+                      <span class="input-group-text">Règlement</span>
                     </div>
-                    <input (keyup)="searchNumeroFacture()" class="form-control" type="text"
-                           [(ngModel)]="numeroFacture">
+                    <input (keyup)="searchReglements()" class="form-control" type="text" [(ngModel)]="numeroFacture"/>
                   </div>
                 </div>
 
@@ -92,7 +91,7 @@
                     </td>
                     <td class="text-center">
                       <div class="btn-group" dropdown [dropup]="false">
-                        <button id="button-basic" dropdownToggle type="button" class="btn btn-default dropdown-toggle"
+                        <button id="button-basic" dropdownToggle type="button" class="btn btn-light dropdown-toggle"
                                 aria-controls="dropdown-basic">
                           Sélectionner <span class="caret"></span>
                         </button>
@@ -342,7 +341,7 @@
                 </table>
               </div>
               <div class="card-footer">
-                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'"
+                <button class="btn btn-light float-left" type="reset" *ngIf="type === 'i'"
                         (click)="clearReglementForm()">
                   <i class="fa fa-refresh"></i> Effacer
                 </button>

@@ -6,7 +6,7 @@
           <button class="btn btn-primary" placement="top" tooltip="Site" (click)="openModal(null, 'i')"><i
             class="fa fa-plus"></i> Ajouter
           </button>
-          <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
+          <button class="btn btn-light float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
           </button>
         </div>
         <div class="card-body">
@@ -90,7 +90,7 @@
                 <td class="text-center">
                   <button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="openModal(site, 'u')"><i
                     class="fa fa-edit"></i></button>
-                  <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="openModal(site, 's')"><i
+                  <button class="btn btn-light" placement="top" tooltip="Afficher" (click)="openModal(site, 's')"><i
                     class="fa fa-eye"></i></button>
                   <button class="btn btn-danger" placement="top" tooltip="Désactiver" *ngIf="site.enable === 1"
                           (click)="openRemoveModal(site, 'd', i)"><i

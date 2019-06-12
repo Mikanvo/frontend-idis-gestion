@@ -7,7 +7,7 @@
           <ng-template tabHeading><i class="icon-bag"></i> Colis</ng-template>
           <div class="card">
             <div class="card-header">
-              <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
+              <button class="btn btn-light float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
               </button>
             </div>
             <div class="card-body">
@@ -274,6 +274,7 @@
                   <div class="form-group row col-md-6" *ngIf="type === 'u' || type === 's'">
                     <div class="col-md-12 qrCode text-right">
                       <ngx-qrcode
+                              qrc-element-type="canvas"
                               [qrc-value]="colis?.qrCode"
                               qrc-class="qrCode"
                               qrc-version = "8"
@@ -426,7 +427,7 @@
                 </table>
               </div>
               <div class="card-footer">
-                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'" (click)="clearColisForm()">
+                <button class="btn btn-light float-left" type="reset" *ngIf="type === 'i'" (click)="clearColisForm()">
                   <i class="fa fa-refresh"></i> Effacer
                 </button>
                 <button *ngIf="type === 'i'" [ladda]="isLoading" type="button" class="btn btn-primary float-right"

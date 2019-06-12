@@ -8,7 +8,7 @@ import {RoleService} from '../../services/role/role.service';
 import {Role} from '../../models/role/role';
 import {Subject} from 'rxjs/Subject';
 import {RegisterForm} from '../../models/utilisateur/register-form';
-import {PasswordValidator} from '../../directives/validators/password-validator';
+import {PasswordValidator} from '../../directives/validators';
 import {EmployeService} from '../../services/employe/employe.service';
 import {ClientService} from '../../services/client/client.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -91,12 +91,14 @@ export class ModalUtilisateurComponent implements OnInit, OnDestroy {
     let password = this.userForm.get('password');
     let repassword = this.userForm.get('repassword');
     let roles = this.userForm.get('roles');
+    let personne = this.userForm.get('personne');
 
     (this.type) ? id.disable() : id.enable();
     ((this.type === 's') || (this.type === 'u')) ? username.disable() : username.enable();
     (this.type === 's') ? password.disable() : password.enable();
     (this.type === 's') ? repassword.disable() : repassword.enable();
     (this.type === 's') ? roles.disable() : roles.enable();
+    (this.type === 's') ? personne.disable() : personne.enable();
 
   }
 

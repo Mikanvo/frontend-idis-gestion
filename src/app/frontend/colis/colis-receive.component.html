@@ -7,7 +7,7 @@
           <ng-template tabHeading><i class="icon-bag"></i> Colis</ng-template>
           <div class="card">
             <div class="card-header">
-              <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
+              <button class="btn btn-light float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
               </button>
             </div>
             <div class="card-body">
@@ -86,7 +86,7 @@
                     <td>{{colis?.nomDestinataire}}</td>
                     <td class="text-right font-weight-bold" >{{ colis?.devise?.cout > user?.personne?.site?.devise?.cout ? colis?.valeurColis * colis?.devise?.cout : colis?.valeurColis / user?.personne?.site?.devise?.cout | number }} {{user?.personne?.site?.devise?.nomDevise}}</td>
                     <td class="text-center">
-                      <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="showForm(colis)"
+                      <button class="btn btn-light" placement="top" tooltip="Afficher" (click)="showForm(colis)"
                       ><i
                         class="fa fa-eye"></i></button>
                     </td>
@@ -388,7 +388,7 @@
                 </table>
               </div>
               <!--<div class="card-footer">
-                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'" (click)="clearColisForm()">
+                <button class="btn btn-light float-left" type="reset" *ngIf="type === 'i'" (click)="clearColisForm()">
                   <i class="fa fa-refresh"></i> Effacer
                 </button>
                 <button *ngIf="type === 'i'" [ladda]="isLoading" type="button" class="btn btn-primary float-right"

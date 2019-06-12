@@ -62,7 +62,7 @@
       <label for="roles" class="control-label col-md-3">Rôles</label>
       <div class="col-md-9">
         <ng-select [ngClass]="{'is-invalid': ((!!userForm?.controls['roles']?.errors?.required) && (userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || ((!!userForm?.controls['roles']?.errors?.required) && (hasClientAndOther)),
-                   'is-valid': ((!userForm?.controls['roles']?.errors?.required) && (!userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched))) || ((!userForm?.controls['roles']?.errors?.required) && (!hasClientAndOther))}"
+                   'is-valid': ((!userForm?.controls['roles']?.errors?.required) && (!userForm.controls['roles'].errors && (userForm.controls['roles'].dirty || userForm.controls['roles'].touched)))}"
                    id="roles" class="form-control" *ngIf="allRoles?.length > 0"
                    [items]="allRoles"
                    multiple="true"
@@ -86,12 +86,12 @@
       <label for="personne" class="control-label col-md-3"><span *ngIf="typeUser === 'client'">Client</span><span *ngIf="typeUser === 'employe'">Employe</span></label>
       <div class="col-md-9">
         <ng-select [ngClass]="{'is-invalid': ((!!userForm?.controls['personne']?.errors?.required) && (userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched))) || (hasClientAndOther),
-                   'is-valid': ((!userForm?.controls['personne']?.errors?.required) && (!userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched)))}"
+                   'is-valid': ((!userForm?.controls['personne']?.errors?.required) && (!userForm.controls['personne'].errors && (userForm.controls['personne'].dirty || userForm.controls['personne'].touched))  && (!hasClientAndOther))}"
                    id="personne" class="form-control" *ngIf="allPersonnes?.length > 0"
                    [items]="allPersonnes"
                    bindLabel="raisonSociale"
                    formControlName="personne"
-                     placeholder="Aucune personne sélectionnée">
+                   placeholder="Aucune personne sélectionnée">
           <ng-template ng-label-tmp let-item="item">
             <b>{{item?.matricule}}</b><b>{{item?.codeClient}}</b> || {{item?.raisonSociale}}
           </ng-template>

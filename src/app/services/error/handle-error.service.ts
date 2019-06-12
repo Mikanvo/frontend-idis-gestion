@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {HttpErrorResponse} from '@angular/common/http';
+import {Router} from "@angular/router";
 
 @Injectable()
 export class HandleErrorService {
 
-  constructor() { }
+  constructor(
+      private router: Router,
+  ) { }
 
   /**
    *
@@ -22,8 +25,11 @@ export class HandleErrorService {
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);
+      localStorage.removeItem("jwt_token");
+      //window.location.reload();
+      this.router.navigate(['']);
     }
-    // return an ErrorObservable with a user-facing error message
+
     return new ErrorObservable(error.error.message);
   }
 

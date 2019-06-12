@@ -106,4 +106,8 @@ ng-select .btn-secondary {
   font-size: 18px !important;
 }
 
+.form-control:disabled, .form-control[readonly] {
+  background-color: #f9f9f9 !important;
+}
+
 

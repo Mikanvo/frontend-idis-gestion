@@ -11,7 +11,7 @@
           </ng-template>
           <div class="card">
             <div class="card-header">
-              <button class="btn btn-default float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
+              <button class="btn btn-light float-right" (click)="reload()"><i class="fa fa-refresh"></i> Actualiser
               </button>
             </div>
             <div class="card-body">
@@ -112,7 +112,7 @@
                     <td class="text-center">
                       <!--<button class="btn btn-warning" placement="top" tooltip="Modifier" (click)="editForm(facture)">
                         <i class="fa fa-edit"></i></button>
-                      <button class="btn btn-default" placement="top" tooltip="Afficher" (click)="showForm(facture)"
+                      <button class="btn btn-light" placement="top" tooltip="Afficher" (click)="showForm(facture)"
                       ><i
                         class="fa fa-eye"></i></button>
                       <button class="btn btn-danger" placement="top" tooltip="Désactiver" *ngIf="facture.enable === 1"
@@ -126,7 +126,7 @@
                         <i class="fa fa-remove"></i>
                       </button>-->
                       <div class="btn-group" dropdown [dropup]="false">
-                        <button id="button-basic" dropdownToggle type="button" class="btn btn-default dropdown-toggle"
+                        <button id="button-basic" dropdownToggle type="button" class="btn btn-light dropdown-toggle"
                                 aria-controls="dropdown-basic">
                           Sélectionner <span class="caret"></span>
                         </button>
@@ -409,7 +409,7 @@
                 </table>
               </div>
               <div class="card-footer">
-                <button class="btn btn-default float-left" type="reset" *ngIf="type === 'i'"
+                <button class="btn btn-light float-left" type="reset" *ngIf="type === 'i'"
                         (click)="clearFactureForm()">
                   <i class="fa fa-refresh"></i> Effacer
                 </button>
