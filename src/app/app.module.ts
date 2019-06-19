@@ -78,6 +78,7 @@ import {HandleErrorService} from './services/error/handle-error.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {PaginationModule} from './components/pagination/pagination.module';
+import {RoleGuard} from "./guards/role.guard";
 
 export function tokenGetter() {
   return localStorage.getItem('jwt_token');
@@ -116,6 +117,7 @@ export function tokenGetter() {
     },
     TokenService,
     httpInterceptorProviders,
+    RoleGuard,
     AdminGuard,
     UserGuard,
     ClientGuard,

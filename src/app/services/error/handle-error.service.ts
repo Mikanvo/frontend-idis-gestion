@@ -25,9 +25,6 @@ export class HandleErrorService {
       console.error(
         `Backend returned code ${error.status}, ` +
         `body was: ${error.error}`);
-      localStorage.removeItem("jwt_token");
-      //window.location.reload();
-      this.router.navigate(['']);
     }
 
     return new ErrorObservable(error.error.message);

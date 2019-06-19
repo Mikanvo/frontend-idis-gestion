@@ -8,9 +8,10 @@ export class AdminOrUserOrClientGuard implements CanActivate {
     private tokenService: TokenService
   ){}
   canActivate(){
-    let admin = this.tokenService.hasRole("ADMIN");
-    let user = this.tokenService.hasRole("USER");
-    let client = this.tokenService.hasRole("CLIENT");
-    return (admin || user || client);
+    //let admin = this.tokenService.hasRole("ADMIN");
+    //let user = this.tokenService.hasRole("USER");
+    //let client = this.tokenService.hasRole("CLIENT");
+    //return (admin || user || client);
+    return true;
   }
 }

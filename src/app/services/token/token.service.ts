@@ -35,11 +35,21 @@ export class TokenService {
     localStorage.setItem(this.jwtTokenName, jwtToken);
   }
 
-  hasRole(role: string){
+  hasRole(role: String){
     let roles = this.getRoles();
     if(roles){
       for(let r of roles){
-        if(r.authority == role) return true;
+        if (r.authority == role) return true;
+      }
+    }
+    return false;
+  }
+
+  hasRoles(rs: Array<String>){
+    let roles = this.getRoles();
+    if(roles){
+      for(let r of roles){
+        if (rs.includes(r.authority)) return true;
       }
     }
     return false;

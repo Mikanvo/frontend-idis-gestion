@@ -11,10 +11,10 @@ import { navigation } from './../../_nav';
       <ul class="nav">
         <ng-template ngFor let-navitem [ngForOf]="navigation">
           <li *ngIf="isDivider(navitem)" class="nav-divider"></li>
-          <ng-template [ngIf]="isTitle(navitem)&&(hasRole(navitem.admin)||hasRole(navitem.user)||hasRole(navitem.client))">
+          <ng-template [ngIf]="isTitle(navitem)&&hasRoles(navitem.roles)">
             <app-sidebar-nav-title [title]='navitem'></app-sidebar-nav-title>
           </ng-template>
-          <ng-template [ngIf]="!isDivider(navitem)&&!isTitle(navitem)&&(hasRole(navitem.admin)||hasRole(navitem.user)||hasRole(navitem.client))" >
+          <ng-template [ngIf]="!isDivider(navitem)&&!isTitle(navitem)&&hasRoles(navitem.roles)" >
             <app-sidebar-nav-item [item]='navitem'></app-sidebar-nav-item>
           </ng-template>
         </ng-template>
@@ -29,8 +29,8 @@ export class AppSidebarNavComponent {
     return item.divider ? true : false
   }
 
-  public hasRole(role){
-      return this.tokenService.hasRole(role);
+  public hasRoles(roles){
+      return this.tokenService.hasRoles(roles);
   }
 
   public isTitle(item) {
