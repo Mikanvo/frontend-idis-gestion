@@ -7,7 +7,6 @@ import {BASE_URL} from '../const/constants.service';
 import {HandleErrorService} from '../error/handle-error.service';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 import {RegisterForm} from '../../models/utilisateur/register-form';
-import {Role} from '../../models/role/role';
 
 @Injectable()
 export class UtilisateurService {
@@ -25,7 +24,7 @@ export class UtilisateurService {
       .append('enable', enable.toString())
       .append('page', page.toString())
       .append('size', size.toString());
-    return this.http.get<ListeUtilisateurs>(`${BASE_URL}/user/search-users?`, {params: httpParams})
+    return this.http.get<ListeUtilisateurs>(`${BASE_URL}/admin/search-users?`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -37,7 +36,7 @@ export class UtilisateurService {
 
   public addUser(user: RegisterForm) {
 
-    return this.http.post<Utilisateur>(`${BASE_URL}/user/add-user`, user)
+    return this.http.post<Utilisateur>(`${BASE_URL}/admin/add-user`, user)
       .pipe(
       tap(user => console.log(user) ),
       catchError(this.handleErrorService.handleError)
@@ -47,7 +46,7 @@ export class UtilisateurService {
 
   public updateUser(user: RegisterForm) {
 
-    return this.http.post<Utilisateur>(`${BASE_URL}/user/update-user`, user)
+    return this.http.post<Utilisateur>(`${BASE_URL}/admin/update-user`, user)
       .pipe(
         tap(user => console.log(user) ),
         catchError(this.handleErrorService.handleError)
@@ -58,7 +57,7 @@ export class UtilisateurService {
   public getUser(id: number) {
     let httpParams = new HttpParams()
       .append('id', id.toString());
-    return this.http.get<Utilisateur>(`${BASE_URL}/user/take-user`, {params: httpParams})
+    return this.http.get<Utilisateur>(`${BASE_URL}/admin/take-user`, {params: httpParams})
       .pipe(
         tap(
           data => console.log(data),
@@ -80,7 +79,7 @@ export class UtilisateurService {
   }
 
   public disableUser(user: Utilisateur) {
-    return this.http.post<Utilisateur>(`${BASE_URL}/user/disable-user`, user)
+    return this.http.post<Utilisateur>(`${BASE_URL}/admin/disable-user`, user)
       .pipe(
         tap(disable => console.log(disable) ),
         catchError(this.handleErrorService.handleError)

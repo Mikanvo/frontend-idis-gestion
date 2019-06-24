@@ -69,11 +69,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {JwtModule} from '@auth0/angular-jwt';
 import {TokenService} from './services/token/token.service';
 import {httpInterceptorProviders} from './http-interceptors';
-import {AdminGuard} from './guards/admin.guard';
-import {UserGuard} from './guards/user.guard';
-import {ClientGuard} from './guards/client.guard';
-import {AdminOrUserGuard} from './guards/admin-or-user.guard';
-import {AdminOrUserOrClientGuard} from './guards/admin-or-user-or-client.guard';
 import {HandleErrorService} from './services/error/handle-error.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -118,11 +113,6 @@ export function tokenGetter() {
     TokenService,
     httpInterceptorProviders,
     RoleGuard,
-    AdminGuard,
-    UserGuard,
-    ClientGuard,
-    AdminOrUserGuard,
-    AdminOrUserOrClientGuard,
     HandleErrorService
   ],
   bootstrap: [AppComponent]

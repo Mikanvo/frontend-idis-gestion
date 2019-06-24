@@ -8,7 +8,7 @@ export class TokenService {
 
   private jwtTokenName = 'jwt_token';
 
-  private roles: Array<any>;
+  protected roles: Array<any>;
 
   constructor(
     public jwtHelper: JwtHelperService
@@ -53,6 +53,13 @@ export class TokenService {
       }
     }
     return false;
+  }
+
+  public isAuthenticated(): boolean {
+    const token = localStorage.getItem(this.jwtTokenName);
+    // Check whether the token is expired and return
+    // true or false
+    return !this.jwtHelper.isTokenExpired(token);
   }
 
 

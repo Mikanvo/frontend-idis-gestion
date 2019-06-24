@@ -1,28 +1,35 @@
 import { Injectable } from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {TokenService} from '../services/token/token.service';
-import {Observable} from "rxjs";
+import { Location } from '@angular/common';
 
 @Injectable()
 
 export class RoleGuard implements CanActivate {
+
+  protected roles: Array<any>;
+
   constructor(
     private tokenService: TokenService,
-    private router: Router
-  ){}
+    private router: Router,
+    private location: Location
+  ){
+    this.roles = this.tokenService.getRoles();
+  }
+
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
-    const roles = this.tokenService.getRoles();
+    let bool = this.tokenService.hasRoles(next.data.roles);
 
-    if (roles) {
-      for(let r in roles){
-        if(next.data.roles.includes(r)) return true;
-      }
+    if(bool && this.tokenService.isAuthenticated())
+    {
       return true;
     }
 
     // navigate to not found page
-    this.router.navigate(['login']);
+    //this.router.navigate(['/login']);
+    this.location.back();
+
     return false;
   }
 }
