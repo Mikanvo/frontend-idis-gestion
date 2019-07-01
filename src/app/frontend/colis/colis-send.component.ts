@@ -19,7 +19,6 @@ import {BsModalService} from 'ngx-bootstrap/modal';
 import {ModalRemoveColisComponent} from './modal-remove-colis.component';
 import {SuiviColisComponent} from './suivi-colis.component';
 import {UtilisateurService} from '../../services/utilisateur/utilisateur.service';
-import {Devise} from '../../models/devise/devise';
 import {Utilisateur} from '../../models/utilisateur/utilisateur';
 
 @Component({
@@ -237,6 +236,7 @@ export class ColisSendComponent implements OnInit {
       id: [''],
       quantite: ['', Validators.required],
       poids: ['', Validators.required],
+      prixUnitaire: ['', Validators.required],
       designation: ['', Validators.required],
       description: ['', Validators.required],
     });

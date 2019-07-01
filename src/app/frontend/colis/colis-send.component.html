@@ -355,16 +355,19 @@
                     <th style="width: 20%" class="text-center">
                       Designation
                     </th>
-                    <th style="width: 20%" class="text-center">
+                    <th style="width: 15%" class="text-center">
                       Quantité
                     </th>
-                    <th style="width: 20%" class="text-center">
+                    <th style="width: 15%" class="text-center">
                       Poids (Kg)
                     </th>
-                    <th style="width: 30%" class="text-center">
+                    <th style="width: 20%" class="text-center">
+                      Prix Unitaire
+                    </th>
+                    <th style="width: 20%" class="text-center">
                       Description
                     </th>
-                    <th style="width: 20%" class="text-center" *ngIf="type !== 's'">
+                    <th style="width: 10%" class="text-center" *ngIf="type !== 's'">
                       Action
                     </th>
                   </tr>
@@ -402,6 +405,23 @@
                         class="invalid-feedback">
           <span
             [hidden]="!detailsColis?.controls[i].controls['poids'].errors?.required">Le<strong> poids</strong> est obligatoire.</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="input-group mb-4">
+                        <input [ngClass]="{'is-invalid': (!!detailsColis?.controls[i].controls['prixUnitaire']?.errors?.required) && (detailsColis?.controls[i].controls['prixUnitaire'].errors && (detailsColis?.controls[i].controls['prixUnitaire'].dirty || detailsColis?.controls[i].controls['prixUnitaire'].touched)),
+                  'is-valid': (!detailsColis?.controls[i].controls['prixUnitaire']?.errors?.required) && (!detailsColis?.controls[i].controls['prixUnitaire'].errors && (detailsColis?.controls[i].controls['prixUnitaire'].dirty || detailsColis?.controls[i].controls['prixUnitaire'].touched))}"
+                               formControlName="prixUnitaire" type="number" class="form-control">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">{{user?.personne?.site?.devise?.nomDevise}}</span>
+                        </div>
+                      </div>
+
+                      <div
+                              *ngIf="detailsColis?.controls[i].controls['prixUnitaire'].errors && (detailsColis?.controls[i].controls['prixUnitaire'].dirty || detailsColis?.controls[i].controls['prixUnitaire'].touched)"
+                              class="invalid-feedback">
+          <span
+                  [hidden]="!detailsColis?.controls[i].controls['prixUnitaire'].errors?.required">Le<strong> prix unitaire</strong> est obligatoire.</span>
                       </div>
                     </td>
                     <td>

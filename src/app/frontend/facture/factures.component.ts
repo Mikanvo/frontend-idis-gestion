@@ -107,10 +107,6 @@ export class FacturesComponent implements OnInit {
     this.clearFormArray(this.ligneFactures);
   }
 
-  onValueChange(value: Date): void {
-    console.log(value);
-  }
-
   applyLocale() {
     this.localeService.use(this.locale);
   }
@@ -297,8 +293,6 @@ export class FacturesComponent implements OnInit {
       this.colis = null;
       this.clearFormArray(this.ligneFactures);
     }
-    this.montantHT = 0;
-    this.montantTTC = 0;
 
   }
 
@@ -323,6 +317,7 @@ export class FacturesComponent implements OnInit {
       detailsColis: [null],
       designation: [{value: '', disabled: true}, Validators.required],
       quantite: [{value: '', disabled: true}, Validators.required],
+      poids: [{value: '', disabled: true}, Validators.required],
       prixUnitaire: ['', Validators.required],
       prixTotal: [{value: '', disabled: true}, Validators.required],
     });
@@ -440,10 +435,17 @@ export class FacturesComponent implements OnInit {
       detailsColis: lf.detailsColis,
       designation: [{value: lf.detailsColis.designation, disabled: true}],
       quantite: [{value: lf.detailsColis.quantite, disabled: true}],
+      poids: [{value: lf.detailsColis.poids, disabled: true}],
       prixUnitaire: [{value: lf.prixUnitaire, disabled: this.type === 's'}],
       prixTotal: [{value: lf.prixTotal, disabled: true}]
     }));
-    console.log(ligneFacturesFGs);
+
+    this.montantHT = 0;
+    ligneFactures.forEach((lf) =>{
+      this.montantHT += lf.prixTotal;
+    });
+    this.montantTTC = (1 + this.tva) * this.montantHT;
+
     const lfFormArray = this.fb.array(ligneFacturesFGs);
     this.factureForm.setControl('ligneFactures', lfFormArray);
   }
@@ -454,12 +456,19 @@ export class FacturesComponent implements OnInit {
         detailsColis: dc,
         designation: [{value: dc.designation, disabled: true}],
         quantite: [{value: dc.quantite, disabled: true}],
-        prixUnitaire: 0,
-        prixTotal: [{value: 0, disabled: true}]
+        poids: [{value: dc.poids, disabled: true}],
+        prixUnitaire: [{value: dc.prixUnitaire, disabled: false}],
+        prixTotal: dc.prixUnitaire * dc.poids
       }));
-    console.log(ligneFacturesFGs);
+
     const lfFormArray = this.fb.array(ligneFacturesFGs);
     this.factureForm.setControl('ligneFactures', lfFormArray);
+
+    this.montantHT = 0;
+    detailsColis.forEach((dc) =>{
+      this.montantHT += dc.prixUnitaire * dc.poids;
+    });
+    this.montantTTC = (1 + this.tva) * this.montantHT;
   }
 
   prixUnitaire(event: any, index: number){
@@ -471,8 +480,9 @@ export class FacturesComponent implements OnInit {
         detailsColis: lf.get('detailsColis').value,
         designation: lf.get('designation').value,
         quantite: lf.get('quantite').value,
+        poids: lf.get('poids').value,
         prixUnitaire: lf.get('prixUnitaire').value,
-        prixTotal: parseInt(lf.get('prixUnitaire').value) * parseInt(lf.get('quantite').value)
+        prixTotal: parseInt(lf.get('prixUnitaire').value) * parseInt(lf.get('poids').value)
       });
       this.montantHT = 0;
       this.ligneFactures.controls.forEach((lf) =>{
